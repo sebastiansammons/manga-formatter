@@ -4,25 +4,24 @@ from shutil import copyfile
 import sqlite3
 import mangaguilib
 
+#Change these later
+ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
+QUEUESRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
+CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"
+VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
+OPCHAPTERCOVERPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/One Piece/Cover Pictures/"
+MYSQLITEDB = '/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db'
 
 def sql_format_chapter(mangatitle):
-    #Default PATHS
-    #Change when I get new mac/final location
-    ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-    CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"   
-    #New chapter source
-    #Change when I get new mac/final location
-    chaptersrc = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
     #Create list of non-hidden filenames
-    chaptersrclist = [f for f in os.listdir(chaptersrc) if not f.startswith('.')]
-    #Sort chaptersrc list
+    chaptersrclist = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+    #Sort list
     chaptersrclist = sorted(chaptersrclist)
-    #Get number of pages in new chapter
+    #Get number of pages for the new chapter
     pagecount = len(chaptersrclist)   
     #Connect to SQLite
-    #change when final location
     try :
-        conn = sqlite3.connect('/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db')
+        conn = sqlite3.connect(MYSQLITEDB)
         c = conn.cursor()
         #Get Current Chapter number from SQLite and increment
         c.execute("Select curchap from manga where title = ?",(mangatitle,))
@@ -40,7 +39,6 @@ def sql_format_chapter(mangatitle):
     #except :
     #    print(newchapterpath + " Exists")
     #    if(len(os.listdir(newchapterpath))>0):
-    #        #make a message popup later            
     #        mangaguilib.error_message("Chapter already formatted? ABORT!")
     #        exit()
     #    else:
@@ -48,49 +46,40 @@ def sql_format_chapter(mangatitle):
     copylog = [None] * pagecount
     pagesrc = [None] * pagecount
     pagedest = [None] * pagecount
-    #get full source and destination paths
+    #get full source and destination paths for copy
     for i in range(0,pagecount):
-        pagesrc[i]= chaptersrc+str(chaptersrclist[i])
+        pagesrc[i]= QUEUESRC+str(chaptersrclist[i])
         #Get extension of current source page file
         ext=get_extension(pagesrc[i])
         pagedest[i] = newchapterpath + mangatitle + " CH" + str(newchapternumber)+" PG"+str(i+1)+ext
-        copylog[i] = pagesrc[i] + " to "+pagedest[i]
-    #print copy log
+        #detailed log
+        #copylog[i] = pagesrc[i] + " to "+pagedest[i]
+        #simple log
+        copylog[i] = str(chaptersrclist[i]) + " to "+ mangatitle + " CH" + str(newchapternumber)+" PG"+str(i+1)+ext
+    #print copy log & confirm format
     mangaguilib.display_logs(copylog)
-    #ask to confirm copy
-    #for i in range(0,pagecount):    
-        #rename
+    #rename
+    #for i in range(0,pagecount):        
         #os.rename(pagesrc[i],pagedest[i])
     #update sql with new current chapter number
-    #
-    #Out of range error coming from here, got late so i had to leave it
-    #
-    c.execute("UPDATE manga set curchap = ? WHERE title = ?",(newchapternumber,mangatitle))
-    #c.execute("UPDATE manga set curchap = ? WHERE title = ?",(int(newchapternumber),mangatitle))
+    c.execute("UPDATE manga set curchap = ? WHERE title = ?",(int(newchapternumber),mangatitle))
+    c.execute("Select curchap from manga where title = ?",(mangatitle,))
     newsqldata = [tup[0] for tup in c.fetchall()]
-    print("Update sql curchap to: "+str(newsqldata[0]))
+    print("Updated sql curchap to: "+str(newsqldata[0]))
     #conn.commit()
     conn.close()
     #Check if Title is One Piece
     if(mangatitle=="One Piece"):
-        print("One Piece, Not Moving Cover Yet. Still Need To Fix Some Things")            
+        print("One Piece Cover Copy: Currently not creating directories so I can't run this right now")            
         #one_piece_cover_copy(newchapterpath,newchapternumber)
 
-    return copylog
 
-
-
+#
+#Update this later
+#
 def manual_format_chapter(mangatitle,newchapternumber):
-    #Default PATHS
-    #Change when I get new mac/final location
-    ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-    CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"   
-    #New chapter source
-    #Don't need to check if src is empty, main did that already
-    #Change when I get new mac/final location
-    chaptersrc = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
     #Create list of non-hidden filenames
-    chaptersrclist = [f for f in os.listdir(chaptersrc) if not f.startswith('.')]
+    chaptersrclist = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
     #Sort chaptersrc list
     chaptersrclist = sorted(chaptersrclist)
     #Get number of pages in new chapter
@@ -115,7 +104,7 @@ def manual_format_chapter(mangatitle,newchapternumber):
     
     #Move & format new chapter
     for i in range(0,pagecount):
-        pagesrc[i]= chaptersrc+str(chaptersrclist[i])
+        pagesrc[i]= QUEUESRC+str(chaptersrclist[i])
         #Get extension of current source page file
         ext=get_extension(pagesrc[i])
         pagedest[i] = newchapterpath + mangatitle + " CH" + str(newchapternumber)+" PG"+str(i+1)+ext
@@ -130,26 +119,23 @@ def manual_format_chapter(mangatitle,newchapternumber):
         print("One Piece, Not Moving Cover Yet. Still Need To Fix Some Things")            
         #one_piece_cover_copy(newchapterpath,newchapternumber)
 
-    return copylog
-
 #need to *fix* later (find cases)
 #check if file is already there
 def one_piece_cover_copy(newchapterpath,newchapternumber):
-    #change later in final version
-    CHAPTERCOVERPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/One Piece/Cover Pictures/"    
+    #get cover page
     newchapterpages = os.listdir(newchapterpath)
     newchapterpages = sorted(newchapterpages)
     print("Cover page is " + newchapterpath + newchapterpages[0])
     #Get extension of source file
     ext=get_extension(newchapterpages[0])
-    newchaptercover = CHAPTERCOVERPATH + "CH" + str(newchapternumber) + " Cover" + ext
+    newchaptercover = OPCHAPTERCOVERPATH + "CH" + str(newchapternumber) + " Cover" + ext
     print("Copy "+ newchapterpath + newchapterpages[0] + " to " + newchaptercover)
     if(os.path.isfile(newchaptercover)):
         #create pop up message
         mangaguilib.error_message(newchaptercover + " already exists!!!")  
-    else:    
-        copyfile(newchapterpath + newchapterpages[0],newchaptercover)
-
+    #else:
+        #copy cover 
+        #copyfile(newchapterpath + newchapterpages[0],newchaptercover)
 
 
 def get_extension(chaptersrcpage):
@@ -158,25 +144,17 @@ def get_extension(chaptersrcpage):
     return ext
 
 def sql_format_volume(mangatitle,lastchapter):
-    #Default PATHS
-    #Change when I get new mac/final location
-    ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-    CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"
-    VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-    
-    coversrc = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
     #Get Cover page file
-    volumesrc = [f for f in os.listdir(coversrc) if not f.startswith('.')]
-    #Make sure there is only 1 file in the directory
+    volumesrc = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+    #Make sure there is only 1 file in the directory (the cover)
     if(len(volumesrc)!=1):
-        #make message pop up
-        mangaguilib.error_message("ERROR MORE THAN ONE FILE IN SOURCE. DON'T KNOW WHCH ONE IS VOLUME COVER")
+        mangaguilib.error_message("MORE THAN ONE FILE IN QUEUE. DON'T KNOW WHCH ONE IS VOLUME COVER")
         exit()
     else:
         #Connect to SQLite
         #change when final location
         try :
-            conn = sqlite3.connect('/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db')
+            conn = sqlite3.connect(MYSQLITEDB)
         except :
             mangaguilib.error_message("CANNOT CONNECT TO fridgemedia.db")
             exit()
@@ -202,54 +180,62 @@ def sql_format_volume(mangatitle,lastchapter):
         #    os.mkdir(newvolumepath)
         #except :         
         #    print(newvolumepath + " Exists")
-        #    if(len(os.listdir(newvolumepath))>0):
-        #        #make a message popup later            
+        #    if(len(os.listdir(newvolumepath))>0):        
         #        print("Volume already formatted? ABORT!")
         #        exit()
         #    else:
         #        pass
         #Copy Volume Cover
-        volcoversrc = coversrc + volumesrc[0]
+        volcoversrc = QUEUESRC + volumesrc[0]
         #Get extension of source file
         ext=get_extension(volcoversrc)   
         volcoverdest = newvolumepath + mangatitle +" "+ str(newvolumenumber) + ext
         coverlog ="Copy" + volcoversrc + " to "+ volcoverdest
+        #make a pop up for this?
         print(coverlog)
-        #actual copy line here
+        #Format cover
+        #os.rename(volcoversrc,volcoverdest)
+        #Move chapters
         if(int(lastchapter)>firstchap):
             numchapters = int(lastchapter) - firstchap + 1
             chapterdir = [None] * numchapters
             chaptersrc = [None] * numchapters  
             for chapnum in range(firstchap,int(lastchapter)+1):
-                print(str(chapnum)+" chapter")
                 chapterdir[chapnum-firstchap] = ROOTPATH + mangatitle + CHAPTERFORMATPATH +str(chapnum).zfill(3)+"/"
-                curvolchaplist = [f for f in os.listdir(chapterdir[chapnum-firstchap]) if not f.startswith('.')]
-                curvolchaplist = sorted(curvolchaplist)
-                chaptersrc[chapnum-firstchap] = [None] * len(curvolchaplist)
-                for i in range(0,len(curvolchaplist)):
-                    chaptersrc[chapnum-firstchap][i] = curvolchaplist[i]
-            #show log
+                curchapsrcpages = [f for f in os.listdir(chapterdir[chapnum-firstchap]) if not f.startswith('.')]
+                curchapsrcpages = sorted(curchapsrcpages)
+                chaptersrc[chapnum-firstchap] = [None] * len(curchapsrcpages)
+                for i in range(0,len(curchapsrcpages)):
+                    chaptersrc[chapnum-firstchap][i] = curchapsrcpages[i]
+            #create & show log
+            numlog = 0
             for i in range(0,numchapters):
-                for j in range(0,len(chaptersrc[i])):     
-                    print(chapterdir[i] +chaptersrc[i][j]+ " to")
-                    print(newvolumepath+chaptersrc[i][j])
-                print()
+                numlog+=len(chaptersrc[i])
+            copylog = [None] * numlog
+            logindex = 0
+            for i in range(0,numchapters):
+                for j in range(0,len(chaptersrc[i])):
+                    #detailed log
+                    #copylog[logindex] = chapterdir[i] +chaptersrc[i][j]+ " to "+ newvolumepath+chaptersrc[i][j]
+                    #simple log
+                    copylog[logindex] = chapterdir[i] + " to "+ newvolumepath
+                    logindex+=1
             #confirm & Format
-            for i in range(0,numchapters):
-                for j in range(0,len(chaptersrc[i])):  
-                    #os.rename(chapterdir[i] +chaptersrc[i][j],newvolumepath+chaptersrc[i][j])
-                    print(str(i) + ":" + str(j))
+            mangaguilib.display_logs(copylog)
+            #for i in range(0,numchapters):
+            #    for j in range(0,len(chaptersrc[i])):  
+            #        #os.rename(chapterdir[i] +chaptersrc[i][j],newvolumepath+chaptersrc[i][j])
         else:
-            mangaguilib.error_message("Incorrect value of last chapter")
+            mangaguilib.error_message("Last Chapter number < First chapter number!!!!")
         #updatesql curvol + fconv
         #update sql with new current chapter number
         c.execute("UPDATE manga set curvol = ? WHERE title = ?",(int(newvolumenumber),mangatitle))
         c.execute("Select curvol from manga where title = ?",(mangatitle,))
         sqldata = [tup[0] for tup in c.fetchall()]
-        print("Update sql curvol to: "+str(sqldata[0]))
+        print("Updated sql curvol to: "+str(sqldata[0]))
         c.execute("UPDATE manga set fconv = ? WHERE title = ?",(int(lastchapter)+1,mangatitle))
         c.execute("Select fconv from manga where title = ?",(mangatitle,))
         sqldata = [tup[0] for tup in c.fetchall()]
-        print("Update sql fconv to: "+str(sqldata[0]))
+        print("Updated sql fconv to: "+str(sqldata[0]))
         #conn.commit()
         conn.close()
