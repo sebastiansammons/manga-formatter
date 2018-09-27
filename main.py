@@ -4,13 +4,13 @@ import os
 
 
 #Constant Values
-CHAPTERSRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
-ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-MANGAFORMATPATH = "/Chapter Pictures/Other Chapters/"
+#CHAPTERSRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
+#ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
+#MANGAFORMATPATH = "/Chapter Pictures/Other Chapters/"
 
 
 #Make sure queue isn't empty    
-if(len(os.listdir(CHAPTERSRC))==0):
+if(len(os.listdir(mangaformatlib.QUEUESRC))==0):
     print("Queue is empty, ABORT")
     #Window Message
     mangaguilib.error_message("Empty Queue","Your queue is empty!!")
