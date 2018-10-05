@@ -2,18 +2,17 @@ import mangaformatlib
 import mangaguilib
 import os
 
-
-#Constant Values
-#CHAPTERSRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/ChapterQueue/"
-#ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-#MANGAFORMATPATH = "/Chapter Pictures/Other Chapters/"
-
-
-#Make sure queue isn't empty    
-if(len(os.listdir(mangaformatlib.QUEUESRC))==0):
-    print("Queue is empty, ABORT")
-    #Window Message
-    mangaguilib.error_message("Empty Queue","Your queue is empty!!")
+#Make sure queue isn't empty
+try :
+    if(len([f for f in os.listdir(mangaformatlib.QUEUESRC) if not f.startswith('.')])==0):
+        print("Queue is empty, ABORT")
+        #Window Message
+        mangaguilib.error_message("Empty Queue, Your queue is empty!!")
+        exit()
+except SystemExit :
+    exit()
+except :
+    mangaguilib.error_message("ERROR! [" + mangaformatlib.QUEUESRC + "] NOT FOUND")
     exit()
 #Create Format GUI
 mangaguilib.formatselectgui()
