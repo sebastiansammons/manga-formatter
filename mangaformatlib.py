@@ -13,7 +13,7 @@ VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
 OPCHAPTERCOVERPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/One Piece/Cover Pictures/"
 MYSQLITEDB = '/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db'
 
-def sql_format_chapter(mangatitle) :
+def sql_format_chapter(mangatitle,logtype) :
     #Create list of non-hidden filenames
     try :
         #Don't really need to "try" this since main already did it. But I guess it doesn't hurt
@@ -61,12 +61,14 @@ def sql_format_chapter(mangatitle) :
         ext=get_extension(pagesrc[i])
         pagedest[i] = newchapterpath + mangatitle + " CH" + str(newchapternumber) +" PG" + str(i+1) + ext
         #toggle to pick detailed or simple log?
-        #detailed log
-        #copylog[i] = pagesrc[i] + " to " + pagedest[i]
-        #simple log
-        copylog[i] = str(chaptersrclist[i]) + " to " + mangatitle + " CH" + str(newchapternumber) + " PG" + str(i+1) + ext
+        if(logtype=="Simple") :
+            #Simple log
+            copylog[i] = "/" + str(chaptersrclist[i]) + " to /" + mangatitle + " CH" + str(newchapternumber) + " PG" + str(i+1) + ext
+        else :
+            #detailed log
+            copylog[i] = pagesrc[i] + " to " + pagedest[i]
     #print copy log & confirm format
-    mangaguilib.display_logs(copylog)
+    mangaguilib.display_logs(copylog,logtype)
     #Commit Format
     for i in range(0,pagecount) :
         try :
@@ -160,7 +162,7 @@ def get_extension(chaptersrcpage) :
     ext=chaptersrcpage[chaptersrcpage.rfind('.'):]
     return ext
 
-def sql_format_volume(mangatitle,lastchapter) :
+def sql_format_volume(mangatitle,lastchapter,logtype) :
     #Get Cover page file
     try :
         volumesrc = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
@@ -182,12 +184,12 @@ def sql_format_volume(mangatitle,lastchapter) :
     c.execute("Select curvol from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
     newvolumenumber = sqldata[0] + 1
-    print(newvolumenumber)
+    print("New Volume Number: " + str(newvolumenumber))
     #Get first chapter of new volume
     c.execute("Select fconv from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
     firstchap = sqldata[0]
-    print(firstchap)
+    print("First Chap of next volume: " + str(firstchap))
     #Make sure user entered a chapter number thats newer then the fconv
     if(int(lastchapter)<=firstchap) :
         mangaguilib.error_message("Last Chapter number < First chapter number!!!!")
@@ -236,7 +238,7 @@ def sql_format_volume(mangatitle,lastchapter) :
             curchapsrclist = [f for f in os.listdir(chapterdir[chapnum-firstchap]) if not f.startswith('.')]
         except :
             mangaguilib.error_message("ERROR!! [" + chapterdir[chapnum-firstchap] + "] NOT FOUND")
-            exit()
+            break
         #sort the directory list (not realy needed tbh)
         curchapsrclist = sorted(curchapsrclist)
         #create list for this chapnum's filenames
@@ -244,25 +246,27 @@ def sql_format_volume(mangatitle,lastchapter) :
         #get each chapter page filename
         for i in range(0,len(curchapsrclist)) :
             chaptersrc[chapnum-firstchap][i] = curchapsrclist[i]
-    #create & show log
-    numcopylog = 0
-    for i in range(0,numchapters) :
-        numcopylog+=len(chaptersrc[i])
-    copylog = [None] * numcopylog
-    logindex = 0
-    #increment each chapter
-    for i in range(0,numchapters) :
-        #increment each page in the chapter
-        for j in range(0,len(chaptersrc[i])) :
-            #toggle for detailed or simple log?
-            #detailed log
-            copylog[logindex] = chapterdir[i] + chaptersrc[i][j] + " to " + newvolumepath + chaptersrc[i][j]
-            #simple log
-            #make a better simple log?
-            #copylog[logindex] = chapterdir[i] + " to " + newvolumepath
-            logindex+=1
+    #Create & show log
+    if(logtype=="Simple") :
+        copylog = [None] * numchapters
+        for i in range(0,numchapters) :
+            #Simple log
+            copylog[i] = chapterdir[i].replace(ROOTPATH + mangatitle + CHAPTERFORMATPATH,"/")[:-1] + " to " + newvolumepath.replace(ROOTPATH + mangatitle + VOLUMEFORMATPATH,"/")[:-1]
+    else :
+        numcopylog = 0
+        for i in range(0,numchapters) :
+            numcopylog+=len(chaptersrc[i])
+        copylog = [None] * numcopylog
+        logindex = 0
+        #increment each chapter
+        for i in range(0,numchapters) :
+            #increment each page in the chapter
+            for j in range(0,len(chaptersrc[i])) :
+                #detailed log
+                copylog[logindex] = chapterdir[i] + chaptersrc[i][j] + " to " + newvolumepath + chaptersrc[i][j]
+                logindex+=1
     #Confirm & Format
-    mangaguilib.display_logs(copylog)
+    mangaguilib.display_logs(copylog,logtype)
     #increment each chapter
     for i in range(0,numchapters) :
         #increment each page in the chapter
