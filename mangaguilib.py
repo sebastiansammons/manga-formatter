@@ -4,55 +4,6 @@ import mangaformatlib
 from tkinter import *
 from tkinter import messagebox
 
-
-#
-#FOR ALL GUIS
-#Look into protocols for WM_DELETE_WINDOWS
-#
-'''
-ORIINAL FORMAL SELECT GUI
-def formatselectgui():
-    masterwindow = Tk()
-    masterwindow.title("Manga Formatter")
-    masterwindow.geometry('350x100')
-
-    #Format Label
-    formatlabel = Label(masterwindow, text="Select Format")
-    formatlabel.grid(row=0,column=0,columnspan=6,ipadx=10,sticky=E)
-    #Format Option List
-    formatlist = ["Chapter Format","Volume Format"]
-    formatvar=StringVar()
-    formatvar.set(formatlist[0])
-    formatoption = OptionMenu(masterwindow,formatvar, *formatlist)
-    formatoption.config(width=20)
-    formatoption.grid(row=0,column=6,columnspan=2)
-
-    #Manga Label
-    mangalabel = Label(masterwindow, text="Select Manga")
-    mangalabel.grid(row=1,column=0,columnspan=6,ipadx=10)
-    #Manga Title Option List
-    titlelist = ["Attack On Titan","Boruto","Dr. Stone","My Hero Academia","One Piece","Platinum End","The Promised Neverland"] 
-    titlevar=StringVar()
-    titlevar.set(titlelist[0])
-    mangalist = OptionMenu(masterwindow,titlevar,*titlelist)
-    mangalist.config(width=20)
-    mangalist.grid(row=1,column=6,columnspan=2)
-
-    #Text Box (Remove after sql is worked out)
-    entrynumber = Entry(masterwindow)
-    entrynumber.config(width=5)
-    entrynumber.grid(row=3,column=6,sticky=E)
-    
-    #Create Button
-    b = Button(masterwindow, text="Format", command= lambda: startformat(formatvar,titlevar,entrynumber,masterwindow))
-    b.grid(row=3,column=7, sticky=E)
-
-    #masterwindow.resizable(False, False)
-
-    #Draw window
-    masterwindow.mainloop()
-'''
-
 def formatselectgui():
     masterwindow = Tk()
     masterwindow.title("Manga Formatter")
@@ -89,16 +40,19 @@ def formatselectgui():
     entrynumber.grid(row=2,column=100,sticky=W)
     
     #Create Button
-    b = Button(masterwindow, text="Format", command= lambda: startformat(formatvar,titlevar,entrynumber,masterwindow,rbv))
-    b.grid(row=2,column=199, sticky=E)
+    autob = Button(masterwindow, text="Auto Format", command= lambda: autoformatpick(formatvar,titlevar,entrynumber,masterwindow,rbl))
+    autob.grid(row=2,column=199, sticky=E)
+
+    manualb = Button(masterwindow, text="Manual Format", command= lambda: manualformatpick(masterwindow))
+    manualb.grid(row=3,column=199, sticky=E)
 
     #Radiobuttons
-    rbv = IntVar()
-    rbd = Radiobutton(masterwindow, text = "Detailed",variable = rbv,value = 0)
-    rbs = Radiobutton(masterwindow, text = "Simple",variable = rbv, value = 1)
+    rbl = IntVar()
+    rbd = Radiobutton(masterwindow, text = "Detailed",variable = rbl,value = 0)
+    rbs = Radiobutton(masterwindow, text = "Simple",variable = rbl, value = 1)
     rbd.grid(row=3,column=99,sticky=E)
     rbs.grid(row=3,column=100,sticky=W)
-    rbv.set(1)
+    rbl.set(1)
     #masterwindow.resizable(False, False)
 
     #Draw window
@@ -107,8 +61,8 @@ def formatselectgui():
 
 
 #Confirmation Button
-def startformat(formatvar,titlevar,entrynumber,root,rbv):
-    if(rbv.get()==1) :
+def autoformatpick(formatvar,titlevar,entrynumber,root,rbl):
+    if(rbl.get()==1) :
         logtype = "Simple"
     else :
         logtype = "Detailed"
@@ -148,6 +102,84 @@ def startformat(formatvar,titlevar,entrynumber,root,rbv):
     root.destroy()
     print("quit first format window")
     root.quit()
+
+def manualformatpick(root):
+    print("You want to manually format something")
+    #Remove first window
+    root.destroy()
+    root.quit()
+    newmasterwindow = Tk()
+    newmasterwindow.title("Manga Formatter")
+    newmasterwindow.geometry('350x130')
+
+    #Format Label
+    formatlabel = Label(newmasterwindow, text="Select Format")
+    formatlabel.grid(row=0,column=0,columnspan=100,sticky=E)
+    #Format Option List
+    formatlist = ["Chapter Format","Volume Format"]
+    formatvar=StringVar()
+    formatvar.set(formatlist[0])
+    formatoption = OptionMenu(newmasterwindow,formatvar, *formatlist)
+    formatoption.config(width=12)
+    formatoption.grid(row=0,column=100,columnspan=100,sticky=E)
+
+    #Manga Label
+    mangalabel = Label(newmasterwindow, text="Select Manga")
+    mangalabel.grid(row=1,column=0,columnspan=100,sticky=E)
+    #Manga Title Option List
+    mangatitle = Entry(newmasterwindow)
+    mangatitle.config(width=18)
+    mangatitle.grid(row=1,column=100,columnspan=100)
+    
+    #Last Chapter of New Volume Label
+    lconvlabel = Label(newmasterwindow, text="Chapter Number")
+    lconvlabel.grid(row=2,column=99,sticky=W)
+    #Last Chapter of New Volume Text Box
+    entrynumber = Entry(newmasterwindow)
+    entrynumber.config(width=4)
+    entrynumber.grid(row=2,column=100,sticky=W)
+    
+
+    rbn = IntVar()
+    rbmc = Radiobutton(newmasterwindow, text = "Multiple",variable = rbn,value = 0)
+    rbsc = Radiobutton(newmasterwindow, text = "Single",variable = rbn, value = 1)
+    rbmc.grid(row=3,column=99,sticky=E)
+    rbsc.grid(row=3,column=100,sticky=W)
+    rbn.set(1)
+
+    manualb = Button(newmasterwindow, text="Manual Format", command= lambda: manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl))
+    manualb.grid(row=4,column=199, sticky=E)
+
+    #Radiobuttons
+    rbl = IntVar()
+    rbd = Radiobutton(newmasterwindow, text = "Detailed",variable = rbl,value = 0)
+    rbs = Radiobutton(newmasterwindow, text = "Simple",variable = rbl, value = 1)
+    rbd.grid(row=4,column=99,sticky=E)
+    rbs.grid(row=4,column=100,sticky=W)
+    rbl.set(1)
+    #masterwindow.resizable(False, False)
+
+    #Draw window
+    newmasterwindow.mainloop()
+    return
+
+def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
+    formattype = formatvar.get()
+    title = mangatitle.get()
+    number = entrynumber.get()
+    chaptercout = rbn.get()
+    if(rbn.get()==1) :
+        counttype = "Single"
+    else :
+        counttype = "Multiple"
+    if(rbl.get()==1) :
+        logtype = "Simple"
+    else :
+        logtype = "Detailed"
+    if(counttype=="Single") :
+        print("You want to format " + title + " Chapter " + number + " with " + logtype + " logs.")
+    else :
+        print("You want to format Multiple chapters of " + title + " with " + logtype + " logs.")
 
 def error_message(message):
     top = Tk()
