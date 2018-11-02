@@ -40,10 +40,10 @@ def formatselectgui():
     entrynumber.grid(row=2,column=100,sticky=W)
     
     #Create Button
-    autob = Button(masterwindow, text="Auto Format", command= lambda: autoformatpick(formatvar,titlevar,entrynumber,masterwindow,rbl))
+    autob = Button(masterwindow, text="Auto Format", command= lambda: autoformat(formatvar,titlevar,entrynumber,masterwindow,rbl))
     autob.grid(row=2,column=199, sticky=E)
 
-    manualb = Button(masterwindow, text="Manual Format", command= lambda: manualformatpick(masterwindow))
+    manualb = Button(masterwindow, text="Manual Format", command= lambda: manualformatgui(masterwindow))
     manualb.grid(row=3,column=199, sticky=E)
 
     #Radiobuttons
@@ -61,7 +61,7 @@ def formatselectgui():
 
 
 #Confirmation Button
-def autoformatpick(formatvar,titlevar,entrynumber,root,rbl):
+def autoformat(formatvar,titlevar,entrynumber,root,rbl):
     if(rbl.get()==1) :
         logtype = "Simple"
     else :
@@ -103,7 +103,7 @@ def autoformatpick(formatvar,titlevar,entrynumber,root,rbl):
     print("quit first format window")
     root.quit()
 
-def manualformatpick(root):
+def manualformatgui(root):
     print("You want to manually format something")
     #Remove first window
     root.destroy()
@@ -124,16 +124,16 @@ def manualformatpick(root):
     formatoption.grid(row=0,column=100,columnspan=100,sticky=E)
 
     #Manga Label
-    mangalabel = Label(newmasterwindow, text="Select Manga")
+    mangalabel = Label(newmasterwindow, text="Manga Title")
     mangalabel.grid(row=1,column=0,columnspan=100,sticky=E)
     #Manga Title Option List
     mangatitle = Entry(newmasterwindow)
     mangatitle.config(width=18)
     mangatitle.grid(row=1,column=100,columnspan=100)
     
-    #Last Chapter of New Volume Label
-    lconvlabel = Label(newmasterwindow, text="Chapter Number")
-    lconvlabel.grid(row=2,column=99,sticky=W)
+    #Single Chapter Number or Volume Number
+    entrylabel = Label(newmasterwindow, text="Number")
+    entrylabel.grid(row=2,column=99,sticky=E)
     #Last Chapter of New Volume Text Box
     entrynumber = Entry(newmasterwindow)
     entrynumber.config(width=4)
@@ -167,7 +167,6 @@ def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
     formattype = formatvar.get()
     title = mangatitle.get()
     number = entrynumber.get()
-    chaptercout = rbn.get()
     if(rbn.get()==1) :
         counttype = "Single"
     else :
@@ -176,11 +175,43 @@ def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
         logtype = "Simple"
     else :
         logtype = "Detailed"
-    if(counttype=="Single") :
-        print("You want to format " + title + " Chapter " + number + " with " + logtype + " logs.")
+    if(title=="") :
+        error_message("NO MANGA TITLE GIVEN")
+        return
+    #check for empty field
+    if(number=="") :
+        error_message("NO CHAPTER NUMBER GIVEN")
+        return    
+    if(formattype=="Chapter Format") :
+        if(counttype=="Single") :
+            print("You want to format " + title + " Chapter " + number + " with " + logtype + " logs.")
+            mangaformatlib.manual_single_chapter(title,number,logtype)
+        else :
+            print("You want to format Multiple chapters of " + title + " with " + logtype + " logs.")
+            #mangaformatlib.manual_multiple_chapter(title,logtype)
+    elif(formattype=="Volume Format") :
+        #Make Sure user didn't select Volume & Multiple (I could ignore this)
+        if(counttype=="Multiple") :
+            error_message("CAN'T FORMAT MULTIPLE VOLUMES")
+            return
+        #Make sure entry is an actual Number
+        try :
+            number = int(number)
+        except :
+            error_message("VOLUME NUMBER NOT GIVEN")
+            return
+        print("You want to format volume #" + str(number) + " of " + title + ". Log type: " + logtype)
+        #mangaformatlib.manual_format_volume(title,number,logtype)
     else :
-        print("You want to format Multiple chapters of " + title + " with " + logtype + " logs.")
+        error_message("FATAL ERROR: NO FORMAT TYPE")
+    print("destroy manual format window")
+    newmasterwindow.destroy()
+    print("quit manual format window")
+    newmasterwindow.quit()    
 
+#
+#Work on this later
+#
 def error_message(message):
     top = Tk()
     #Avoids root window from being drawn
@@ -200,7 +231,6 @@ def display_logs(loglist,logtype):
         text = Text(logwindow,height = 24,width=267,bg="grey")
     for i in loglist:
         text.insert(END, i + '\n')
-    #text.pack(side=LEFT, fill=BOTH, expand=YES)
     text.config(state="disabled")
     text.grid(row=0,column=0,columnspan=200)
 
@@ -220,6 +250,9 @@ def display_logs(loglist,logtype):
     logwindow.mainloop()
     return
 
+#
+#Work on this Later
+#
 def commitformat(root):
     print("destroy log")
     root.destroy()
@@ -228,6 +261,9 @@ def commitformat(root):
     text = "Commit"
     return  text
 
+#
+#Work on this Later
+#
 def abortformat(root):
     root.destroy()
     root.quit()
