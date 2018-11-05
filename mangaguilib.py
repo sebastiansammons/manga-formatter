@@ -180,15 +180,16 @@ def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
         return
     #check for empty field
     if(number=="") :
-        error_message("NO CHAPTER NUMBER GIVEN")
-        return    
+        if(counttype=="Single") :
+            error_message("NO CHAPTER NUMBER GIVEN")
+            return    
     if(formattype=="Chapter Format") :
         if(counttype=="Single") :
             print("You want to format " + title + " Chapter " + number + " with " + logtype + " logs.")
             mangaformatlib.manual_single_chapter(title,number,logtype)
         else :
             print("You want to format Multiple chapters of " + title + " with " + logtype + " logs.")
-            #mangaformatlib.manual_multiple_chapter(title,logtype)
+            mangaformatlib.manual_multiple_chapter(title,logtype)
     elif(formattype=="Volume Format") :
         #Make Sure user didn't select Volume & Multiple (I could ignore this)
         if(counttype=="Multiple") :
@@ -230,7 +231,8 @@ def display_logs(loglist,logtype):
         #Create Text
         text = Text(logwindow,height = 24,width=267,bg="grey")
     for i in loglist:
-        text.insert(END, i + '\n')
+#        text.insert(END, i + '\n')
+        text.insert(END, str(i) + '\n')
     text.config(state="disabled")
     text.grid(row=0,column=0,columnspan=200)
 
