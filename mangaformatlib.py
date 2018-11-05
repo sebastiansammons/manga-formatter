@@ -146,7 +146,7 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
     volcoversrc = QUEUESRC + volumesrc[0]
     #Get extension of source file
     ext=get_extension(volcoversrc)   
-    volcoverdest = newvolumepath + mangatitle + " " + str(newvolumenumber) + ext
+    volcoverdest = newvolumepath + mangatitle + " " + str(newvolumenumber) + ext ##add leading zeros?
     coverlog = "Copy" + volcoversrc + " to " + volcoverdest
     #make a pop up for this?
     print(coverlog)
@@ -279,10 +279,92 @@ def manual_single_chapter(mangatitle,chapternumber,logtype) :
             mangaguilib.error_message("ERROR copying: " + pagesrc[i] + " to " + pagedest[i])
             exit()
 
+#Fix Comments + variable names later
+def manual_multiple_chapter(title,logtype) :
+    #Assume QUESRC is formatted correctly
+    #Create list of directories? filenames
+    chaptersrclist = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+    #Sort chaptersrc list
+    chaptersrclist = sorted(chaptersrclist)
+    #Get number of pages in new chapter
+    chaptercount = len(chaptersrclist)   
+    #Src Directory path
+    chaptersrcdir = [None] * chaptercount
+    #Dest Directory Path
+    chapterdestdir = [None] * chaptercount
+    #Full path of all page sources
+    allpagessrc = [None] * chaptercount
+    #FUll path of all page destinations
+    allpagesdest = [None] * chaptercount
+    #Get Source & Destination Directories
+    for i in range(0,chaptercount) :
+        print("-" + chaptersrclist[i] + "-")
+        #Get Chapter Source Directory path
+        chaptersrcdir[i] = QUEUESRC + chaptersrclist[i] + "/"
+        #Get Chapter Destination Directory path
+        chapterdestdir[i] = MANUALDEST + chaptersrclist[i] + "/"
+        #Make Chapter Destination Directory
+        print("Make Directory " + chapterdestdir[i])
+#        try :
+#            os.mkdir(chapterdestdir[i])
+#        except :
+#            print(chapterdestdir[i] + " Exists")
+#            if(len([f for f in os.listdir(chapterdestdir[i]) if not f.startswith('.')])>0) :
+#                mangaguilib.error_message("Chapter already formatted? ABORT!")
+#                exit()
+#            else :
+#                pass
+    numcopylog = 0
+    for i in range(0,chaptercount) :
+        #Get List of current chapter source pages
+        try :
+            curchapsrclist = [f for f in os.listdir(chaptersrcdir[i]) if not f.startswith('.')]
+        except :
+            mangaguilib.error_message("ERROR!! [" + chaptersrcdir[i] + "] NOT FOUND")
+            break
+        #sort the directory list (not realy needed tbh)
+        curchapsrclist = sorted(curchapsrclist)
+        #create list for this chapnum's filenames
+        allpagessrc[i] = [None] * len(curchapsrclist)
+        allpagesdest[i] = [None] * len(curchapsrclist)
+        #get each src and dest chapter page filename
+        for j in range(0,len(curchapsrclist)) :
+            allpagessrc[i][j] = curchapsrclist[j]
+            allpagesdest[i][j] = title + " CH" + chaptersrclist[i].lstrip("0") + " PG" + str(j+1) + get_extension(curchapsrclist[j])
+        #Add log Length
+        numcopylog+=len(curchapsrclist)
+    copylog = [None] * numcopylog    
+    logindex = 0
+    for i in range(0,chaptercount) :
+        for j in range(0,len(allpagessrc[i])) :
+            if(logtype=="Simple") :
+                copylog[logindex] = "/" + allpagessrc[i][j] + " to /" + allpagesdest[i][j]
+            else :
+                copylog[logindex] = chaptersrcdir[i] + allpagessrc[i][j] + " to " + chapterdestdir[i] + allpagesdest[i][j]
+            logindex+=1
+    #Confirm & Format
+    mangaguilib.display_logs(copylog,logtype)
+    #increment each chapter
+    for i in range(0,chaptercount) :
+        #increment each page in the chapter
+        for j in range(0,len(allpagessrc[i])) :  
+            try :
+                print("COPY " + chaptersrcdir[i] + allpagessrc[i][j] + " to " + chapterdestdir[i] + allpagesdest[i][j])
+                #os.rename(chaptersrcdir[i] + allpagessrc[i][j], chapterdestdir[i] + allpagesdest[i][j])
+            except :
+                mangaguilib.error_message("ERROR unable to copy: " + chaptersrcdir[i] + allpagessrc[i][j] + " to " + chapterdestdir[i] + allpagesdest[i][j])
+                exit()
+        #remove old chapter directory
+        print("REMOVE: " + chaptersrcdir[i])
+        #try :
+        #    shutil.rmtree(chaptersrcdir[i])
+        #except :
+        #    mangaguilib.error_message("ERROR!! UNABLE TO REMOVE [" + chaptersrcdir[i] + "] You need to manually remove it")            
 
-#mangaformatlib.manual_multiple_chapter(title,logtype)
     
-#mangaformatlib.manual_format_volume(title,number,logtype)
+def manual_format_volume(title,number,logtype) :
+    manual_multiple_chapter(title,logtype)
+
     
 
 #need to *fix* later (find cases)
