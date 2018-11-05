@@ -231,8 +231,7 @@ def display_logs(loglist,logtype):
         #Create Text
         text = Text(logwindow,height = 24,width=267,bg="grey")
     for i in loglist:
-#        text.insert(END, i + '\n')
-        text.insert(END, str(i) + '\n')
+        text.insert(END, i + '\n')
     text.config(state="disabled")
     text.grid(row=0,column=0,columnspan=200)
 
