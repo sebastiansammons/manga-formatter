@@ -4,7 +4,7 @@ import mangaformatlib
 from tkinter import *
 from tkinter import messagebox
 
-def formatselectgui():
+def formatselectgui() :
     masterwindow = Tk()
     masterwindow.title("Manga Formatter")
     masterwindow.geometry('350x100')
@@ -61,7 +61,7 @@ def formatselectgui():
 
 
 #Confirmation Button
-def autoformat(formatvar,titlevar,entrynumber,root,rbl):
+def autoformat(formatvar,titlevar,entrynumber,root,rbl) :
     if(rbl.get()==1) :
         logtype = "Simple"
     else :
@@ -69,9 +69,9 @@ def autoformat(formatvar,titlevar,entrynumber,root,rbl):
     formattype = formatvar.get()
     title = titlevar.get()
     number = entrynumber.get()
-    if(formattype=="Chapter Format"):
+    if(formattype=="Chapter Format") :
         mangaformatlib.sql_format_chapter(title,logtype)
-    elif(formattype=="Volume Format"):
+    elif(formattype=="Volume Format") :
         #check for empty field
         if(number=="") :
             error_message("NO CHAPTER NUMBER GIVEN")
@@ -96,15 +96,12 @@ def autoformat(formatvar,titlevar,entrynumber,root,rbl):
             error_message("ENTRY GIVEN TOO SMALL FOR FORMAT")
             return    
         mangaformatlib.sql_format_volume(title,number,logtype)
-    else:
+    else :
         error_message("FATAL ERROR: NO FORMAT TYPE")
-    print("destroy first format window")
     root.destroy()
-    print("quit first format window")
     root.quit()
 
-def manualformatgui(root):
-    print("You want to manually format something")
+def manualformatgui(root) :
     #Remove first window
     root.destroy()
     root.quit()
@@ -163,7 +160,7 @@ def manualformatgui(root):
     newmasterwindow.mainloop()
     return
 
-def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
+def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl) :
     formattype = formatvar.get()
     title = mangatitle.get()
     number = entrynumber.get()
@@ -185,10 +182,8 @@ def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
             return    
     if(formattype=="Chapter Format") :
         if(counttype=="Single") :
-            print("You want to format " + title + " Chapter " + number + " with " + logtype + " logs.")
             mangaformatlib.manual_single_chapter(title,number,logtype)
         else :
-            print("You want to format Multiple chapters of " + title + " with " + logtype + " logs.")
             mangaformatlib.manual_multiple_chapter(title,logtype)
     elif(formattype=="Volume Format") :
         #Make Sure user didn't select Volume & Multiple (I could ignore this)
@@ -201,26 +196,23 @@ def manualformat(formatvar,mangatitle,entrynumber,newmasterwindow,rbn,rbl):
         except :
             error_message("VOLUME NUMBER NOT GIVEN")
             return
-        print("You want to format volume #" + str(number) + " of " + title + ". Log type: " + logtype)
-        #mangaformatlib.manual_format_volume(title,number,logtype)
+        mangaformatlib.manual_format_volume(title,number,logtype)
     else :
         error_message("FATAL ERROR: NO FORMAT TYPE")
-    print("destroy manual format window")
     newmasterwindow.destroy()
-    print("quit manual format window")
     newmasterwindow.quit()    
 
 #
 #Work on this later
 #
-def error_message(message):
+def error_message(message) :
     top = Tk()
     #Avoids root window from being drawn
     top.geometry("0x0")
     messagebox.showwarning("ERROR",message)
     top.destroy()
 
-def display_logs(loglist,logtype):
+def display_logs(loglist,logtype) :
     logwindow = Tk()
     logwindow.title("Format Logs")
     if(logtype=="Simple") :
@@ -230,7 +222,7 @@ def display_logs(loglist,logtype):
         logwindow.geometry("1880x400")
         #Create Text
         text = Text(logwindow,height = 24,width=267,bg="grey")
-    for i in loglist:
+    for i in loglist :
         text.insert(END, i + '\n')
     text.config(state="disabled")
     text.grid(row=0,column=0,columnspan=200)
@@ -254,18 +246,16 @@ def display_logs(loglist,logtype):
 #
 #Work on this Later
 #
-def commitformat(root):
-    print("destroy log")
+def commitformat(root) :
     root.destroy()
-    print("quit log")
     root.quit()
-    text = "Commit"
-    return  text
+    #text = "Commit"
+    #return  text
 
 #
 #Work on this Later
 #
-def abortformat(root):
+def abortformat(root) :
     root.destroy()
     root.quit()
     exit()
