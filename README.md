@@ -1,4 +1,4 @@
-Sebastian’s manga formatter
+Sebastian’s manga formatter (README.md not updated as of 11/11/2018)
 
 This project formats a new chapter or volume of manga into my specific file structure. I use the formatted volumes to create pdf’s for me to read on my phone or tablet. Every file is typically a jpg or png image mirroring a page of manga. 
 I use SQLite to keep track of every manga title’s

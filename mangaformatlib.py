@@ -444,4 +444,3 @@ def get_extension(chaptersrcpage) :
     #Gets the extension of any filename
     ext=chaptersrcpage[chaptersrcpage.rfind('.'):]
     return ext
-
