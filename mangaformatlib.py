@@ -6,13 +6,33 @@ import sqlite3
 import mangaguilib
 
 #Change these later
-ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-QUEUESRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/Formats/ChapterQueue/"
-MANUALDEST = "/Users/Fridge/Documents/Python/MangaProj/Manga/Formats/Manual Destination/"
-CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"
+#Mid 2012 Macbook Pro
+#ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
+#QUEUESRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/Formats/ChapterQueue/"
+#MANUALDEST = "/Users/Fridge/Documents/Python/MangaProj/Manga/Formats/Manual Destination/"
+#CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"
+#VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
+#OPCHAPTERCOVERPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/One Piece/Cover Pictures/"
+#MYSQLITEDB = '/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db'
+
+#2018 Mac mini test
+ROOTPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/"
+QUEUESRC = "/Users/fridge/Development/Manga Format Project/Manga/Formats/QUEUE TEST/"
+MANUALDEST = "/Users/fridge/Development/Manga Format Project/Manga/Formats/DESTINATION/"
+CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
 VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-OPCHAPTERCOVERPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/One Piece/Cover Pictures/"
-MYSQLITEDB = '/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db'
+OPCHAPTERCOVERPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/One Piece/Cover Pictures/"
+MYSQLITEDB = "/Users/fridge/Development/Manga Format Project/fridgemediatest.db"
+
+#2018 Mac mini production
+#ROOTPATH = "/Users/fridge/Manga/Manga/"
+#QUEUESRC = "/Users/fridge/Manga/Formats/QUEUE/"
+#MANUALDEST = "/Users/fridge/Manga/Formats/DESTINATION/"
+#CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
+#VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
+#OPCHAPTERCOVERPATH = "/Users/fridge/Manga/Manga/One Piece/Cover Pictures/"
+#MYSQLITEDB = "/Users/fridge/Manga/Formats/fridgemedia.db"
+
 
 
 
@@ -84,8 +104,8 @@ def sql_format_chapter(mangatitle,logtype) :
     c.execute("Select curchap from manga where title = ?",(mangatitle,))
     newsqldata = [tup[0] for tup in c.fetchall()]
     print("Updated sql curchap to: " + str(newsqldata[0]))
-    #conn.commit()
-    conn.close()
+    conn.commit()
+    #conn.close()
     #Make copy of chapter cover if One Piece is formatted
     if(mangatitle=="One Piece") :
         #print("One Piece Cover Copy: Currently not creating directories so I can't run this right now")            

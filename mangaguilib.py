@@ -86,7 +86,7 @@ def autoformat(formatvar,titlevar,entrynumber,root,rbl) :
         try :
             otherchaplist = [f for f in os.listdir(mangaformatlib.ROOTPATH + str(title) + mangaformatlib.CHAPTERFORMATPATH) if not f.startswith('.')]
         except :
-            error_message("ERROR!! [" + mangaformatlib.QUEUESRC + "] NOT FOUND")
+            error_message("ERROR!! [" + mangaformatlib.ROOTPATH + str(title) + mangaformatlib.CHAPTERFORMATPATH + "] NOT FOUND")
             exit()
         otherchaplist = sorted(otherchaplist)
         if(int(number) > int(otherchaplist[len(otherchaplist)-1])) :
