@@ -16,22 +16,22 @@ import mangaguilib
 #MYSQLITEDB = '/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db'
 
 #2018 Mac mini test
-ROOTPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/"
-QUEUESRC = "/Users/fridge/Development/Manga Format Project/Manga/Formats/QUEUE TEST/"
-MANUALDEST = "/Users/fridge/Development/Manga Format Project/Manga/Formats/DESTINATION/"
-CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
-VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-OPCHAPTERCOVERPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/One Piece/Cover Pictures/"
-MYSQLITEDB = "/Users/fridge/Development/Manga Format Project/fridgemediatest.db"
-
-#2018 Mac mini production
-#ROOTPATH = "/Users/fridge/Manga/Manga/"
-#QUEUESRC = "/Users/fridge/Manga/Formats/QUEUE/"
-#MANUALDEST = "/Users/fridge/Manga/Formats/DESTINATION/"
+#ROOTPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/"
+#QUEUESRC = "/Users/fridge/Development/Manga Format Project/Manga/Formats/QUEUE TEST/"
+#MANUALDEST = "/Users/fridge/Development/Manga Format Project/Manga/Formats/DESTINATION/"
 #CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
 #VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-#OPCHAPTERCOVERPATH = "/Users/fridge/Manga/Manga/One Piece/Cover Pictures/"
-#MYSQLITEDB = "/Users/fridge/Manga/Formats/fridgemedia.db"
+#OPCHAPTERCOVERPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/One Piece/Cover Pictures/"
+#MYSQLITEDB = "/Users/fridge/Development/Manga Format Project/fridgemediatest.db"
+
+#2018 Mac mini production
+ROOTPATH = "/Users/fridge/Manga/Manga/"
+QUEUESRC = "/Users/fridge/Manga/Formats/QUEUE/"
+MANUALDEST = "/Users/fridge/Manga/Formats/DESTINATION/"
+CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
+VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
+OPCHAPTERCOVERPATH = "/Users/fridge/Manga/Manga/One Piece/Cover Pictures/"
+MYSQLITEDB = "/Users/fridge/Manga/Formats/fridgemedia.db"
 
 
 
@@ -105,7 +105,7 @@ def sql_format_chapter(mangatitle,logtype) :
     newsqldata = [tup[0] for tup in c.fetchall()]
     print("Updated sql curchap to: " + str(newsqldata[0]))
     conn.commit()
-    #conn.close()
+    conn.close()
     #Make copy of chapter cover if One Piece is formatted
     if(mangatitle=="One Piece") :
         #print("One Piece Cover Copy: Currently not creating directories so I can't run this right now")            
@@ -165,7 +165,10 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
     volumecoversrc = QUEUESRC + volumecoverdir[0]
     #Get extension of cover file
     ext=get_extension(volumecoversrc)   
-    volumecoverdest = newvolumedir + mangatitle + " " + str(newvolumenumber).zfill(2) + ext
+    if(mangatitle=="One Piece") :
+        volumecoverdest = newvolumedir + mangatitle + " " + str(newvolumenumber).zfill(3) + ext
+    else :
+        volumecoverdest = newvolumedir + mangatitle + " " + str(newvolumenumber).zfill(2) + ext
     coverlog = "Copy" + volumecoversrc + " to " + volumecoverdest
     #make a pop up for this?
     print(coverlog)
@@ -236,7 +239,7 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
     c.execute("Select fconv from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
     print("Updated sql fconv to: " + str(sqldata[0]))
-    #conn.commit()
+    conn.commit()
     conn.close()
 
 
