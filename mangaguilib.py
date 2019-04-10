@@ -1,8 +1,11 @@
 import sys
 import os
 import mangaformatlib
+import sqlite3
 from tkinter import *
 from tkinter import messagebox
+
+MYSQLITEDB = "/Users/fridge/Manga/Formats/fridgemedia.db"
 
 def formatselectgui() :
     masterwindow = Tk()
@@ -24,7 +27,17 @@ def formatselectgui() :
     mangalabel = Label(masterwindow, text="Select Manga")
     mangalabel.grid(row=1,column=0,columnspan=100,sticky=E)
     #Manga Title Option List
-    titlelist = ["Attack On Titan","Boruto","Dr. Stone","My Hero Academia","One Piece","Platinum End","The Promised Neverland"] 
+    #get list from sql
+    try :
+        conn = sqlite3.connect(MYSQLITEDB)
+    except:
+        error_message("CANNOT CONNECT TO fridgemedia.db")
+        exit()
+    c = conn.cursor()
+    c.execute("Select title from manga group by title")
+    titlelist = [tup[0] for tup in c.fetchall()]
+    #manually created list
+    #titlelist = ["Attack On Titan","Boruto","Dr. Stone","My Hero Academia","One Piece","Platinum End","The Promised Neverland"] 
     titlevar=StringVar()
     titlevar.set(titlelist[0])
     mangalist = OptionMenu(masterwindow,titlevar,*titlelist)
