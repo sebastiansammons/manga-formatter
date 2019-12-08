@@ -3,46 +3,16 @@ import os
 import shutil
 from shutil import copyfile
 import sqlite3
+import mangaconfig
 import mangaguilib
 
-#Change these later
-#Mid 2012 Macbook Pro
-#ROOTPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/"
-#QUEUESRC = "/Users/Fridge/Documents/Python/MangaProj/Manga/Formats/ChapterQueue/"
-#MANUALDEST = "/Users/Fridge/Documents/Python/MangaProj/Manga/Formats/Manual Destination/"
-#CHAPTERFORMATPATH = "/Chapter Pictures/Other Chapters/"
-#VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-#OPCHAPTERCOVERPATH = "/Users/Fridge/Documents/Python/MangaProj/Manga/MangaTest/One Piece/Cover Pictures/"
-#MYSQLITEDB = '/Users/Fridge/Documents/Python/MangaProj/fridgemedia.db'
-
-#2018 Mac mini test
-#ROOTPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/"
-#QUEUESRC = "/Users/fridge/Development/Manga Format Project/Manga/Formats/QUEUE TEST/"
-#MANUALDEST = "/Users/fridge/Development/Manga Format Project/Manga/Formats/DESTINATION/"
-#CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
-#VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-#OPCHAPTERCOVERPATH = "/Users/fridge/Development/Manga Format Project/Manga/Manga Test/One Piece/Cover Pictures/"
-#MYSQLITEDB = "/Users/fridge/Development/Manga Format Project/fridgemediatest.db"
-
-#2018 Mac mini production
-ROOTPATH = "/Users/fridge/Manga/Manga/"
-QUEUESRC = "/Users/fridge/Manga/Formats/QUEUE/"
-MANUALDEST = "/Users/fridge/Manga/Formats/DESTINATION/"
-CHAPTERFORMATPATH = "/Chapter Pictures/New Chapters/"
-VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
-OPCHAPTERCOVERPATH = "/Users/fridge/Manga/Manga/One Piece/Cover Pictures/"
-MYSQLITEDB = "/Users/fridge/Manga/Formats/fridgemedia.db"
-
-
-
-
-def sql_format_chapter(mangatitle,logtype) :
+def sql_format_chapter(mangatitle) :
     #Create list of non-hidden files
     try :
         #Don't really need to "try" this since main already did it. But I guess it doesn't hurt
-        chapterpages = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+        chapterpages = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     except :
-        mangaguilib.error_message("ERROR!! [" + QUEUESRC + "] NOT FOUND")
+        mangaguilib.error_message("ERROR!! [" + mangaconfig.QUEUESRC + "] NOT FOUND")
         exit()
     #Sort list
     chapterpages = sorted(chapterpages)
@@ -50,7 +20,7 @@ def sql_format_chapter(mangatitle,logtype) :
     numpages = len(chapterpages)   
     #Connect to SQLite
     try :
-        conn = sqlite3.connect(MYSQLITEDB)
+        conn = sqlite3.connect(mangaconfig.MYSQLITEDB)
     except :
         mangaguilib.error_message("CANNOT CONNECT TO fridgemedia.db")
         exit()
@@ -60,14 +30,14 @@ def sql_format_chapter(mangatitle,logtype) :
     sqldata = [tup[0] for tup in c.fetchall()]
     newchapternumber = sqldata[0] + 1
     #Create directory path for new chapter
-    newchapterdir = ROOTPATH + mangatitle + CHAPTERFORMATPATH + str(newchapternumber).zfill(3) + "/"
+    newchapterdir = mangaconfig.ROOTPATH + mangatitle + mangaconfig.CHAPTERFORMATPATH + str(newchapternumber).zfill(3) + "/"
     #Create new directory
     #Check if directory exists
     try :
         os.mkdir(newchapterdir)
     except :
         if(len([f for f in os.listdir(newchapterdir) if not f.startswith('.')])==0) :
-            #Directory exists but nothing is in the folder
+            #Directory exists but nothing is in it
             pass
         else :
             mangaguilib.error_message("Error Creating Directory: " + newchapterdir)
@@ -77,23 +47,24 @@ def sql_format_chapter(mangatitle,logtype) :
     pagesrc = [None] * numpages
     pagedest = [None] * numpages
     for i in range(0,numpages) :
-        pagesrc[i]= QUEUESRC + str(chapterpages[i])
+        pagesrc[i]= mangaconfig.QUEUESRC + str(chapterpages[i])
         #Get extension of current page file
         ext=get_extension(pagesrc[i])
         pagedest[i] = newchapterdir + mangatitle + " CH" + str(newchapternumber) +" PG" + str(i+1) + ext
         #Create log based on details wanted
-        if(logtype=="Simple") :
+        if(mangaconfig.LOGTYPE=="Simple") :
             #Simple log
             copylog[i] = "/" + str(chapterpages[i]) + " to /" + mangatitle + " CH" + str(newchapternumber) + " PG" + str(i+1) + ext
-        else :
+        elif(mangaconfig.LOGTYPE=="Detailed"):
             #Detailed log
             copylog[i] = pagesrc[i] + " to " + pagedest[i]
     #Show copy log
-    mangaguilib.display_logs(copylog,logtype)
+    mangaguilib.display_logs(copylog)
+    #Abort format?
+        #Currentyl if user selects "ABORT" in the GUI, the directory for the new chapter is still there. If the user selects "ABORT" it should be removed. Here is where we would chagne that
     #Commit format
     for i in range(0,numpages) :
         try :
-            #print("COPY " + pagesrc[i] + " to " + pagedest[i])
             os.rename(pagesrc[i],pagedest[i])
         except :
             mangaguilib.error_message("ERROR copying: " + pagesrc[i] + " to " + pagedest[i])
@@ -103,22 +74,20 @@ def sql_format_chapter(mangatitle,logtype) :
     #Check update
     c.execute("Select curchap from manga where title = ?",(mangatitle,))
     newsqldata = [tup[0] for tup in c.fetchall()]
-    print("Updated sql curchap to: " + str(newsqldata[0]))
     conn.commit()
     conn.close()
     #Make copy of chapter cover if One Piece is formatted
     if(mangatitle=="One Piece") :
-        #print("One Piece Cover Copy: Currently not creating directories so I can't run this right now")            
         one_piece_cover_copy(newchapterdir,newchapternumber)
 
 
 
-def sql_format_volume(mangatitle,lastchapter,logtype) :
+def sql_format_volume(mangatitle,lastchapter) :
     #Get volume cover page
     try :
-        volumecoverdir = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+        volumecoverdir = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     except :
-        mangaguilib.error_message("ERROR!! [" + QUEUESRC + "] NOT FOUND")
+        mangaguilib.error_message("ERROR!! [" + mangaconfig.QUEUESRC + "] NOT FOUND")
         exit()
     #Make sure there is only 1 file in the directory (the cover)
     if(len(volumecoverdir)!=1) :
@@ -126,7 +95,7 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
         exit()
     #Connect to SQLite
     try :
-        conn = sqlite3.connect(MYSQLITEDB)
+        conn = sqlite3.connect(mangaconfig.MYSQLITEDB)
     except :
         mangaguilib.error_message("CANNOT CONNECT TO fridgemedia.db")
         exit()
@@ -135,34 +104,32 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
     c.execute("Select curvol from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
     newvolumenumber = sqldata[0] + 1
-    #print("New Volume Number: " + str(newvolumenumber))
     #Get first chapter of new volume
     c.execute("Select fconv from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
     firstchap = sqldata[0]
-    #print("First Chap of next volume: " + str(firstchap))
     #Make sure user entered a chapter number thats newer then the fconv
     if(int(lastchapter)<=firstchap) :
         mangaguilib.error_message("Last Chapter number < First chapter number!!!!")
         exit()
     #Create path for new chapter directory
     if(mangatitle=="One Piece") :
-        newvolumedir = ROOTPATH + mangatitle + VOLUMEFORMATPATH + mangatitle + " Volume " + str(newvolumenumber).zfill(3) + "/"
+        newvolumedir = mangaconfig.ROOTPATH + mangatitle + mangaconfig.VOLUMEFORMATPATH + mangatitle + " Volume " + str(newvolumenumber).zfill(3) + "/"
     else :
-        newvolumedir = ROOTPATH + mangatitle + VOLUMEFORMATPATH + mangatitle + " Volume " + str(newvolumenumber).zfill(2) + "/"
+        newvolumedir = mangaconfig.ROOTPATH + mangatitle + mangaconfig.VOLUMEFORMATPATH + mangatitle + " Volume " + str(newvolumenumber).zfill(2) + "/"
     #Create new directory (from new path just generated)
     #Check if directory exists
     try :
         os.mkdir(newvolumedir)
     except :
         if(len([f for f in os.listdir(newvolumedir) if not f.startswith('.')])==0) :
-            #Directory exists but nothing is in the folder
+            #Directory exists but nothing is in it
             pass
         else :
             mangaguilib.error_message("Error Creating Directory: " + newvolumedir)
             exit()
     #Copy volume cover
-    volumecoversrc = QUEUESRC + volumecoverdir[0]
+    volumecoversrc = mangaconfig.QUEUESRC + volumecoverdir[0]
     #Get extension of cover file
     ext=get_extension(volumecoversrc)   
     if(mangatitle=="One Piece") :
@@ -186,7 +153,7 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
     chapterpagesrc = [None] * numchapters
     for chapnum in range(firstchap,int(lastchapter) + 1) :
         #Get chapnum's directory and get the list of pages within the directory
-        chapterdir[chapnum-firstchap] = ROOTPATH + mangatitle + CHAPTERFORMATPATH + str(chapnum).zfill(3) + "/"
+        chapterdir[chapnum-firstchap] = mangaconfig.ROOTPATH + mangatitle + mangaconfig.CHAPTERFORMATPATH + str(chapnum).zfill(3) + "/"
         try :
             chapterpagesrc[chapnum-firstchap] = [f for f in os.listdir(chapterdir[chapnum-firstchap]) if not f.startswith('.')]
         except :
@@ -195,12 +162,12 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
         #Sort the pages (not realy needed tbh)
         chapterpagesrc[chapnum-firstchap] = sorted(chapterpagesrc[chapnum-firstchap])
     #Create and show log
-    if(logtype=="Simple") :
+    if(mangaconfig.LOGTYPE=="Simple") :
         copylog = [None] * numchapters
         for i in range(0,numchapters) :
             #Simple log
-            copylog[i] = chapterdir[i].replace(ROOTPATH + mangatitle + CHAPTERFORMATPATH,"/")[:-1] + " to " + newvolumedir.replace(ROOTPATH + mangatitle + VOLUMEFORMATPATH,"/")[:-1]
-    else :
+            copylog[i] = chapterdir[i].replace(mangaconfig.ROOTPATH + mangatitle + mangaconfig.CHAPTERFORMATPATH,"/")[:-1] + " to " + newvolumedir.replace(mangaconfig.ROOTPATH + mangatitle + mangaconfig.VOLUMEFORMATPATH,"/")[:-1]
+    elif(mangaconfig.LOGTYPE=="Detailed"):
         #Detailed log
         numcopylog = 0
         for i in range(0,numchapters) :
@@ -211,18 +178,18 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
             for j in range(0,len(chapterpagesrc[i])) :
                 copylog[logindex] = chapterdir[i] + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j]
                 logindex+=1
+    mangaguilib.display_logs(copylog)
+    #Abort format?
+        #Things need to get done if user decides to abort. Will work on later
     #Commit format
-    mangaguilib.display_logs(copylog,logtype)
     for i in range(0,numchapters) :
         for j in range(0,len(chapterpagesrc[i])) :  
             try :
-                #print("COPY " + chapterdir[i] + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j])
                 os.rename(chapterdir[i] + chapterpagesrc[i][j],newvolumedir + chapterpagesrc[i][j])
             except :
                 mangaguilib.error_message("ERROR unable to copy: " + chapterdir[i] + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j])
                 exit()
         #Remove old chapter directories
-        print("REMOVE: " + chapterdir[i])
         try :
             shutil.rmtree(chapterdir[i])
         except :
@@ -232,34 +199,31 @@ def sql_format_volume(mangatitle,lastchapter,logtype) :
     #check update
     c.execute("Select curvol from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
-    print("Updated sql curvol to: " + str(sqldata[0]))
     #Update SQLite with new first chapter of new volume number
     c.execute("UPDATE manga set fconv = ? WHERE title = ?",(int(lastchapter) + 1,mangatitle))
     #check update
     c.execute("Select fconv from manga where title = ?",(mangatitle,))
     sqldata = [tup[0] for tup in c.fetchall()]
-    print("Updated sql fconv to: " + str(sqldata[0]))
     conn.commit()
     conn.close()
 
 
 
-def manual_single_chapter(mangatitle,chapternumber,logtype) :
+def manual_single_chapter(mangatitle,chapternumber) :
     #Create list of non-hidden filenames
-    chapterpages = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+    chapterpages = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     #Sort pages
     chapterpages = sorted(chapterpages)
     #Get number of pages for the new chapter
     numpages = len(chapterpages)   
     #Create new chapter directory
-    newchapterdir = MANUALDEST + chapternumber.zfill(3) + "/"
+    newchapterdir = mangaconfig.MANUALDEST + chapternumber.zfill(3) + "/"
     #Check if directory exists
-    #print("Make Directory " + newchapterdir)
     try :
         os.mkdir(newchapterdir)
     except :
         if(len([f for f in os.listdir(newchapterdir) if not f.startswith('.')])==0) :
-            #Directory exists but nothing is in the folder
+            #Directory exists but nothing is in it
             pass
         else :
             mangaguilib.error_message("Error Creating Direcotry: " + newchapterdir)
@@ -270,23 +234,24 @@ def manual_single_chapter(mangatitle,chapternumber,logtype) :
     pagedest = [None] * numpages
     for i in range(0,numpages) :
         #Singe chapter so queue should just be the pages
-        pagesrc[i]= QUEUESRC + str(chapterpages[i])
+        pagesrc[i]= mangaconfig.QUEUESRC + str(chapterpages[i])
         #Get extension of current page file
         ext=get_extension(pagesrc[i])
         pagedest[i] = newchapterdir + mangatitle + " CH" + str(chapternumber) + " PG" + str(i+1) + ext
         #Create log based on details wanted
-        if(logtype=="Simple") :
+        if(mangaconfig.LOGTYPE=="Simple") :
             #Simple log
             copylog[i] = "/" + str(chapterpages[i]) + " to /" + mangatitle + " CH" + str(chapternumber) + " PG" + str(i+1) + ext
-        else :
+        elif(mangaconfig.LOGTYPE=="Detailed"):
             #Detailed log
             copylog[i] = pagesrc[i] + " to " + pagedest[i]
     #Show copy log
-    mangaguilib.display_logs(copylog,logtype)
+    mangaguilib.display_logs(copylog)
+    #Abort format?
+        #Currentyl if user selects "ABORT" in the GUI, the directory for the new chapter is still there. If the user selects "ABORT" it should be removed. Here is where we would chagne that
     #Commit format
     for i in range(0,numpages) :
         try :
-            #print("COPY " + pagesrc[i] + " to " + pagedest[i])
             os.rename(pagesrc[i],pagedest[i])
         except :
             mangaguilib.error_message("ERROR copying: " + pagesrc[i] + " to " + pagedest[i])
@@ -294,10 +259,10 @@ def manual_single_chapter(mangatitle,chapternumber,logtype) :
 
 
 
-def manual_multiple_chapter(title,logtype) :
-    #Assume QUESRC is formatted correctly
+def manual_multiple_chapter(title) :
+    #Assume QUESRC is formatted correctly (Each chapter is in their own directory with the correct chapter number as directory name)
     #List of chapter directories
-    chaptersrclist = [f for f in os.listdir(QUEUESRC) if not f.startswith('.')]
+    chaptersrclist = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     #Sort directory list
     chaptersrclist = sorted(chaptersrclist)
     #Get number of chapters
@@ -313,16 +278,15 @@ def manual_multiple_chapter(title,logtype) :
     #Get source and destination directories
     for i in range(0,numchapters) :
         #Get chapter source directories
-        chaptersrcdir[i] = QUEUESRC + chaptersrclist[i] + "/"
+        chaptersrcdir[i] = mangaconfig.QUEUESRC + chaptersrclist[i] + "/"
         #Get chapter destination directories
-        chapterdestdir[i] = MANUALDEST + chaptersrclist[i].zfill(3) + "/"
+        chapterdestdir[i] = mangaconfig.MANUALDEST + chaptersrclist[i].zfill(3) + "/"
         #Make chapter destination directories
-        #print("Make Directory " + chapterdestdir[i])
         try :
             os.mkdir(chapterdestdir[i])
         except :
             if(len([f for f in os.listdir(chapterdestdir[i]) if not f.startswith('.')])==0) :
-                #Directory exists but nothing is in the folder
+                #Directory exists but nothing is in it
                 pass
             else :
                 mangaguilib.error_message("Error Creating Directory: " + chapterdestdir[i])
@@ -352,49 +316,48 @@ def manual_multiple_chapter(title,logtype) :
     logindex = 0
     for i in range(0,numchapters) :
         for j in range(0,len(chapterpagesrc[i])) :
-            if(logtype=="Simple") :
+            if(mangaconfig.LOGTYPE=="Simple") :
                 #Simple log
                 copylog[logindex] = "/" + chapterpagesrc[i][j] + " to /" + chapterpagedest[i][j]
-            else :
+            elif(mangaconfig.LOGTYPE=="Detailed"):
                 #Detailed log
                 copylog[logindex] = chaptersrcdir[i] + chapterpagesrc[i][j] + " to " + chapterdestdir[i] + chapterpagedest[i][j]
             logindex+=1
+    mangaguilib.display_logs(copylog)
+    #Abort format?
+        #Something has to done when user selects abort format. Will deal with later
     #Commit format
-    mangaguilib.display_logs(copylog,logtype)
     for i in range(0,numchapters) :
         for j in range(0,len(chapterpagesrc[i])) :  
             try :
-                #print("COPY " + chaptersrcdir[i] + chapterpagesrc[i][j] + " to " + chapterdestdir[i] + chapterpagedest[i][j])
                 os.rename(chaptersrcdir[i] + chapterpagesrc[i][j], chapterdestdir[i] + chapterpagedest[i][j])
             except :
                 mangaguilib.error_message("ERROR unable to copy: " + chaptersrcdir[i] + chapterpagesrc[i][j] + " to " + chapterdestdir[i] + chapterpagedest[i][j])
                 exit()
         #Remove old chapter directories
-        print("REMOVE: " + chaptersrcdir[i])
         try :
             shutil.rmtree(chaptersrcdir[i])
         except :
             mangaguilib.error_message("ERROR!! UNABLE TO REMOVE [" + chaptersrcdir[i] + "] You need to manually remove it")            
 
 
-def manual_format_volume(title,number,logtype) :
-    manual_multiple_chapter(title,logtype)
+def manual_format_volume(title,number) :
+    manual_multiple_chapter(title)
     #Get list of chapters
-    chapterdir = [f for f in os.listdir(MANUALDEST) if not f.startswith('.')]
+    chapterdir = [f for f in os.listdir(mangaconfig.MANUALDEST) if not f.startswith('.')]
     #Sort chaptersrc list
     chapterdir = sorted(chapterdir)
     numchapters = len(chapterdir)
     #list of each chapter page list (2D List)
     chapterpagesrc = [None] * numchapters
     #Get chapter destination directory path
-    newvolumedir = MANUALDEST + title + " Volume " + str(number).zfill(2) + "/"
+    newvolumedir = mangaconfig.MANUALDEST + title + " Volume " + str(number).zfill(2) + "/"
     #Make chapter destination directory
-    #print("Make Directory " + newvolumedir)
     try :
        os.mkdir(newvolumedir)
     except :
         if(len([f for f in os.listdir(newvolumedir) if not f.startswith('.')])==0) :
-            #Directory exists but nothing is in the folder
+            #Directory exists but nothing is in it
             pass
         else :
             mangaguilib.error_message("Error Creating Directory: " + newvolumedir)
@@ -402,20 +365,20 @@ def manual_format_volume(title,number,logtype) :
     #Get list of each chapter's page source
     for i in range(0,numchapters) :
         try :
-            chapterpagesrc[i] = [f for f in os.listdir(MANUALDEST + chapterdir[i]) if not f.startswith('.')]
+            chapterpagesrc[i] = [f for f in os.listdir(mangaconfig.MANUALDEST + chapterdir[i]) if not f.startswith('.')]
         except :
-            mangaguilib.error_message("ERROR!! [" + MANUALDEST + chapterdir[i] + "] NOT FOUND")
+            mangaguilib.error_message("ERROR!! [" + mangaconfig.MANUALDEST + chapterdir[i] + "] NOT FOUND")
             break
         #Sort the directory list (not realy needed tbh)
         chapterpagesrc[i] = sorted(chapterpagesrc[i])
     #Create and show log
     numcopy = 0
-    if(logtype=="Simple") :
+    if(mangaconfig.LOGTYPE=="Simple") :
         #Simple log
         copylog = [None] * numchapters
         for i in range(0,numchapters) :
                 copylog[i] = "/" + chapterdir[i] + " to " + "/Volume " + str(number).zfill(2)    
-    else :
+    elif(mangaconfig.LOGTYPE=="Detailed"):
         #Detailed log
         for i in range(0,numchapters) :
             numcopy+=len(chapterpagesrc[i])
@@ -423,25 +386,24 @@ def manual_format_volume(title,number,logtype) :
         logindex=0
         for i in range(0,numchapters) :
             for j in range(0,len(chapterpagesrc[i])) :       
-                #print(MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + MANUALDEST + chapterpagesrc[i][j])
-                copylog[logindex] = MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j]
+                copylog[logindex] = mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j]
                 logindex+=1
+    mangaguilib.display_logs(copylog)
+    #Abort format?
+        #Something has to done when user selects abort format. Will deal with later
     #Commit format
-    mangaguilib.display_logs(copylog,logtype)
     for i in range(0,numchapters) :
         for j in range(0,len(chapterpagesrc[i])) :  
             try :
-                #print("COPY " + MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j])
-                os.rename(MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j],newvolumedir + chapterpagesrc[i][j])
+                os.rename(mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j],newvolumedir + chapterpagesrc[i][j])
             except :
-                mangaguilib.error_message("ERROR unable to copy: " + MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j])
+                mangaguilib.error_message("ERROR unable to copy: " + mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j])
                 exit()
         #Remove old chapter directory
-        print("REMOVE: " + MANUALDEST + chapterdir[i])
         try :
-            shutil.rmtree(MANUALDEST + chapterdir[i])
+            shutil.rmtree(mangaconfig.MANUALDEST + chapterdir[i])
         except :
-            mangaguilib.error_message("ERROR!! UNABLE TO REMOVE [" + MANUALDEST + chapterdir[i] + "] You need to manually remove it")
+            mangaguilib.error_message("ERROR!! UNABLE TO REMOVE [" + mangaconfig.MANUALDEST + chapterdir[i] + "] You need to manually remove it")
 
 
 
@@ -451,7 +413,7 @@ def one_piece_cover_copy(newchapterpath,newchapternumber) :
     newchapterpages = sorted(newchapterpages)
     #Get extension of page file
     ext=get_extension(newchapterpages[0])
-    newchaptercoverdest = OPCHAPTERCOVERPATH + "CH" + str(newchapternumber) + " Cover" + ext
+    newchaptercoverdest = mangaconfig.OPCHAPTERCOVERPATH + "CH" + str(newchapternumber) + " Cover" + ext
     #Copy cover page
     if(os.path.isfile(newchaptercoverdest)) :
         mangaguilib.error_message(newchaptercoverdest + " already exists!!!")  
