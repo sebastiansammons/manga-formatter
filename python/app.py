@@ -1,37 +1,32 @@
+import os
 from flask import Flask, render_template, request, redirect
 import mangaconfig
 import mangaformatlib
 
-app = Flask(__name__)
+#Get template path
+template_path = os.path.abspath('../html')
+app = Flask(__name__, template_folder=template_path)
+
+#
+#Make sure mangaconfig.py is reachable
+#
+
+#Default version when template is local folder
+#app = Flask(__name__)
 
 @app.route('/')
 def index():
-    print("Loading Main Page")
+    print("index()")
     return render_template('index.html')
-
-# @app.route('/', methods=['POST'])
-# def getAuto():
-#     print("Auto Click?")
-#     format = request.form['auto']
-#     if(format == "auto"):
-#         return redirect('/auto')
-
-# @app.route('/', methods=['POST'])
-# def getManual():
-#     print("Manual Click?")
-#     format = request.form['manual']
-#     if(format == "manual"):
-#         return redirect('/manual')
 
 @app.route('/', methods=['POST'])
 def get_format():
-    print("Loading something?")
+    print("get_from()")
     format = request.form["format"]
     if(format=="auto"):
         return redirect('/auto',301)
     elif(format=="manual"):
         return redirect('/manual',301)
-
 
 # #WORKING Auto/Manual Pick
 # @app.route('/', methods=['GET','POST'])
@@ -44,7 +39,6 @@ def get_format():
 #     else:
 #         print("No Auto or Manual")
 #         return redirect('/auto')
-
 
 # #Before
 # @app.route('/', methods=['POST'])
@@ -64,34 +58,40 @@ def get_format():
 #         print("No Auto or Manual")
 #         return render_template('formatqueue.html', f=fmat, m=manga, vea=volendat, af=autoformat)
 
-
 @app.route('/auto')
 def auto_format():
-    print("Loading AutoFormat Page")
+    print("auto_format()")
     return render_template('autoformat.html')
 
 @app.route('/auto', methods=['POST'])
 def get_auto_format():
+    print("get_auto_format()")
     fmat = request.form['fmat']
     manga = request.form['manga']
     volendat = request.form['volendat']
     # autoformat = request.form['autoformat']
     if(fmat=="chapter"):
+        #make sure queue isn't empty
         print("You Are running sql_format_chapter!")
         mangaformatlib.sql_format_chapter(mangaformatlib.get_manga(manga))
-    elif():
+        #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+    elif(fmat=="volume"):
+        #make sure queue isn't empty
         print("You Are running sql_format_volume")
-        mangaformatlib.sql_format_volume(mangaformatlib.get_manga(manga),volendat)
+        #mangaformatlib.sql_format_volume(mangaformatlib.get_manga(manga),volendat)
+        #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
     return redirect('/')
     # return render_template('autoformat.html')    
 
 @app.route('/logs')
 def logs():
+    print("logs()")
     return render_template('formatqueue.html')
-
 
 @app.route('/manual', methods=['GET','POST'])
 def manual_format():
+    print("manual_format()")
+    #make sure queue isn't empty
     return render_template('manualformat.html') 
 
 # @app.route('/logs', methods=['POST', 'GET'])
@@ -102,21 +102,6 @@ def manual_format():
 #         #return render_template('formatqueue.html')
 #         return render_template('formatqueue.html')
 
-
-# @app.route('/commit', methods=['GET', 'POST'])
-# def commit():
-# #def commit(src,dest)
-#     #commit, do the rename
-#     #try: task
-#     #except:?
-#     return redirect('/')
-
-# @app.route('/abort')
-# def abort():
-#     #abort, clean up anything that was before the rename (i.e. removing new directory)
-#     #try: task
-#     #except: ?
-#     return redirect('/logs')
 
 if __name__ == "__main__":
     app.run(debug=True)
