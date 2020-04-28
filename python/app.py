@@ -21,42 +21,13 @@ def index():
 
 @app.route('/', methods=['POST'])
 def get_format():
-    print("get_from()")
+    #need to be able to handle different forms, this is a workaround
+    print("get_format()")
     format = request.form["format"]
     if(format=="auto"):
-        return redirect('/auto',301)
+        return redirect('/auto')
     elif(format=="manual"):
-        return redirect('/manual',301)
-
-# #WORKING Auto/Manual Pick
-# @app.route('/', methods=['GET','POST'])
-# def getValue():
-#     format = request.form['format']
-#     if(format == "auto"):
-#         return redirect('/auto')
-#     elif(format == "manual"):
-#         return redirect('/manual')
-#     else:
-#         print("No Auto or Manual")
-#         return redirect('/auto')
-
-# #Before
-# @app.route('/', methods=['POST'])
-# def getValue():
-#     fmat = request.form['fmat']
-#     manga = request.form['manga']
-#     volendat = request.form['volendat']
-#     autoformat = request.form['autoformat']
-#     #manualformat = request.form['manualformat']
-#     if(autoformat == "Auto Format"):
-#         print("Auto Selected")
-#         return render_template('autoformat.html', f=fmat, m=manga, vea=volendat, af=autoformat)
-#     elif(manualformat == "Manual Format"):
-#         print("Manual Selected")
-#         return render_template('manualformat.html')
-#     else:
-#         print("No Auto or Manual")
-#         return render_template('formatqueue.html', f=fmat, m=manga, vea=volendat, af=autoformat)
+        return redirect('/manual')
 
 @app.route('/auto')
 def auto_format():
@@ -72,35 +43,70 @@ def get_auto_format():
     # autoformat = request.form['autoformat']
     if(fmat=="chapter"):
         #make sure queue isn't empty
-        print("You Are running sql_format_chapter!")
+        print("mangaformatlib.sql_format_chapter!")
+        #send values in logs() ##later
         mangaformatlib.sql_format_chapter(mangaformatlib.get_manga(manga))
         #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
     elif(fmat=="volume"):
         #make sure queue isn't empty
-        print("You Are running sql_format_volume")
-        #mangaformatlib.sql_format_volume(mangaformatlib.get_manga(manga),volendat)
+        print("mangaformatlib.sql_format_volume")
+        #send values in logs() ##later
+        mangaformatlib.sql_format_volume(mangaformatlib.get_manga(manga),volendat)
         #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
-    return redirect('/')
+    return redirect('/logs')
     # return render_template('autoformat.html')    
+
+
+@app.route('/manual')
+def manual_format():
+    print("manual_format()")
+    #make sure queue isn't empty
+    return render_template('manualformat.html')
+
+@app.route('/manual', methods=['POST'])
+def get_manual_format():
+    print("get_manual_format()")
+    fmat = request.form['format']
+    manga = request.form['mangatitle']
+    number = request.form['number']
+    howmany = request.form['howmany']
+    if(fmat=="chapter"):
+        if(howmany=="single"):
+            #make sure queue isn't empty
+            print("mangaformatlib.manual_single_chapter()")
+            #send values in logs() ##later
+            mangaformatlib.manual_single_chapter(manga, number)
+            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+        elif(howmany=="multiple"):
+            #make sure queue isn't empty
+            print("mangaformatlib.manual_multiple_chapter()")
+            #send values in logs() ##later
+            mangaformatlib.manual_multiple_chapter(manga)
+            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+    elif(fmat=="volume"):
+        #make sure queue isn't empty
+        print("mangaformatlib.manual_format_volume()")
+        #send values in logs() ##later
+        mangaformatlib.manual_format_volume(manga,number)
+        #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)  
+    return redirect('/logs')
 
 @app.route('/logs')
 def logs():
     print("logs()")
     return render_template('formatqueue.html')
 
-@app.route('/manual', methods=['GET','POST'])
-def manual_format():
-    print("manual_format()")
-    #make sure queue isn't empty
-    return render_template('manualformat.html') 
-
-# @app.route('/logs', methods=['POST', 'GET'])
-# def logs():
-#     if request.method == 'POST':
-#         return redirect('/commit')
-#     else:
-#         #return render_template('formatqueue.html')
-#         return render_template('formatqueue.html')
+@app.route('/logs', methods=['POST'])
+def determine_commit():
+    print("determine_commit()")
+    commit = request.form['commit']
+    if(commit=="Commit"):
+        print("commit()")
+    #need to be able to handle different forms
+    # if(abort=="Abort"):
+    #     print("abort()")
+    print(commit)
+    return redirect('/')
 
 
 if __name__ == "__main__":

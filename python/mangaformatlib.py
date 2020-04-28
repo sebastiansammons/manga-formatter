@@ -37,6 +37,7 @@ def sql_format_chapter(mangatitle) :
     try :
         #Check if directory exists
         #change mkdir to isfile? to avoid making dir then not commiting to rename?
+        print("os.mkdir(newchapterdir)")
         os.mkdir(newchapterdir)
     except :
         if(len([f for f in os.listdir(newchapterdir) if not f.startswith('.')])==0) :
@@ -129,6 +130,7 @@ def sql_format_volume(mangatitle,lastchapter) :
     #Create new directory (from new path just generated)
     #Check if directory exists
     try :
+        print("os.mkdir(newvolumedir)")
         os.mkdir(newvolumedir)
     except :
         if(len([f for f in os.listdir(newvolumedir) if not f.startswith('.')])==0) :
@@ -202,7 +204,8 @@ def sql_format_volume(mangatitle,lastchapter) :
                 exit()
         #Remove old chapter directories
         try :
-            shutil.rmtree(chapterdir[i])
+            print("shutil.rmtree(chapterdir[i])")
+            #shutil.rmtree(chapterdir[i])
         except :
             print("ERROR!! UNABLE TO REMOVE [" + chapterdir[i] + "] You need to manually remove it")            
     #Update SQLite with new current volume number
@@ -230,14 +233,15 @@ def manual_single_chapter(mangatitle,chapternumber) :
     #Create new chapter directory
     newchapterdir = mangaconfig.MANUALDEST + chapternumber.zfill(3) + "/"
     #Check if directory exists
-    try :
+    try:
+        print("os.mkdir(" +  newchapterdir + ")")
         os.mkdir(newchapterdir)
     except :
         if(len([f for f in os.listdir(newchapterdir) if not f.startswith('.')])==0) :
             #Directory exists but nothing is in it
             pass
         else :
-            print("Error Creating Direcotry: " + newchapterdir)
+            print("Error Creating Directory: " + newchapterdir)
             exit()
     #Get full source and destination paths for logs and format
     copylog = [None] * numpages
@@ -264,7 +268,7 @@ def manual_single_chapter(mangatitle,chapternumber) :
     for i in range(0,numpages) :
         try :
             print("Rename: " + pagesrc[i] + " To: " + pagedest[i])
-            #os.rename(pagesrc[i],pagedest[i])
+            os.rename(pagesrc[i],pagedest[i])
         except :
             print("ERROR copying: " + pagesrc[i] + " to " + pagedest[i])
             exit()
@@ -295,6 +299,7 @@ def manual_multiple_chapter(mangatitle) :
         chapterdestdir[i] = mangaconfig.MANUALDEST + chaptersrclist[i].zfill(3) + "/"
         #Make chapter destination directories
         try :
+            print("os.mkdir(chapterdestdir[i])")
             os.mkdir(chapterdestdir[i])
         except :
             if(len([f for f in os.listdir(chapterdestdir[i]) if not f.startswith('.')])==0) :
@@ -302,11 +307,10 @@ def manual_multiple_chapter(mangatitle) :
                 pass
             else :
                 print("Error Creating Directory: " + chapterdestdir[i])
-                exit()    
+                exit()
     for i in range(0,numchapters) :
         #Get pages for each chapter
         try :
-            curchapterpages = [f for f in os.listdir(chaptersrcdir[i]) if not f.startswith('.')]
             curchapterpages = [f for f in os.listdir(chaptersrcdir[i]) if not f.startswith('.')]
         except :
             print("ERROR!! [" + chaptersrcdir[i] + "] NOT FOUND")
@@ -343,15 +347,17 @@ def manual_multiple_chapter(mangatitle) :
         for j in range(0,len(chapterpagesrc[i])) :  
             try :
                 print("Rename: " + chaptersrcdir[i] + chapterpagesrc[i][j] + " to " + chapterdestdir[i] + chapterpagedest[i][j])
-                #os.rename(chaptersrcdir[i] + chapterpagesrc[i][j], chapterdestdir[i] + chapterpagedest[i][j])
+                os.rename(chaptersrcdir[i] + chapterpagesrc[i][j], chapterdestdir[i] + chapterpagedest[i][j])
             except :
                 print("ERROR unable to copy: " + chaptersrcdir[i] + chapterpagesrc[i][j] + " to " + chapterdestdir[i] + chapterpagedest[i][j])
                 exit()
         #Remove old chapter directories
         try :
             shutil.rmtree(chaptersrcdir[i])
+            print("shutil.rmtree(chaptersrcdir[i])")
         except :
             print("ERROR!! UNABLE TO REMOVE [" + chaptersrcdir[i] + "] You need to manually remove it")            
+
 
 
 def manual_format_volume(mangatitle,number) :
@@ -367,7 +373,8 @@ def manual_format_volume(mangatitle,number) :
     newvolumedir = mangaconfig.MANUALDEST + mangatitle + " Volume " + str(number).zfill(2) + "/"
     #Make chapter destination directory
     try :
-       os.mkdir(newvolumedir)
+        print("os.mkdir( " + newvolumedir + ")")
+        os.mkdir(newvolumedir)
     except :
         if(len([f for f in os.listdir(newvolumedir) if not f.startswith('.')])==0) :
             #Directory exists but nothing is in it
@@ -409,15 +416,17 @@ def manual_format_volume(mangatitle,number) :
         for j in range(0,len(chapterpagesrc[i])) :  
             try :
                 print("Rename: " + mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " To: " + newvolumedir + chapterpagesrc[i][j])
-                #os.rename(mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j],newvolumedir + chapterpagesrc[i][j])
+                os.rename(mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j],newvolumedir + chapterpagesrc[i][j])
             except :
                 print("ERROR unable to copy: " + mangaconfig.MANUALDEST + chapterdir[i] + "/" + chapterpagesrc[i][j] + " to " + newvolumedir + chapterpagesrc[i][j])
                 exit()
         #Remove old chapter directory
         try :
+            print("shutil.rmtree(mangaconfig.MANUALDEST + chapterdir[i])")
             shutil.rmtree(mangaconfig.MANUALDEST + chapterdir[i])
         except :
             print("ERROR!! UNABLE TO REMOVE [" + mangaconfig.MANUALDEST + chapterdir[i] + "] You need to manually remove it")
+
 
 
 def preview(src, dest):
@@ -430,6 +439,7 @@ def preview(src, dest):
         for i in range(len(src)):
             print("Rename: " + src[i] + " to " + dest[i])
         
+
 
 #set up mutex with this?
 def one_piece_cover_copy(newchapterpath,newchapternumber) :
@@ -454,11 +464,12 @@ def one_piece_cover_copy(newchapterpath,newchapternumber) :
 
 def get_extension(chaptersrcpage) :
     #Gets the extension of any filename
+    #handle for no extension found(folder path passed instead)
     ext=chaptersrcpage[chaptersrcpage.rfind('.'):]
     return ext
 
 
-
+#temp workaround
 def get_manga(manga):
     if(manga=="aot"):
         return "Attack On Titan"
