@@ -28,6 +28,8 @@ OPCHAPTERCOVERPATH = "C:/Users/BassX/Code/Projects/Manga Formatter/Manga/Manga T
 MYSQLITEDB = "C:/Users/BassX/Code/Projects/Manga Formatter/Test/fridgemediatest.db"
 
 
-
+#
+#Log Type:
+#
 LOGTYPE = "Simple"
-#LOGTYPE = "Detailed"
+# LOGTYPE = "Detailed"
