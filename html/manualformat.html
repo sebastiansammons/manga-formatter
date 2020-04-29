@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Manual Format</title>
+    </head>
+    <h1>
+        YOU WANT TO MANUAL FORMAT
+    </h1>
+    <body>
+        <div>
+            <!--Manual Format Form-->
+            <form name = "mformat" method = "POST">
+                <!--Select Format-->
+                <div>
+                    <label>Select Format</label>
+                        <select name="format">
+                            <option value="chapter">Chapter Format</option>
+                            <option value="volume">Volume Format</option>
+                        </select>                
+                </div>
+                <!--Manga Title-->
+                <div>
+                    <label>Manga Title</label>
+                    <input type="text" name="mangatitle">
+                </div>
+                <!--Number-->
+                <div>
+                    <label for="">Number</label>
+                    <input type="text" name="number">
+                </div>
+                <!--How Many Radio-->
+                <div>
+                    <label>How Many RADIO</label>
+                    <select name="howmany">
+                        <option value="multiple">Multiple</option>
+                        <option value="single">Single</option>
+                    </select>
+                </div>
+                <!--Manual Format-->
+                <div>
+                    <label>Manual Format</label>
+                    <input type="submit" name="manualformat" value="Manual Format">
+                    <!-- Use Button Instead with Javascript?
+                    <button>Auto Format</button>
+                    -->
+                </div>    
+            </form>    
+        </div>
+        <br>        
+    </body>
+</html>
