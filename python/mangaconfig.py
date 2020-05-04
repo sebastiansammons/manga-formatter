@@ -26,10 +26,10 @@ VOLUMEFORMATPATH = "/Chapter Pictures/Volume Chapters/"
 OPCHAPTERCOVERPATH = "C:/Users/BassX/Code/Projects/Manga Formatter/Manga/Manga Test/One Piece/Cover Pictures/"
 #FilePaths
 MYSQLITEDB = "C:/Users/BassX/Code/Projects/Manga Formatter/Test/fridgemediatest.db"
-
+LOGPATH = "C:/Users/BassX/Code/Projects/Manga Formatter/Test/Logs/"
 
 #
 #Log Type:
 #
-LOGTYPE = "Simple"
-# LOGTYPE = "Detailed"
+LOGTYPE = "SIMPLE"
+# LOGTYPE = "DETAILED"

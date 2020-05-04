@@ -3,22 +3,23 @@
     <head>
         <title>Format Queue</title>
     </head>
-    <!--Commit Format-->
-    <div>
-        <!--form action="commitformat.html"-->
-        <form method='POST'>
-            <label>Commit Format</label>
-            <input type="submit" name="commit" value="Commit">
+    <body>
+        <!--Commit Format-->
+        <h5>
+            <!-- Show Preview -->
+            {% for i in range(0,len) %}
+            <div>{{preview[i]}}</div>
+            {% endfor %}
+        </h5>
+        <form name="commit" method="POST">
+            Commit/Abort
+            <label>Select Commit/Abort</label>
+            <select name="commit">
+                <option value="Commit">Commit</option>
+                <option value="Abort">Abort</option>
+             </select> 
+             <input type="submit" name="commit" value="Commit">
         </form>
-    </div>
-    <!--Return to Main-->
-    <div>
-<!--         
-        <form method='POST'>
-            <label>Abort to Main Page</label>
-            <input type="submit" name="abort" value="ABORT">
-        </form>      
- -->
-
+    </body>
     </div>
 </html>
