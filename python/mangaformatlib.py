@@ -58,7 +58,7 @@ def sql_format_chapter(mangatitle) :
     #Update SQLite with new current chapter number
     c.execute("UPDATE manga set curchap = ? WHERE title = ?",(int(newchapternumber),mangatitle))
     #lock mutex?
-    #conn.commit()
+    conn.commit()
     #unlock mutex?
     conn.close()
     #Make copy of chapter cover if One Piece
@@ -74,10 +74,6 @@ def sql_format_volume(mangatitle,lastchapter) :
         volumecoverdir = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     except :
         mangalogging.log_error("[" + mangaconfig.QUEUESRC + "] NOT FOUND")
-        exit()
-    #Make sure there is only 1 file in the directory (the cover)
-    if(len(volumecoverdir)!=1) :
-        mangalogging.log_warning("MORE THAN ONE FILE IN QUEUE. DON'T KNOW WHCH ONE IS VOLUME COVER")
         exit()
     #Connect to SQLite
     try :
@@ -106,7 +102,6 @@ def sql_format_volume(mangatitle,lastchapter) :
     #Create new directory (from new path just generated)
     #Check if directory exists
     try :
-        #TODO: CHANGE log_info formatting?
         mangalogging.log_info("os.mkdir(" + newvolumedir + ")")
         os.mkdir(newvolumedir)
     except :
@@ -166,7 +161,7 @@ def sql_format_volume(mangatitle,lastchapter) :
     c.execute("UPDATE manga set curvol = ? WHERE title = ?",(int(newvolumenumber),mangatitle))
     #Update SQLite with new first chapter of new volume number
     c.execute("UPDATE manga set fconv = ? WHERE title = ?",(int(lastchapter) + 1,mangatitle))
-    #conn.commit()
+    conn.commit()
     conn.close()
 
 
@@ -206,7 +201,6 @@ def manual_single_chapter(mangatitle,chapternumber) :
 
 def manual_multiple_chapter(mangatitle) :
     mangalogging.log_debug("mangaformatlib.manual_multiple_chapter" + mangatitle + ")")
-    #Assume QUESRC is formatted correctly (Each chapter is in their own directory with the correct chapter number as directory name)
     #List of chapter directories
     chaptersrclist = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     #Sort directory list
@@ -363,10 +357,9 @@ def one_piece_cover_copy(newchapterpath,newchapternumber) :
     else :
         try :
             mangalogging.log_info("Copy: " + newchapterpath + newchapterpages[0] + " to " + newchaptercoverdest)
-            copyfile(newchapterpath + newchapterpages[0],newchaptercoverdest)
+            shutil.copyfile(newchapterpath + newchapterpages[0],newchaptercoverdest)
         except :
             mangalogging.log_error("[" + newchapterpath + newchapterpages[0] + " TO " + newchaptercoverdest + "] COULD NOT COPY")
-
 
 
 def get_extension(chaptersrcpage) :

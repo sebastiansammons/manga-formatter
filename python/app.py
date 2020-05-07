@@ -53,13 +53,17 @@ def get_auto_format():
     session["manga"] = manga
     session["number"] = number
     if(fmat=="chapter"):
-        #make sure queue isn't empty
-        preview = mangapreview.sql_format_chapter(mangaformatlib.get_manga(manga))
         session["format"] = "autochapter"
+        preview = mangapreview.sql_format_chapter(mangaformatlib.get_manga(manga))
+        if(preview==False):
+            mangalogging.log_warning("PREVIEW ERROR AUTO CHAPTER")
+            return redirect('/')
     elif(fmat=="volume"):
-        #make sure queue isn't empty
-        preview = mangapreview.sql_format_volume(mangaformatlib.get_manga(manga),number)
         session["format"] = "autovolume"
+        preview = mangapreview.sql_format_volume(mangaformatlib.get_manga(manga),number)
+        if(preview==False):
+            mangalogging.log_warning("PREVIEW ERROR AUTO VOLUME")
+            return redirect('/')
     session["preview"] = preview
     return redirect('/preview') 
 
@@ -81,16 +85,22 @@ def get_manual_format():
     if(fmat=="chapter"):
         if(howmany=="single"):
             session["format"] = "manualsinglechapter"
-            #make sure queue isn't empty
             preview = mangapreview.manual_single_chapter(manga, number)
+            if(preview==False):
+                mangalogging.log_warning("PREVIEW ERROR MANUAL SINGLE CHAPTER")
+                return redirect('/')
         elif(howmany=="multiple"):
             session["format"] = "manualmultiplechapter"
-            #make sure queue isn't empty
             preview = mangapreview.manual_multiple_chapter(manga)
+            if(preview==False):
+                mangalogging.log_warning("PREVIEW ERROR MANUAL MULTI CHAPTER")
+                return redirect('/')
     elif(fmat=="volume"):
         session["format"] = "manualvolume"
-        #make sure queue isn't empty
         preview = mangapreview.manual_format_volume(manga,number)
+        if(preview==False):
+            mangalogging.log_warning("PREVIEW ERROR MANUAL VOLUME")
+            return redirect('/')
     session["preview"] = preview
     return redirect('/preview')
 
@@ -105,6 +115,7 @@ def preview():
 
 @app.route('/preview', methods=['POST'])
 def determine_commit():
+    #need to be able to handle different forms, this is a workaround
     mangalogging.log_debug("determine_commit()")
     if "manga" in session:
         manga = session["manga"]
@@ -122,34 +133,28 @@ def determine_commit():
     if(commit=="Commit"):
         mangalogging.log_debug("commit()")
         if(format=="autochapter"):
-            print("autochapter: " + mangaformatlib.get_manga(manga))
-            #mangaformatlib.sql_format_chapter(mangaformatlib.get_manga(manga))
-            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+            mangaformatlib.sql_format_chapter(mangaformatlib.get_manga(manga))
+            #TODO return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
         elif(format=="autovolume"):
-            print("autovolume: " +mangaformatlib.get_manga(manga) + ": " + number)
-            #mangaformatlib.sql_format_volume(mangaformatlib.get_manga(manga),number)
-            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+            mangaformatlib.sql_format_volume(mangaformatlib.get_manga(manga),number)
+            #TODO return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
         elif(format=="manualsinglechapter"):
-            print("manualsinglechapter: " + manga + ": " + number)
-            #mangaformatlib.manual_single_chapter(manga, number)
-            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+            mangaformatlib.manual_single_chapter(manga, number)
+            #TODO return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
         elif(format=="manualmultiplechapter"):
-            print("manualmultiplechapter: " + manga)
-            #mangaformatlib.manual_multiple_chapter(manga)
-            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+            mangaformatlib.manual_multiple_chapter(manga)
+            #TODO return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
         elif(format=="manualvolume"):
-            print("manualvolume: " + manga + ": " + number)
-            #mangaformatlib.manual_format_volume(manga,number)
-            #^ return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
+            mangaformatlib.manual_format_volume(manga,number)
+            #TODO return values based on errors, then redirect (i.e. db not connected, path can't be created, etc)
         else:
-            print("MAJOR ERROR")
+            mangalogging.log_critical("MAJOR ERROR")
     elif(commit=="Abort"):
-        print("ABORT")
+        return redirect('/')
     session.pop("manga", None)
     session.pop("number", None)
     session.pop("preview", None)
     #put these on first page?
-    print("End Session")
     return redirect('/')
 
 
