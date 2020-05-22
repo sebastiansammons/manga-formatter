@@ -13,11 +13,12 @@ def sql_format_chapter(mangatitle) :
         chapterpages = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     except :
         mangalogging.log_error("[" + mangaconfig.QUEUESRC + "] NOT FOUND")
-        exit()
+        mangalogging.ERROR_MSG = "QUEUE NOT FOUND"
+        return False
     #Sort list
     chapterpages = sorted(chapterpages)
     #Get number of pages for the new chapter
-    numpages = len(chapterpages)   
+    numpages = len(chapterpages)
     #Connect to SQLite
     #Set up mutex?, Lock?
     try :
@@ -30,7 +31,8 @@ def sql_format_chapter(mangatitle) :
         #unlock mutex?
     except :
         mangalogging.log_error("[" + mangaconfig.MYSQLITEDB + "] NOT FOUND")
-        exit()
+        mangalogging.ERROR_MSG = "fridgemedia.db NOT FOUND"
+        return False
     #Create directory path for new chapter
     newchapterdir = mangaconfig.ROOTPATH + mangatitle + mangaconfig.CHAPTERFORMATPATH + str(newchapternumber).zfill(3) + "/"
     try :
@@ -44,7 +46,8 @@ def sql_format_chapter(mangatitle) :
             pass
         else :
             mangalogging.log_error("[" + newchapterdir + "] NOT CREATED")
-            exit()
+            mangalogging.ERROR_MSG = newchapterdir + " NOT CREATED"
+            return False
     #Get source and destination path
     pagesrc = [None] * numpages
     pagedest = [None] * numpages
@@ -53,7 +56,8 @@ def sql_format_chapter(mangatitle) :
         pagedest[i] = newchapterdir + mangatitle + " CH" + str(newchapternumber) +" PG" + str(i+1) + get_extension(pagesrc[i])
     #Rename
     #lock mutex?
-    rename(pagesrc, pagedest)
+    if(rename(pagesrc, pagedest)==False):
+        return False
     #unlock mutex?
     #Update SQLite with new current chapter number
     c.execute("UPDATE manga set curchap = ? WHERE title = ?",(int(newchapternumber),mangatitle))
@@ -63,7 +67,9 @@ def sql_format_chapter(mangatitle) :
     conn.close()
     #Make copy of chapter cover if One Piece
     if(mangatitle=="One Piece") :
-        one_piece_cover_copy(newchapterdir,newchapternumber)
+        if(one_piece_cover_copy(newchapterdir,newchapternumber)==False):
+            return False
+    return True
 
 
 
@@ -74,7 +80,8 @@ def sql_format_volume(mangatitle,lastchapter) :
         volumecoverdir = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     except :
         mangalogging.log_error("[" + mangaconfig.QUEUESRC + "] NOT FOUND")
-        exit()
+        mangalogging.ERROR_MSG = "QUEUE NOT FOUND"
+        return False
     #Connect to SQLite
     try :
         conn = sqlite3.connect(mangaconfig.MYSQLITEDB)
@@ -89,10 +96,11 @@ def sql_format_volume(mangatitle,lastchapter) :
         firstchapnum = sqldata[0]
     except :
         mangalogging.log_error("[" + mangaconfig.MYSQLITEDB + "] NOT FOUND")
-        exit()
+        mangalogging.ERROR_MSG = "fridgemedia.db NOT FOUND"
+        return False
     #Make sure user entered a chapter number thats newer then the fconv
     if(int(lastchapter)<=firstchapnum) :
-        mangalogging.log_warning("[" + lastchapter + "] <= " + str(firstchapnum) + "]")
+        mangalogging.log_error("[" + lastchapter + "] <= " + str(firstchapnum) + "]")
         exit()
     #Create new volume directory path
     if(mangatitle=="One Piece") :
@@ -110,7 +118,8 @@ def sql_format_volume(mangatitle,lastchapter) :
             pass
         else :
             mangalogging.log_error("[" + newvolumedir + "] ALREADY EXISTS")
-            exit()
+            mangalogging.ERROR_MSG = newvolumedir + " ALREADY EXISTS"
+            return False
     #Rename volume cover
     volumecoversrc = mangaconfig.QUEUESRC + volumecoverdir[0]
     if(mangatitle=="One Piece") :
@@ -132,7 +141,8 @@ def sql_format_volume(mangatitle,lastchapter) :
             chapterpagesrc[chapnum-firstchapnum] = [f for f in os.listdir(chapterdir[chapnum-firstchapnum]) if not f.startswith('.')]
         except :
             mangalogging.log_error("[" + chapterdir[chapnum-firstchapnum] + "] NOT FOUND")
-            break
+            mangalogging.ERROR_MSG = chapterdir[chapnum-firstchapnum] + " NOT FOUND"
+            return False
         #Sort the pages (not realy needed tbh)
         chapterpagesrc[chapnum-firstchapnum] = sorted(chapterpagesrc[chapnum-firstchapnum])
     #Get Number of pages
@@ -149,7 +159,8 @@ def sql_format_volume(mangatitle,lastchapter) :
             pagedest[pagecount] = newvolumedir + chapterpagesrc[i][j]
             pagecount+=1
     #Rename
-    rename(pagesrc,pagedest)
+    if(rename(pagesrc,pagedest)==False):
+        return False
     #Remove old directories
     for i in range(0,numchapters) :
         try :
@@ -157,12 +168,14 @@ def sql_format_volume(mangatitle,lastchapter) :
             shutil.rmtree(chapterdir[i])
         except :
             mangalogging.log_warning("[" + chapterdir[i] + "] COULD NOT BE REMOVED")
+            return False
     #Update SQLite with new current volume number
     c.execute("UPDATE manga set curvol = ? WHERE title = ?",(int(newvolumenumber),mangatitle))
     #Update SQLite with new first chapter of new volume number
     c.execute("UPDATE manga set fconv = ? WHERE title = ?",(int(lastchapter) + 1,mangatitle))
     conn.commit()
     conn.close()
+    return True
 
 
 
@@ -173,7 +186,7 @@ def manual_single_chapter(mangatitle,chapternumber) :
     #Sort pages
     chapterpages = sorted(chapterpages)
     #Get number of pages for the new chapter
-    numpages = len(chapterpages)   
+    numpages = len(chapterpages)
     #Create new chapter directory
     newchapterdir = mangaconfig.MANUALDEST + chapternumber.zfill(3) + "/"
     #Check if directory exists
@@ -186,7 +199,8 @@ def manual_single_chapter(mangatitle,chapternumber) :
             pass
         else :
             mangalogging.log_error("[" + newchapterdir + "] ALREADY EXISTS")
-            exit()
+            mangalogging.ERROR_MSG = newchapterdir + " ALREADY EXISTS"
+            return False
     #Get source and destination path
     pagesrc = [None] * numpages
     pagedest = [None] * numpages
@@ -195,7 +209,9 @@ def manual_single_chapter(mangatitle,chapternumber) :
         pagesrc[i]= mangaconfig.QUEUESRC + str(chapterpages[i])
         pagedest[i] = newchapterdir + mangatitle + " CH" + str(chapternumber) + " PG" + str(i+1) + get_extension(pagesrc[i])
     #Rename
-    rename(pagesrc,pagedest)
+    if(rename(pagesrc,pagedest)==False):
+        return False
+    return True
 
 
 
@@ -206,7 +222,7 @@ def manual_multiple_chapter(mangatitle) :
     #Sort directory list
     chaptersrclist = sorted(chaptersrclist)
     #Get number of chapters
-    numchapters = len(chaptersrclist) 
+    numchapters = len(chaptersrclist)
     #List of source directories
     chaptersrcdir = [None] * numchapters
     #List of destination directories
@@ -224,7 +240,8 @@ def manual_multiple_chapter(mangatitle) :
             curchapterpages = [f for f in os.listdir(chaptersrcdir[i]) if not f.startswith('.')]
         except :
             mangalogging.log_error("[" + chaptersrcdir[i] + "] NOT FOUND")
-            break
+            mangalogging.ERROR_MSG = chaptersrcdir[i] + " NOT FOUND"
+            return False
         #Sort the chapter pages (not realy needed tbh)
         curchapterpages = sorted(curchapterpages)
         #Create list for each chapter
@@ -245,7 +262,8 @@ def manual_multiple_chapter(mangatitle) :
                 pass
             else :
                 mangalogging.log_error("[" + chapterdestdir[i] + "] ALREADY EXISTS")
-                exit()
+                mangalogging.ERROR_MSG = chapterdestdir[i] + " ALREADY EXISTS"
+                return False
     numpages = 0
     for i in range(0,numchapters) :
         numpages+=len(chapterpagesrc[i])
@@ -257,21 +275,25 @@ def manual_multiple_chapter(mangatitle) :
             src[pageindex] = chaptersrcdir[i] + chapterpagesrc[i][j]
             dest[pageindex] = chapterdestdir[i] + chapterpagedest[i][j]
             pageindex+=1
-    rename(src,dest)
+    if(rename(src,dest)==False):
+        return False
     #Remove old directories
     for i in range(0,numchapters):
         try :
             mangalogging.log_info("shutil.rmtree(" + chaptersrcdir[i] + ")")
             shutil.rmtree(chaptersrcdir[i])
         except :
-            mangalogging.log_warning("[" + chaptersrcdir[i] + "] COULD NOT REMOVE")            
-
+            mangalogging.log_warning("[" + chaptersrcdir[i] + "] COULD NOT REMOVE")
+            return False
+    return True
 
 
 def manual_format_volume(mangatitle,number) :
     mangalogging.log_debug("mangaformatlib.manual_format_volume(" + mangatitle + "," + number + ")")
     #make sure src has consistend volume to format (chapters are in sequential order)
-    manual_multiple_chapter(mangatitle)
+    result = manual_multiple_chapter(mangatitle)
+    if(result==False):
+        return False
     #Get list of chapters
     chapterdir = [f for f in os.listdir(mangaconfig.MANUALDEST) if not f.startswith('.')]
     #Sort chaptersrc list
@@ -290,14 +312,16 @@ def manual_format_volume(mangatitle,number) :
             pass
         else :
             mangalogging.log_error("[" + newvolumedir + "] ALREADY EXISTS")
-            exit()
+            mangalogging.ERROR_MSG = newvolumedir + " ALREADY EXISTS"
+            return False
     #Get list of each chapter's page source
     for i in range(0,numchapters):
         try :
             chapterpagesrc[i] = [f for f in os.listdir(mangaconfig.MANUALDEST+chapterdir[i]) if not f.startswith('.')]
         except :
             mangalogging.log_error("[" + mangaconfig.MANUALDEST+chapterdir[i] + "] NOT FOUND")
-            break
+            mangalogging.ERROR_MSG = mangaconfig.MANUALDEST+chapterdir[i] + " NOT FOUND"
+            return False
         chapterpagesrc[i] = sorted(chapterpagesrc[i])
     numpages = 0
     for i in range(0,numchapters) :
@@ -310,14 +334,18 @@ def manual_format_volume(mangatitle,number) :
             src[pageindex] = mangaconfig.MANUALDEST + chapterdir[i] + "/" +chapterpagesrc[i][j]
             dest[pageindex] = newvolumedir + chapterpagesrc[i][j]
             pageindex+=1
-    rename(src,dest)           
+    #Rename
+    if(rename(src,dest)==False):
+        return False
     #Remove old chapter direcotry
     for i in range(0,numchapters):
-        try : 
+        try :
+            mangalogging.log_info("shutil.rmtree(" + mangaconfig.MANUALDEST +chapterdir[i] + ")")
             shutil.rmtree(mangaconfig.MANUALDEST + chapterdir[i])
         except :
             mangalogging.log_warning("[" + mangaconfig.MANUALDEST + chapterdir[i] + "] COULD NOT BE REMOVED")
-
+            return False
+    return result
 
 def rename(src,dest):
     mangalogging.log_debug("mangaformatlib.rename()")
@@ -328,20 +356,24 @@ def rename(src,dest):
             os.rename(src,dest)
         except:
             mangalogging.log_error("[" + src + " TO " + dest + "] COULD NOT RENAME")
-            exit()
+            mangalogging.ERROR_MSG = "[" + src + " TO " + dest + "] COULD NOT RENAME"
+            return False
     else:
         #multiple page rename
         if(len(src)!=len(dest)):
             mangalogging.log_error("UNEVEN PAGES FOR RENAME")
-            exit()
+            mangalogging.ERROR_MSG = "UNEVEN PAGES FOR RENAME"
+            return False
         for i in range(0,len(src)) :
             try :
                 mangalogging.log_info("os.rename(" + src[i] + "," + dest[i] + ")")
                 os.rename(src[i],dest[i])
             except :
                 mangalogging.log_error("[" + src[i] + " TO " + dest[i] + "] COULD NOT RENAME")
-                exit()
-        
+                mangalogging.ERROR_MSG = "[" + src[i] + " TO " + dest[i] + "] COULD NOT RENAME"
+                return False
+    return True
+
 
 
 #set up mutex with this?
@@ -353,13 +385,17 @@ def one_piece_cover_copy(newchapterpath,newchapternumber) :
     newchaptercoverdest = mangaconfig.OPCHAPTERCOVERPATH + "CH" + str(newchapternumber) + " Cover" + get_extension(newchapterpages[0])
     #Copy cover page
     if(os.path.isfile(newchaptercoverdest)) :
-        mangalogging.log_error("[" + newchaptercoverdest + "] ALREADY EXISTS")  
+        mangalogging.log_warning("[" + newchaptercoverdest + "] ALREADY EXISTS")
+        return False
     else :
         try :
             mangalogging.log_info("Copy: " + newchapterpath + newchapterpages[0] + " to " + newchaptercoverdest)
             shutil.copyfile(newchapterpath + newchapterpages[0],newchaptercoverdest)
         except :
             mangalogging.log_error("[" + newchapterpath + newchapterpages[0] + " TO " + newchaptercoverdest + "] COULD NOT COPY")
+            mangalogging.ERROR_MSG = "[" + newchapterpath + newchapterpages[0] + " TO " + newchaptercoverdest + "] COULD NOT COPY"
+            return False
+    return True
 
 
 def get_extension(chaptersrcpage) :
