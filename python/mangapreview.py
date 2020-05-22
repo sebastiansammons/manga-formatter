@@ -7,19 +7,16 @@ import mangalogging
 
 
 def sql_format_chapter(mangatitle) :
-    if(check_queue("sqlchapter")==False):
-        return False
+    status = check_queue("sqlchapter")
+    if(status==False):
+        return  False
     mangalogging.log_debug("mangapreview.sql_format_chapter(" + mangatitle + ")")
     #Create list of non-hidden files
-    try :
-        chapterpages = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
-    except :
-        mangalogging.log_error("[" + mangaconfig.QUEUESRC + "] NOT FOUND")
-        exit()
+    chapterpages = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
     #Sort list
     chapterpages = sorted(chapterpages)
     #Get number of pages for the new chapter
-    numpages = len(chapterpages)   
+    numpages = len(chapterpages)
     #Connect to SQLite
     #Set up mutex?, Lock?
     try :
@@ -32,7 +29,8 @@ def sql_format_chapter(mangatitle) :
         conn.close()
     except :
         mangalogging.log_error("[" + mangaconfig.MYSQLITEDB + "] NOT FOUND")
-        exit()
+        mangalogging.ERROR_MSG = "fridgemedia.db NOT FOUND"
+        return False
     #Create directory path for new chapter
     newchapterdir = mangaconfig.ROOTPATH + mangatitle + mangaconfig.CHAPTERFORMATPATH + str(newchapternumber).zfill(3) + "/"
     #Get source and destination path
@@ -54,16 +52,6 @@ def sql_format_volume(mangatitle,lastchapter) :
     if(check_queue("sqlvolume")==False):
         return False
     mangalogging.log_debug("mangapreview.sql_format_volume(" + mangatitle + "," + lastchapter + ")")
-    #Get volume cover page
-    try :
-        volumecoverdir = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
-    except :
-        mangalogging.log_error("[" + mangaconfig.QUEUESRC + "] NOT FOUND")
-        exit()
-    #Make sure there is only 1 file in the directory (the cover)
-    if(len(volumecoverdir)!=1) :
-        mangalogging.log_warning("MORE THAN ONE FILE IN QUEUE. DON'T KNOW WHCH ONE IS VOLUME COVER")
-        exit()
     #Connect to SQLite
     try :
         #Get data from db
@@ -80,11 +68,13 @@ def sql_format_volume(mangatitle,lastchapter) :
         conn.close()
     except :
         mangalogging.log_error("[" + mangaconfig.MYSQLITEDB + "] NOT FOUND")
-        exit()
+        mangalogging.ERROR_MSG = "fridgemedia.db NOT FOUND"
+        return False
     #Make sure user entered a chapter number thats newer then the fconv
     if(int(lastchapter)<=firstchapnum) :
         mangalogging.log_error("[" + lastchapter + "] <= " + str(firstchapnum) + "]")
-        exit()
+        mangalogging.ERROR_MSG = "[" + lastchapter + "] <= " + str(firstchapnum) + "]"
+        return False
     #Create new volume directory path
     if(mangatitle=="One Piece") :
         newvolumedir = mangaconfig.ROOTPATH + mangatitle + mangaconfig.VOLUMEFORMATPATH + mangatitle + " Volume " + str(newvolumenumber).zfill(3) + "/"
@@ -103,7 +93,8 @@ def sql_format_volume(mangatitle,lastchapter) :
             chapterpagesrc[chapnum-firstchapnum] = [f for f in os.listdir(chapterdir[chapnum-firstchapnum]) if not f.startswith('.')]
         except :
             mangalogging.log_error("[" + chapterdir[chapnum-firstchapnum] + "] NOT FOUND")
-            break
+            mangalogging.ERROR_MSG = "[" + chapterdir[chapnum-firstchapnum] + "] NOT FOUND"
+            return False
         #Sort the pages (not realy needed tbh)
         chapterpagesrc[chapnum-firstchapnum] = sorted(chapterpagesrc[chapnum-firstchapnum])
     if(mangaconfig.LOGTYPE=="SIMPLE"):
@@ -167,7 +158,7 @@ def manual_multiple_chapter(mangatitle) :
     #Sort directory list
     chaptersrclist = sorted(chaptersrclist)
     #Get number of chapters
-    numchapters = len(chaptersrclist) 
+    numchapters = len(chaptersrclist)
     #List of source directories
     chaptersrcdir = [None] * numchapters
     #List of destination directories
@@ -185,7 +176,8 @@ def manual_multiple_chapter(mangatitle) :
             curchapterpages = [f for f in os.listdir(chaptersrcdir[i]) if not f.startswith('.')]
         except :
             mangalogging.log_error("[" + chaptersrcdir[i] + "] NOT FOUND")
-            break
+            mangalogging.ERROR_MSG = "[" + chaptersrcdir[i] + "] NOT FOUND"
+            return False
         #Sort the chapter pages (not realy needed tbh)
         curchapterpages = sorted(curchapterpages)
         #Create list for each chapter
@@ -220,6 +212,8 @@ def manual_multiple_chapter(mangatitle) :
 def manual_format_volume(mangatitle,number) :
     mangalogging.log_debug("mangapreview.manual_format_volume(" + mangatitle + "," + number + ")")
     chapterpreview = manual_multiple_chapter(mangatitle)
+    if(chapterpreview==False):
+        return False
     if(check_queue("manualvolume")==False):
         return False
     numpages = len(chapterpreview)
@@ -244,12 +238,14 @@ def check_queue(format_type):
         queue_list = [f for f in os.listdir(mangaconfig.QUEUESRC) if not f.startswith('.')]
         queue_length = len(queue_list)
     except:
-       mangalogging.log_error("ERROR at check_queue()")
+       mangalogging.log_warning("[" + mangaconfig.QUEUESRC + "] NOT FOUND")
+       mangalogging.ERROR_MSG = "QUEUE NOT FOUND"
        return False
     #Check QUEUE Size
     if(queue_length==0) :
         #Empty
         mangalogging.log_warning("[" + mangaconfig.QUEUESRC + "] IS EMPTY")
+        mangalogging.ERROR_MSG = "QUEUE IS EMPTY"
         return False
     elif(queue_length==1) :
         #1 File/Folder, only sql_format_volume allows 1 file in QUEUE
@@ -259,15 +255,18 @@ def check_queue(format_type):
                 return True
             else:
                 mangalogging.log_warning("[" + mangaconfig.QUEUESRC + queue_list[0] + "] ISN'T A COVER FILE")
+                mangalogging.ERROR_MSG = queue_list[0] + " ISN'T A COVER FILE"
                 return False
         else:
             mangalogging.log_warning("[" + mangaconfig.QUEUESRC + "] HAS ONLY 1 PAGE")
+            mangalogging.ERROR_MSG = "QUEUE HAS ONLY 1 PAGE"
             return False
     else:
-        #Greate than 1 items
+        #Greater than 1 item
         if(format_type=="sqlvolume"): #probably change value
             #Make sure we aren't trying to run sql_format_volume
             mangalogging.log_warning("[" + mangaconfig.QUEUESRC + "] HAS MORE THAN 1 PAGE FOR VOLUME FORMAT")
+            mangalogging.ERROR_MSG = "QUEUE HAS MORE THAN 1 PAGE FOR VOLUME FORMAT"
             return False
         elif(format_type=="manualmultichapter"):
             for i in range(0,queue_length):
@@ -279,10 +278,12 @@ def check_queue(format_type):
                         if(len(current_directory)==0):
                             #empty
                             mangalogging.log_warning("[" + mangaconfig.QUEUESRC + queue_list[i] + "] IS EMPTY")
+                            mangalogging.ERROR_MSG = queue_list[i] + " IS EMPTY"
                             return False
                     #Directory isn't reachable
                     except:
-                        mangalogging.log_error("[" + mangaconfig.QUEUESRC + queue_list[i] + "] NOT FOUND")
+                        mangalogging.log_warning("[" + mangaconfig.QUEUESRC + queue_list[i] + "] NOT FOUND")
+                        mangalogging.ERROR_MSG = "[" + mangaconfig.QUEUESRC + queue_list[i] + "] NOT FOUND"
                         return False
                     #Check if directory name is a number
                     try:
@@ -291,10 +292,12 @@ def check_queue(format_type):
                     #Directory name isn't a number
                     except:
                         mangalogging.log_warning("[" + queue_list[i] + "] ISN'T A VALID DIRECTORY NAME")
+                        mangalogging.ERROR_MSG = queue_list[i] + " ISN'T A VALID DIRECTORY NAME"
                         return False
                 #Isn't a directory
                 else:
                     mangalogging.log_warning("[" + queue_list[i] + "] ISN'T A DIRECTORY")
+                    mangalogging.ERROR_MSG = queue_list[i] + " ISN'T A DIRECTORY"
                     return False
             return True
         elif(format_type=="manualvolume"):
@@ -308,6 +311,7 @@ def check_queue(format_type):
                     chapter_number+=1
                 else:
                     mangalogging.log_warning("CHAPTERS IN QUEUE ARE NOT IN ORDER FOR A VOLUME FORMAT")
+                    mangalogging.ERROR_MSG = "CHAPTERS IN QUEUE ARE NOT IN ORDER FOR A VOLUME FORMAT"
                     return False
             return True
         else:
@@ -316,6 +320,6 @@ def check_queue(format_type):
                 #Make sure they're all files
                 if(os.path.isfile(mangaconfig.QUEUESRC + queue_list[i])==False):
                     mangalogging.log_warning("[" + queue_list[i] + "] ISN'T A FILE")
+                    mangalogging.ERROR_MSG = queue_list[i] + " ISN'T A FILE"
                     return False
         return True
-

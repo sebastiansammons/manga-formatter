@@ -2,6 +2,10 @@ import logging
 import mangaconfig
 
 
+#
+#Error Message:
+#
+ERROR_MSG = ""
 
 def config():
     # logging.basicConfig(level=logging.DEBUG)
