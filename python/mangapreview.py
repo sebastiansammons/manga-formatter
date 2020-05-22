@@ -7,8 +7,7 @@ import mangalogging
 
 
 def sql_format_chapter(mangatitle) :
-    status = check_queue("sqlchapter")
-    if(status==False):
+    if(check_queue("sqlchapter")==False):
         return  False
     mangalogging.log_debug("mangapreview.sql_format_chapter(" + mangatitle + ")")
     #Create list of non-hidden files
