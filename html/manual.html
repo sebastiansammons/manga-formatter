@@ -13,7 +13,7 @@
                 <!--Select Format-->
                 <div>
                     <label>Select Format</label>
-                        <select name="format">
+                        <select name="format_type">
                             <option value="chapter">Chapter Format</option>
                             <option value="volume">Volume Format</option>
                         </select>                
@@ -21,19 +21,24 @@
                 <!--Manga Title-->
                 <div>
                     <label>Manga Title</label>
-                    <input type="text" name="mangatitle">
+                    <input type="text" name="manga">
+                </div>
+                <!--Chapter/Volume Title-->
+                <div>
+                    <label>Chapter/Volume Title</label>
+                    <input type="text" name="title">
                 </div>
                 <!--Number-->
                 <div>
-                    <label for="">Number</label>
+                    <label for="">Chapter/Volume Number</label>
                     <input type="text" name="number">
                 </div>
-                <!--How Many Radio-->
+                <!--Chapter Type Radio-->
                 <div>
-                    <label>How Many</label>
-                    <select name="howmany">
-                        <option value="multiple">Multiple</option>
+                    <label>Chapter Type</label>
+                    <select name="chapter_type">
                         <option value="single">Single</option>
+                        <option value="multiple">Multiple</option>
                     </select>
                 </div>
                 <!--Manual Format-->
