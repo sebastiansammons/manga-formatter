@@ -35,12 +35,12 @@ def auto_chapter(manga, chapter_title):
     #Get source and destination file path
     page_src = [None] * page_count
     page_dest = [None] * page_count
-    for i in range(0, page_count):
-        page_src[i] = manga_config.QUEUE_PATH + str(chapter_pages[i])
+    for page in range(0, page_count):
+        page_src[page] = manga_config.QUEUE_PATH + str(chapter_pages[page])
         if(manga == "One Piece"):
-            page_dest[i] = new_chapter_path + manga + " - CH" + str(new_chapter_number).zfill(4) + "PG" + str(i + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_path + manga + " - CH" + str(new_chapter_number).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
         else:
-            page_dest[i] = new_chapter_path + manga + " - CH" + str(new_chapter_number).zfill(3) + "PG" + str(i + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_path + manga + " - CH" + str(new_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
     #Rename
     if(manga_utility.rename(page_src, page_dest) == False):
         return False
@@ -119,23 +119,23 @@ def auto_volume(manga, last_chapter_of_new_volume, volume_title):
         chapter_filename[chapter_number - first_chapter_in_volume] = sorted(chapter_filename[chapter_number - first_chapter_in_volume])
     #Get number of volume pages
     volume_pages = 0
-    for i in range(0, chapter_count):
-        volume_pages += len(chapter_filename[i])
+    for chapter in range(0, chapter_count):
+        volume_pages += len(chapter_filename[chapter])
     #Get source and destination filename path
     page_src = [None] * volume_pages
     page_dest = [None] * volume_pages
     page_count = 0
-    for i in range(0, chapter_count):
-        for j in range(0, len(chapter_filename[i])):
-            page_src[page_count] = chapter_path[i] + chapter_filename[i][j]
-            page_dest[page_count] = new_volume_path + chapter_filename[i][j]
+    for chapter in range(0, chapter_count):
+        for page in range(0, len(chapter_filename[chapter])):
+            page_src[page_count] = chapter_path[chapter] + chapter_filename[chapter][page]
+            page_dest[page_count] = new_volume_path + chapter_filename[chapter][page]
             page_count += 1
     #Rename
     if(manga_utility.rename(page_src, page_dest) == False):
         return False
     #Remove old directories
-    for i in range(0, chapter_count):
-        manga_utility.rmdir(chapter_path[i])
+    for chapter in range(0, chapter_count):
+        manga_utility.rmdir(chapter_path[chapter])
     #Update appropriate tables
     result = manga_utility.sqlite_execute(cursor, "UPDATE manga_progress SET current_volume = ?, first_chapter_of_new_volume = ? WHERE manga = ?", (new_volume_number, int(last_chapter_of_new_volume) + 1, manga))
     if(result == False):
@@ -164,12 +164,12 @@ def manual_single_chapter(manga, chapter_number, chapter_title):
     #Get source and destination file path
     page_src = [None] * page_count
     page_dest = [None] * page_count
-    for i in range(0, page_count):
-        page_src[i] = manga_config.QUEUE_PATH + str(chapter_pages[i])
+    for page in range(0, page_count):
+        page_src[page] = manga_config.QUEUE_PATH + str(chapter_pages[page])
         if(chapter_title == ""):
-            page_dest[i] = new_chapter_path + manga + " CH" + str(chapter_number).zfill(3) + "PG" + str(i + 1).zfill(2) + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_path + manga + " CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + manga_utility.get_extension(page_src[page])
         else:
-            page_dest[i] = new_chapter_path + manga + " CH" + str(chapter_number).zfill(3) + "PG" + str(i + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_path + manga + " CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
     #Rename
     if(manga_utility.rename(page_src, page_dest) == False):
         return False
@@ -190,43 +190,43 @@ def manual_multiple_chapter(manga):
     src_filename = [None] * chapter_count
     #List of each chapter page destination filename (2D List)
     dest_filename = [None] * chapter_count
-    for i in range(0, chapter_count):
+    for chapter in range(0, chapter_count):
         #Get chapter source directory path
-        src_path[i] = manga_config.QUEUE_PATH + chapter_path[i] + "/"
+        src_path[chapter] = manga_config.QUEUE_PATH + chapter_path[chapter] + "/"
         #Get pages for each chapter
-        current_chapter_path = manga_utility.listdir(src_path[i])
+        current_chapter_path = manga_utility.listdir(src_path[chapter])
         if(current_chapter_path == False):
             return False
         current_chapter_count = len(current_chapter_path)
         current_chapter_path = sorted(current_chapter_path)
         #Chapter destination directory path
-        dest_path[i] = manga_config.MANUAL_DEST_PATH + (chapter_path[i].lstrip('0')).zfill(3) + "/"
-        if(manga_utility.mkdir(dest_path[i]) == False):
+        dest_path[chapter] = manga_config.MANUAL_DEST_PATH + (chapter_path[chapter].lstrip('0')).zfill(3) + "/"
+        if(manga_utility.mkdir(dest_path[chapter]) == False):
             return False
         #Get each source and destination filename
-        src_filename[i] = [None] * current_chapter_count
-        dest_filename[i] = [None] * current_chapter_count
-        for j in range(0, current_chapter_count):
-            src_filename[i][j] = current_chapter_path[j]
-            dest_filename[i][j] = manga + " - CH" + (chapter_path[i].lstrip('0')).zfill(3) + "PG" + str(j + 1).zfill(2) + manga_utility.get_extension(current_chapter_path[j])
+        src_filename[chapter] = [None] * current_chapter_count
+        dest_filename[chapter] = [None] * current_chapter_count
+        for page in range(0, current_chapter_count):
+            src_filename[chapter][page] = current_chapter_path[page]
+            dest_filename[chapter][page] = manga + " - CH" + (chapter_path[chapter].lstrip('0')).zfill(3) + "PG" + str(page + 1).zfill(2) + manga_utility.get_extension(current_chapter_path[page])
     multi_chapter_pages = 0
-    for i in range(0, chapter_count):
-        multi_chapter_pages += len(src_filename[i])
+    for chapter in range(0, chapter_count):
+        multi_chapter_pages += len(src_filename[chapter])
     #Get source and destination filename path
     page_src = [None] * multi_chapter_pages
     page_dest = [None] * multi_chapter_pages
     page_count = 0
-    for i in range(0, chapter_count):
-        for j in range(0, len(src_filename[i])):
-            page_src[page_count] = src_path[i] + src_filename[i][j]
-            page_dest[page_count] = dest_path[i] + dest_filename[i][j]
+    for chapter in range(0, chapter_count):
+        for page in range(0, len(src_filename[chapter])):
+            page_src[page_count] = src_path[chapter] + src_filename[chapter][page]
+            page_dest[page_count] = dest_path[chapter] + dest_filename[chapter][page]
             page_count += 1
     #Rename
     if(manga_utility.rename(page_src, page_dest) == False):
         return False
     #Remove old directories
-    for i in range(0, chapter_count):
-        manga_utility.rmdir(src_path[i])
+    for chapter in range(0, chapter_count):
+        manga_utility.rmdir(src_path[chapter])
     return True
 
 def manual_volume(manga, volume_number, volume_title):
@@ -248,28 +248,28 @@ def manual_volume(manga, volume_number, volume_title):
     if(manga_utility.mkdir(new_volume_path) == False):
         return False
     #Get list of each chapter's filename
-    for i in range(0, chapter_count):
-        chapter_filename[i] = manga_utility.listdir(manga_config.MANUAL_DEST_PATH + chapter_path[i])
-        if(chapter_filename[i] == False):
+    for chapter in range(0, chapter_count):
+        chapter_filename[chapter] = manga_utility.listdir(manga_config.MANUAL_DEST_PATH + chapter_path[chapter])
+        if(chapter_filename[chapter] == False):
             return False
-        chapter_filename[i] = sorted(chapter_filename[i])
+        chapter_filename[chapter] = sorted(chapter_filename[chapter])
     #Get number of volume pages
     volume_pages = 0
-    for i in range(0, chapter_count):
-        volume_pages += len(chapter_filename[i])
+    for chapter in range(0, chapter_count):
+        volume_pages += len(chapter_filename[chapter])
     #Get source and destination filename path
     page_src = [None] * volume_pages
     page_dest = [None] * volume_pages
     page_count = 0
-    for i in range(0, chapter_count):
-        for j in range(0, len(chapter_filename[i])):
-            page_src[page_count] = manga_config.MANUAL_DEST_PATH + chapter_path[i] + "/" +chapter_filename[i][j]
-            page_dest[page_count] = new_volume_path + chapter_filename[i][j]
+    for chapter in range(0, chapter_count):
+        for page in range(0, len(chapter_filename[chapter])):
+            page_src[page_count] = manga_config.MANUAL_DEST_PATH + chapter_path[chapter] + "/" +chapter_filename[chapter][page]
+            page_dest[page_count] = new_volume_path + chapter_filename[chapter][page]
             page_count += 1
     #Rename
     if(manga_utility.rename(page_src, page_dest) == False):
         return False
     #Remove old directories
-    for i in range(0, chapter_count):
-        manga_utility.rmdir(manga_config.MANUAL_DEST_PATH + chapter_path[i])
+    for chapter in range(0, chapter_count):
+        manga_utility.rmdir(manga_config.MANUAL_DEST_PATH + chapter_path[chapter])
     return True

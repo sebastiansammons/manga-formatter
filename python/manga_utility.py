@@ -75,42 +75,42 @@ def check_queue(format_type):
             manga_logging.ERROR_MSG = "QUEUE HAS MORE THAN 1 PAGE FOR AUTO VOLUME FORMAT"
             return False
         elif(format_type == "manual_multi_chapter"):
-            for i in range(0, queue_count):
+            for chapter in range(0, queue_count):
                 #Make sure they're all directories
-                if(isdir(manga_config.QUEUE_PATH + queue_list[i]) == True):
-                    current_path = listdir(manga_config.QUEUE_PATH + queue_list[i])
+                if(isdir(manga_config.QUEUE_PATH + queue_list[chapter]) == True):
+                    current_path = listdir(manga_config.QUEUE_PATH + queue_list[chapter])
                     if(current_path == False):
                         return False
                     if(len(current_path) == 0):
                         #Empty
-                        manga_logging.log_warning("[" + manga_config.QUEUE_PATH + queue_list[i] + "] IS EMPTY")
-                        manga_logging.ERROR_MSG = "[" + queue_list[i] + "] IS EMPTY"
+                        manga_logging.log_warning("[" + manga_config.QUEUE_PATH + queue_list[chapter] + "] IS EMPTY")
+                        manga_logging.ERROR_MSG = "[" + queue_list[chapter] + "] IS EMPTY"
                         return False
                     current_path = sorted(current_path)
                     #Check that each directory name is a number
                     try:
-                        int(queue_list[i].lstrip('0'))
+                        int(queue_list[chapter].lstrip('0'))
                     #Directory name isn't a number
                     except ValueError:
-                        manga_logging.log_warning("[" + queue_list[i] + "] ISN'T A VALID DIRECTORY NAME FOR MULTI CHAPTER RENAME")
-                        manga_logging.ERROR_MSG = "[" + queue_list[i] + "] ISN'T A VALID DIRECTORY NAME FOR MULTI CHAPTER RENAME"
+                        manga_logging.log_warning("[" + queue_list[chapter] + "] ISN'T A VALID DIRECTORY NAME FOR MULTI CHAPTER RENAME")
+                        manga_logging.ERROR_MSG = "[" + queue_list[chapter] + "] ISN'T A VALID DIRECTORY NAME FOR MULTI CHAPTER RENAME"
                         return False
                 #Isn't a directory
                 else:
-                    manga_logging.log_warning("[" + queue_list[i] + "] ISN'T A DIRECTORY")
-                    manga_logging.ERROR_MSG = "[" + queue_list[i] + "] ISN'T A DIRECTORY"
+                    manga_logging.log_warning("[" + queue_list[chapter] + "] ISN'T A DIRECTORY")
+                    manga_logging.ERROR_MSG = "[" + queue_list[chapter] + "] ISN'T A DIRECTORY"
                     return False
             return True
         elif(format_type == "manual_volume"):
             #manual_volume runs manual_multiple_chapters so we only have to check if the chapters are in numerical order for a volume
-            for i in range(0,queue_count):
+            for chapter in range(0,queue_count):
                 #Remove leading zeroes and re-sort before comparing number values
-                queue_list[i] = queue_list[i].lstrip('0')
+                queue_list[chapter] = queue_list[chapter].lstrip('0')
             queue_list = sorted(queue_list)
             #try: isn't needed for int() here b/c it ran previously for manual_multiple_chapters
             chapter_number = int(queue_list[0].lstrip('0'))
-            for i in range(1, queue_count):
-                if(chapter_number + 1 == int(queue_list[i].lstrip('0'))):
+            for chapter in range(1, queue_count):
+                if(chapter_number + 1 == int(queue_list[chapter].lstrip('0'))):
                     chapter_number += 1
                 else:
                     manga_logging.log_warning("CHAPTERS IN QUEUE ARE NOT IN ORDER FOR A VOLUME FORMAT")
@@ -123,11 +123,11 @@ def check_queue(format_type):
                 manga_logging.log_warning("[QUEUE_PATH] DOESN'T HAVE ENOUGH PAGES. IF ACUTAL CHAPTER SIZE RENAME MANUALLY")
                 manga_logging.ERROR_MSG = "[QUEUE_PATH] DOESN'T HAVE ENOUGH PAGES. IF ACUTAL CHAPTER SIZE RENAME MANUALLY"
                 return False
-            for i in range(0, queue_count):
+            for page in range(0, queue_count):
                 #Make sure they're all files
-                if(isfile(manga_config.QUEUE_PATH + queue_list[i]) == False):
-                    manga_logging.log_warning("[" + queue_list[i] + "] ISN'T A FILE")
-                    manga_logging.ERROR_MSG = "[" + queue_list[i] + "] ISN'T A FILE"
+                if(isfile(manga_config.QUEUE_PATH + queue_list[page]) == False):
+                    manga_logging.log_warning("[" + queue_list[page] + "] ISN'T A FILE")
+                    manga_logging.ERROR_MSG = "[" + queue_list[page] + "] ISN'T A FILE"
                     return False
         return True
 
@@ -215,41 +215,41 @@ def leading_zero(src):
         manga_logging.log_warning("[" + src + "] ISN'T A FILE")
         manga_logging.ERROR_MSG = "[" + src + "] ISN'T A FILE"
         return False
-    for i in range(0, len(src_filename)):
-        if(src_filename[i].isnumeric()):
+    for page in range(0, len(src_filename)):
+        if(src_filename[page].isnumeric()):
             #Number found
-            if(i == 0):
+            if(page == 0):
                 #Beginning of the filename
-                if(src_filename[i + 1].isnumeric()):
+                if(src_filename[page + 1].isnumeric()):
                     #Number at beginning and next character, ignore
                     continue
                 else:
                     #No number after first char, add a leading zero
-                    dest = src_path + src_filename[:i] + "0" + src_filename[i:]
+                    dest = src_path + src_filename[:page] + "0" + src_filename[page:]
                     rename(src, dest)
                     return True
-            elif(i + 1 >= len(src_filename)):
+            elif(page + 1 >= len(src_filename)):
                 #End of the filename
                 #Only number found is at the end, add a leading zero
-                dest = src_path + src_filename[:i] + "0" + src_filename[i:]
+                dest = src_path + src_filename[:page] + "0" + src_filename[page:]
                 rename(src, dest)
                 return True
             else:
                 #Middle of filename
-                if(src_filename[i] != '0'):
-                    if(src_filename[i + 1].isnumeric()):
+                if(src_filename[page] != '0'):
+                    if(src_filename[page + 1].isnumeric()):
                         #First number isn't 0, the next is also a number, so probably a 10, 20, etc. Ignore
                         continue
-                    if(src_filename[i-1].isnumeric()):
+                    if(src_filename[page - 1].isnumeric()):
                         #There's a number before current char, ignore
                         continue
                     else:
                         #Number that isn't a 0, there is no number before or after, so a solo non 0 number, adding zero
-                        dest = src_path + src_filename[:i] + "0" + src_filename[i:]
+                        dest = src_path + src_filename[:page] + "0" + src_filename[page:]
                         rename(src, dest)
                         return True
                 else:
-                    if(src_filename[i + 1].isnumeric() and src_filename[i + 1] != '0'):
+                    if(src_filename[page + 1].isnumeric() and src_filename[page + 1] != '0'):
                         #First number is zero, and next is also a non-zero number, already has leading zero
                         return True
     return True
@@ -313,9 +313,9 @@ def remove(path):
 
 def remove_windows_char(src):
     manga_logging.log_debug("mangautility.remove_windows_char(" + src + ")")
-    bad_char = '*\:?"<>|/'
-    for c in bad_char:
-        src = src.replace(c, '')
+    windows_char_not_allowed = '*\:?"<>|/'
+    for char in windows_char_not_allowed:
+        src = src.replace(char, '')
     return src
 
 def rename(src, dest):
@@ -347,25 +347,25 @@ def rename(src, dest):
             manga_logging.log_error("UNEVEN PAGES FOR RENAME")
             manga_logging.ERROR_MSG = "UNEVEN PAGES FOR RENAME"
             return False
-        for i in range(0, len(src)):
-            if(isfile(dest[i]) == True):
-                manga_logging.log_warning("[" + dest[i] + "] ALREADY EXISTS")
-                manga_logging.ERROR_MSG = "[" + dest[i] + "] ALREADY EXISTS"
+        for page in range(0, len(src)):
+            if(isfile(dest[page]) == True):
+                manga_logging.log_warning("[" + dest[page] + "] ALREADY EXISTS")
+                manga_logging.ERROR_MSG = "[" + dest[page] + "] ALREADY EXISTS"
                 return False
             try:
-                os.rename(src[i], dest[i])
-                manga_logging.log_debug("os.rename(" + src[i] + ", " + dest[i] + ")")
+                os.rename(src[page], dest[page])
+                manga_logging.log_debug("os.rename(" + src[page] + ", " + dest[page] + ")")
             except FileNotFoundError:
-                if(isfile(src[i]) == False):
-                    manga_logging.log_error("[" + src[i] + "] NOT FOUND")
-                    manga_logging.ERROR_MSG = "[" + src[i] + "] NOT FOUND"
-                elif(isfile(dest[i]) == False):
-                    manga_logging.log_error("[" + dest[i] + "] NOT FOUND")
-                    manga_logging.ERROR_MSG = "[" + dest[i] + "] NOT FOUND"
+                if(isfile(src[page]) == False):
+                    manga_logging.log_error("[" + src[page] + "] NOT FOUND")
+                    manga_logging.ERROR_MSG = "[" + src[page] + "] NOT FOUND"
+                elif(isfile(dest[page]) == False):
+                    manga_logging.log_error("[" + dest[page] + "] NOT FOUND")
+                    manga_logging.ERROR_MSG = "[" + dest[page] + "] NOT FOUND"
                 return False
             except PermissionError:
-                manga_logging.log_error("[" + src[i] + ", " + dest[i] + "] PERMISSION ERROR")
-                manga_logging.ERROR_MSG = "[" + src[i] + ", " + dest[i] + "] PERMISSION ERROR"
+                manga_logging.log_error("[" + src[page] + ", " + dest[page] + "] PERMISSION ERROR")
+                manga_logging.ERROR_MSG = "[" + src[page] + ", " + dest[page] + "] PERMISSION ERROR"
                 return False
     return True
 
@@ -404,14 +404,14 @@ def sqlite_execute(cursor, query, query_input):
     manga_logging.log_debug("mangautility.sqlite_execute()")
     if(query_input == ""):
         try:
-            query_output = [chapter_data[0] for chapter_data in cursor.execute(query)]
+            query_output = [query_data[0] for query_data in cursor.execute(query)]
         except sqlite3.OperationalError:
             manga_logging.log_error("[" + query + "] IS NOT A VALID OPERATION")
             manga_logging.ERROR_MSG = "[" + query + "] IS NOT A VALID OPERATION"
             return False
     else:
         try:
-            query_output = [chapter_data[0] for chapter_data in cursor.execute(query, query_input)]
+            query_output = [query_data[0] for query_data in cursor.execute(query, query_input)]
         except sqlite3.OperationalError:
             manga_logging.log_error("[" + query + " with data: " + query_input + "] IS NOT A VALID OPERATION")
             manga_logging.ERROR_MSG = "[" + query + " with data: " + query_input + "] IS NOT A VALID OPERATION"
