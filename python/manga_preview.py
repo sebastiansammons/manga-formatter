@@ -44,18 +44,18 @@ def auto_chapter(manga, chapter_title):
     page_src = [None] * page_count
     page_dest = [None] * page_count
     preview = [None] * page_count
-    for i in range(0, page_count):
-        page_src[i] = manga_config.QUEUE_PATH + str(chapter_pages[i])
-        if(manga_utility.check_extension(page_src[i]) == False):
+    for page in range(0, page_count):
+        page_src[page] = manga_config.QUEUE_PATH + str(chapter_pages[page])
+        if(manga_utility.check_extension(page_src[page]) == False):
             return False
         if(manga == "One Piece"):
-            page_dest[i] = new_chapter_directory + manga + " - CH" + str(new_chapter_number).zfill(4) + "PG" + str(i + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_directory + manga + " - CH" + str(new_chapter_number).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
         else:
-            page_dest[i] = new_chapter_directory + manga + " - CH" + str(new_chapter_number).zfill(3) + "PG" + str(i + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_directory + manga + " - CH" + str(new_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
         if(manga_config.LOG_TYPE == "SIMPLE"):
-            preview[i] = "Rename: " + page_src[i][page_src[i].rfind("/"):] + " to " + page_dest[i][page_dest[i].rfind("/"):]
+            preview[page] = "Rename: " + page_src[page][page_src[page].rfind("/"):] + " to " + page_dest[page][page_dest[page].rfind("/"):]
         elif(manga_config.LOG_TYPE == "DETAILED"):
-            preview[i] = "Rename: " + page_src[i] + " to " + page_dest[i]
+            preview[page] = "Rename: " + page_src[page] + " to " + page_dest[page]
     return preview
 
 def auto_volume(manga, last_chapter_of_new_volume, volume_title):
@@ -116,22 +116,22 @@ def auto_volume(manga, last_chapter_of_new_volume, volume_title):
         chapter_filename[chapter_number - first_chapter_in_volume] = sorted(chapter_filename[chapter_number - first_chapter_in_volume])
     if(manga_config.LOG_TYPE == "SIMPLE"):
         preview = [None] * chapter_count
-        for i in range(0, chapter_count):
-            preview[i] = "Rename: " + chapter_path[i][chapter_path[i].rfind("/", 0, chapter_path[i].rfind("/")):] + " to " + new_volume_path[new_volume_path.rfind("/", 0, new_volume_path.rfind("/")):]
+        for chapter in range(0, chapter_count):
+            preview[chapter] = "Rename: " + chapter_path[chapter][chapter_path[chapter].rfind("/", 0, chapter_path[chapter].rfind("/")):] + " to " + new_volume_path[new_volume_path.rfind("/", 0, new_volume_path.rfind("/")):]
     elif(manga_config.LOG_TYPE == "DETAILED"):
         #Get number of volume pages
         volume_pages = 0
-        for i in range(0, chapter_count):
-            volume_pages += len(chapter_filename[i])
+        for chapter in range(0, chapter_count):
+            volume_pages += len(chapter_filename[chapter])
         #Get source and destination filename path
         page_src = [None] * volume_pages
         page_dest = [None] * volume_pages
         preview = [None] * volume_pages
         page_count = 0
-        for i in range(0, chapter_count):
-            for j in range(0, len(chapter_filename[i])):
-                page_src[page_count] = chapter_path[i] + chapter_filename[i][j]
-                page_dest[page_count] = new_volume_path + chapter_filename[i][j]
+        for chapter in range(0, chapter_count):
+            for page in range(0, len(chapter_filename[chapter])):
+                page_src[page_count] = chapter_path[chapter] + chapter_filename[chapter][page]
+                page_dest[page_count] = new_volume_path + chapter_filename[chapter][page]
                 preview[page_count] = "Rename: " + page_src[page_count] + " to " + page_dest[page_count]
                 page_count += 1
     return preview
@@ -158,18 +158,18 @@ def manual_single_chapter(manga, chapter_number, chapter_title):
     page_src = [None] * page_count
     page_dest = [None] * page_count
     preview = [None] * page_count
-    for i in range(0, page_count):
-        page_src[i] = manga_config.QUEUE_PATH + str(chapter_pages[i])
-        if(manga_utility.check_extension(page_src[i]) == False):
+    for page in range(0, page_count):
+        page_src[page] = manga_config.QUEUE_PATH + str(chapter_pages[page])
+        if(manga_utility.check_extension(page_src[page]) == False):
             return False
         if(chapter_title == ""):
-            page_dest[i] = new_chapter_directory + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(i + 1).zfill(2) + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_directory + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + manga_utility.get_extension(page_src[page])
         else:
-            page_dest[i] = new_chapter_directory + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(i + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[i])
+            page_dest[page] = new_chapter_directory + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
         if(manga_config.LOG_TYPE == "SIMPLE"):
-            preview[i] = "Rename: " + page_src[i][page_src[i].rfind("/"):] + " to " + page_dest[i][page_dest[i].rfind("/"):]
+            preview[page] = "Rename: " + page_src[page][page_src[page].rfind("/"):] + " to " + page_dest[page][page_dest[page].rfind("/"):]
         elif(manga_config.LOG_TYPE == "DETAILED"):
-            preview[i] = "Rename: " + page_src[i] + " to " + page_dest[i]
+            preview[page] = "Rename: " + page_src[page] + " to " + page_dest[page]
     return preview
 
 def manual_multiple_chapter(manga):
@@ -189,36 +189,38 @@ def manual_multiple_chapter(manga):
     src_filename = [None] * chapter_count
     #List of each chapter page destination filename (2D List)
     dest_filename = [None] * chapter_count
-    for i in range(0, chapter_count):
+    for chapter in range(0, chapter_count):
         #Get chapter source directory path
-        src_path[i] = manga_config.QUEUE_PATH + chapter_path[i] + "/"
+        src_path[chapter] = manga_config.QUEUE_PATH + chapter_path[chapter] + "/"
         #Most checks look good, add leading zero, even if it's not needed. The leading zero stays even if you abort the format
-        if(manga_utility.leading_zero_dir(src_path[i]) == False):
+        if(manga_utility.leading_zero_dir(src_path[chapter]) == False):
             return False
-        current_chapter_path = manga_utility.listdir(src_path[i])
+        current_chapter_path = manga_utility.listdir(src_path[chapter])
         if(current_chapter_path == False):
             return False
         current_chapter_count = len(current_chapter_path)
         current_chapter_path = sorted(current_chapter_path)
         #Get each source and destination filename
-        src_filename[i] = [None] * current_chapter_count
-        dest_filename[i] = [None] * current_chapter_count
-        for j in range(0, current_chapter_count):
-            src_filename[i][j] = current_chapter_path[j]
-            if(manga_utility.check_extension(current_chapter_path[j]) == False):
+        src_filename[chapter] = [None] * current_chapter_count
+        dest_filename[chapter] = [None] * current_chapter_count
+        for page in range(0, current_chapter_count):
+            src_filename[chapter][page] = current_chapter_path[page]
+            if(manga_utility.check_extension(current_chapter_path[page]) == False):
                 return False
-            dest_filename[i][j] = manga + " - CH" + (chapter_path[i].lstrip('0')).zfill(3) + "PG" + str(j + 1).zfill(2) + manga_utility.get_extension(current_chapter_path[j])
+            dest_filename[chapter][page] = manga + " - CH" + (chapter_path[chapter].lstrip('0')).zfill(3) + "PG" + str(page + 1).zfill(2) + manga_utility.get_extension(current_chapter_path[page])
         #Chapter destination directory path
-        dest_path[i] = manga_config.MANUAL_DEST_PATH + (chapter_path[i].lstrip('0')).zfill(3) + "/"
+        dest_path[chapter] = manga_config.MANUAL_DEST_PATH + (chapter_path[chapter].lstrip('0')).zfill(3) + "/"
     #Make sure all destination directory paths are available
-    for i in range(0, chapter_count):
-        if(manga_utility.isdir(dest_path[i]) == True and len(manga_utility.listdir(dest_path[i])) > 0):
-            manga_logging.log_error("[" + dest_path[i] + "] ALREADY EXISTS")
-            manga_logging.ERROR_MSG = "[" + dest_path[i] + "] ALREADY EXISTS"
+    for chapter in range(0, chapter_count):
+        if(manga_utility.isdir(dest_path[chapter]) == True and len(manga_utility.listdir(dest_path[chapter])) > 0):
+            manga_logging.log_error("[" + dest_path[chapter] + "] ALREADY EXISTS")
+            manga_logging.ERROR_MSG = "[" + dest_path[chapter] + "] ALREADY EXISTS"
             return False
     #Make sure all destination directory paths are different
-    #Since manual_multiple will remove leading zeroes, theres a chance that dest_path[i] can have duplicates
+    #Since manual_multiple will remove leading zeroes, theres a chance that dest_path[chapter] can have duplicates
     #i.e. src has 058, 58, and 000058, all three of these will have the same destination directory of /058
+    #Compare all destination directories. This is an n^2 comparison but I don't expect to multi_chapter format
+    #for more than 10 chapters
     for i in range(0, chapter_count):
         for j in range(0, chapter_count):
             if(i != j):
@@ -227,17 +229,17 @@ def manual_multiple_chapter(manga):
                     manga_logging.ERROR_MSG = "[" + src_path[i] + "] AND [ " + src_path[j] + "] WILL HAVE THE SAME DEST PATH [" + dest_path[i] + "]"
                     return False
     multi_chapter_pages = 0
-    for i in range(0, chapter_count):
-        multi_chapter_pages += len(src_filename[i])
+    for chapter in range(0, chapter_count):
+        multi_chapter_pages += len(src_filename[chapter])
     #Get source and destination filename path
     page_src = [None] * multi_chapter_pages
     page_dest = [None] * multi_chapter_pages
     preview = [None] * multi_chapter_pages
     page_count = 0
-    for i in range(0, chapter_count):
-        for j in range(0, len(src_filename[i])):
-            page_src[page_count] = src_path[i] + src_filename[i][j]
-            page_dest[page_count] = dest_path[i] + dest_filename[i][j]
+    for chapter in range(0, chapter_count):
+        for page in range(0, len(src_filename[chapter])):
+            page_src[page_count] = src_path[chapter] + src_filename[chapter][page]
+            page_dest[page_count] = dest_path[chapter] + dest_filename[chapter][page]
             if(manga_config.LOG_TYPE == "SIMPLE"):
                 preview[page_count] = "Rename: " + page_src[page_count][page_src[page_count].rfind(manga_config.QUEUE_PATH) + len(manga_config.QUEUE_PATH):] + " to " + page_dest[page_count][page_dest[page_count].rfind(manga_config.MANUAL_DEST_PATH) + len(manga_config.MANUAL_DEST_PATH):]
             elif(manga_config.LOG_TYPE == "DETAILED"):
@@ -262,16 +264,16 @@ def manual_volume(manga, volume_number, volume_title):
         return False
     page_count = len(multi_chapter_preview)
     preview = [None] * page_count
-    for i in range(0, page_count):
+    for page in range(0, page_count):
         if(volume_title == ""):
             if(manga_config.LOG_TYPE == "SIMPLE"):
-                preview[i] = multi_chapter_preview[i][:multi_chapter_preview[i].rfind(" to ")] + " to /" + manga + " Volume " + str(volume_number).zfill(2) + multi_chapter_preview[i][multi_chapter_preview[i].rfind("/"):]
+                preview[page] = multi_chapter_preview[page][:multi_chapter_preview[page].rfind(" to ")] + " to /" + manga + " Volume " + str(volume_number).zfill(2) + multi_chapter_preview[page][multi_chapter_preview[page].rfind("/"):]
             elif(manga_config.LOG_TYPE == "DETAILED"):
-                preview[i] = multi_chapter_preview[i][:multi_chapter_preview[i].rfind(" to ")] + " to " + manga_config.MANUAL_DEST_PATH + manga + " Volume " + str(volume_number).zfill(2) + multi_chapter_preview[i][multi_chapter_preview[i].rfind("/"):]
+                preview[page] = multi_chapter_preview[page][:multi_chapter_preview[page].rfind(" to ")] + " to " + manga_config.MANUAL_DEST_PATH + manga + " Volume " + str(volume_number).zfill(2) + multi_chapter_preview[page][multi_chapter_preview[page].rfind("/"):]
         else:
             if(manga_config.LOG_TYPE == "SIMPLE"):
-                preview[i] = multi_chapter_preview[i][:multi_chapter_preview[i].rfind(" to ")] + " to /" + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + multi_chapter_preview[i][multi_chapter_preview[i].rfind("/"):]
+                preview[page] = multi_chapter_preview[page][:multi_chapter_preview[page].rfind(" to ")] + " to /" + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + multi_chapter_preview[page][multi_chapter_preview[page].rfind("/"):]
             elif(manga_config.LOG_TYPE == "DETAILED"):
-                preview[i] = multi_chapter_preview[i][:multi_chapter_preview[i].rfind(" to ")] + " to " + manga_config.MANUAL_DEST_PATH + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + multi_chapter_preview[i][multi_chapter_preview[i].rfind("/"):]
+                preview[page] = multi_chapter_preview[page][:multi_chapter_preview[page].rfind(" to ")] + " to " + manga_config.MANUAL_DEST_PATH + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + multi_chapter_preview[page][multi_chapter_preview[page].rfind("/"):]
     return preview
     
