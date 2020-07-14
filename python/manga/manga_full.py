@@ -1,4 +1,3 @@
-# import sys
 import manga_config
 import manga_logging
 import manga_utility
@@ -6,10 +5,10 @@ import manga_utility
 
 def full_manga(manga):
     manga_logging.log_debug("mangafull.full_manga(" + manga + ")")
-    manga_path = manga_config.ROOT_MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH
+    manga_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH
     if(check_full_manga(manga, manga_path) == False):
         return False
-    if(full_manga_leading_zero(manga_path) == False):
+    if(full_manga_pad_zero(manga_path) == False):
         return False
     #Connect to SQLite and get appropriate data
     sql_name = manga_utility.sqlite_get_name(manga)
@@ -65,7 +64,7 @@ def full_manga(manga):
             else:
                 current_volume_path = manga + " Volume " + str(volume_number[volume]).zfill(2) + " - " + manga_utility.remove_windows_char(volume_title[volume]) + "/"
         #Create new volume directory
-        new_volume_path = manga_config.ROOT_MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + current_volume_path
+        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + current_volume_path
         if(manga_utility.mkdir(new_volume_path) == False):
             return False
         #Get list of Chapter directory paths within the current Volume
@@ -132,16 +131,16 @@ def full_manga(manga):
     #
     #Remove old "New Chapters" directory
     #
-    manga_utility.rmdir(manga_config.ROOT_MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH)
+    manga_utility.rmdir(manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH)
     #
     #Move new "New Chapters" directory to original path
     #
-    manga_utility.copydir(manga_config.ROOT_MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + "New Chapters/", manga_config.ROOT_MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH)
+    manga_utility.copydir(manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + "New Chapters/", manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH)
     #Remove src
-    manga_utility.rmdir(manga_config.ROOT_MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + "New Chapters/")
+    manga_utility.rmdir(manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + "New Chapters/")
 
-def full_manga_leading_zero(manga_path):
-    manga_logging.log_debug("mangafull.full_manga_leading_zero(" + manga_path + ")")
+def full_manga_pad_zero(manga_path):
+    manga_logging.log_debug("mangafull.full_manga_pad_zero(" + manga_path + ")")
     volume_path = manga_utility.listdir(manga_path)
     if(volume_path == False):
         return False
@@ -170,7 +169,7 @@ def full_manga_leading_zero(manga_path):
                 #Every Page
                 for page in range(0, page_count):
                     page_src = current_chapter_path + "/" + chapter_pages[page]
-                    if(manga_utility.leading_zero(page_src) == False):
+                    if(manga_utility.pad_zero(page_src) == False):
                         return False
 
 def check_full_manga(manga,manga_path):

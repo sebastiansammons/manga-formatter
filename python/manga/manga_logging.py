@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 import manga_config
 
 
@@ -7,13 +8,14 @@ import manga_config
 #
 ERROR_MSG = ""
 
-def config():
+def log_config():
     try:
-        logging.basicConfig(level=logging.DEBUG, filename=manga_config.LOG_PATH + "testing_logs.log", format = '%(asctime)s|%(levelname)-7s|%(message)s', datefmt='%Y/%m/%d %H:%M', )
+        
+
+        logging.basicConfig(level = logging.DEBUG, filename = manga_config.LOGS_PATH + datetime.now().strftime("logs_%Y-%m-%d.log"), format = '%(asctime)s|%(levelname)-7s|%(message)s', datefmt='%Y/%m/%d %H:%M', )
         logging.getLogger
     except FileNotFoundError:
-        logging.basicConfig(level=logging.DEBUG, datefmt='%Y/%m/%d %H:%M', )
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level = logging.DEBUG, filename = datetime.now().strftime("logs_%Y-%m-%d.log"), format = '%(asctime)s|%(levelname)-7s|%(message)s', datefmt='%Y/%m/%d %H:%M', )
         logging.getLogger
 
 def log_debug(message):

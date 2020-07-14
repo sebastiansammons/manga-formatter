@@ -1,38 +1,8 @@
-# import sys
 import os
 import shutil
 import sqlite3
 import manga_config
 import manga_logging
-
-
-def check_config():
-    manga_logging.log_debug("mangautility.check_config()")
-    if(isdir(manga_config.ROOT_MANGA_PATH) == False):
-        manga_logging.log_error("[" + manga_config.ROOT_MANGA_PATH + "] NOT FOUND")
-        manga_logging.ERROR_MSG = "[" + manga_config.ROOT_MANGA_PATH + "] NOT FOUND"
-        return False
-    if(isdir(manga_config.QUEUE_PATH) == False):
-        manga_logging.log_error("[" + manga_config.QUEUE_PATH + "] NOT FOUND")
-        manga_logging.ERROR_MSG = "[" + manga_config.QUEUE_PATH + "] NOT FOUND"
-        return False
-    if(isdir(manga_config.MANUAL_DEST_PATH) == False):
-        manga_logging.log_error("[" + manga_config.MANUAL_DEST_PATH + "] NOT FOUND")
-        manga_logging.ERROR_MSG = "[" + manga_config.MANUAL_DEST_PATH + "] NOT FOUND"
-        return False
-    if(isdir(manga_config.OP_COVER_PATH) == False):
-        manga_logging.log_error("[" + manga_config.OP_COVER_PATH + "] NOT FOUND")
-        manga_logging.ERROR_MSG = "[" + manga_config.OP_COVER_PATH + "] NOT FOUND"
-        return False
-    if(isfile(manga_config.DB_FILE_PATH) == False):
-        manga_logging.log_error("[" + manga_config.DB_FILE_PATH + "] NOT FOUND")
-        manga_logging.ERROR_MSG = "[" + manga_config.DB_FILE_PATH + "] NOT FOUND"
-        return False
-    if(isdir(manga_config.LOG_PATH) == False):
-        manga_logging.log_error("[" + manga_config.LOG_PATH + "] NOT FOUND")
-        manga_logging.ERROR_MSG = "[" + manga_config.LOG_PATH + "] NOT FOUND"
-        return False
-    return True
 
 def check_extension(src):
     manga_logging.log_debug("mangautility.check_extension(" + src + ")")
@@ -42,10 +12,38 @@ def check_extension(src):
         return False
     return True
 
+def check_manga_config():
+    manga_logging.log_debug("mangautility.check_manga_config()")
+    if(isdir(manga_config.MANGA_PATH) == False):
+        manga_logging.log_error("[" + manga_config.MANGA_PATH + "] NOT FOUND")
+        manga_logging.ERROR_MSG = "[" + manga_config.MANGA_PATH + "] NOT FOUND"
+        return False
+    if(isdir(manga_config.SOURCE_PATH) == False):
+        manga_logging.log_error("[" + manga_config.SOURCE_PATH + "] NOT FOUND")
+        manga_logging.ERROR_MSG = "[" + manga_config.SOURCE_PATH + "] NOT FOUND"
+        return False
+    if(isdir(manga_config.DESTINATION_PATH) == False):
+        manga_logging.log_error("[" + manga_config.DESTINATION_PATH + "] NOT FOUND")
+        manga_logging.ERROR_MSG = "[" + manga_config.DESTINATION_PATH + "] NOT FOUND"
+        return False
+    if(isdir(manga_config.OP_COVER_PATH) == False):
+        manga_logging.log_error("[" + manga_config.OP_COVER_PATH + "] NOT FOUND")
+        manga_logging.ERROR_MSG = "[" + manga_config.OP_COVER_PATH + "] NOT FOUND"
+        return False
+    if(isfile(manga_config.DB_FILE_PATH) == False):
+        manga_logging.log_error("[" + manga_config.DB_FILE_PATH + "] NOT FOUND")
+        manga_logging.ERROR_MSG = "[" + manga_config.DB_FILE_PATH + "] NOT FOUND"
+        return False
+    if(isdir(manga_config.LOGS_PATH) == False):
+        manga_logging.log_error("[" + manga_config.LOGS_PATH + "] NOT FOUND")
+        manga_logging.ERROR_MSG = "[" + manga_config.LOGS_PATH + "] NOT FOUND"
+        return False
+    return True
+
 def check_queue(format_type):
     manga_logging.log_debug("mangautility.check_queue(" + format_type + ")")
     queue_count = 0
-    queue_list = listdir(manga_config.QUEUE_PATH)
+    queue_list = listdir(manga_config.SOURCE_PATH)
     if(queue_list == False):
         return False
     queue_count = len(queue_list)
@@ -58,7 +56,7 @@ def check_queue(format_type):
     elif(queue_count == 1):
         #Only auto_volume allows 1 item in QUEUE. Cover file only
         if(format_type == "auto_volume"):
-            if(isfile(manga_config.QUEUE_PATH + queue_list[0]) == True):
+            if(isfile(manga_config.SOURCE_PATH + queue_list[0]) == True):
                 return True
             else:
                 manga_logging.log_warning("[" + queue_list[0] + "] ISN'T A COVER FILE")
@@ -77,13 +75,13 @@ def check_queue(format_type):
         elif(format_type == "manual_multi_chapter"):
             for chapter in range(0, queue_count):
                 #Make sure they're all directories
-                if(isdir(manga_config.QUEUE_PATH + queue_list[chapter]) == True):
-                    current_path = listdir(manga_config.QUEUE_PATH + queue_list[chapter])
+                if(isdir(manga_config.SOURCE_PATH + queue_list[chapter]) == True):
+                    current_path = listdir(manga_config.SOURCE_PATH + queue_list[chapter])
                     if(current_path == False):
                         return False
                     if(len(current_path) == 0):
                         #Empty
-                        manga_logging.log_warning("[" + manga_config.QUEUE_PATH + queue_list[chapter] + "] IS EMPTY")
+                        manga_logging.log_warning("[" + manga_config.SOURCE_PATH + queue_list[chapter] + "] IS EMPTY")
                         manga_logging.ERROR_MSG = "[" + queue_list[chapter] + "] IS EMPTY"
                         return False
                     current_path = sorted(current_path)
@@ -125,7 +123,7 @@ def check_queue(format_type):
                 return False
             for page in range(0, queue_count):
                 #Make sure they're all files
-                if(isfile(manga_config.QUEUE_PATH + queue_list[page]) == False):
+                if(isfile(manga_config.SOURCE_PATH + queue_list[page]) == False):
                     manga_logging.log_warning("[" + queue_list[page] + "] ISN'T A FILE")
                     manga_logging.ERROR_MSG = "[" + queue_list[page] + "] ISN'T A FILE"
                     return False
@@ -201,8 +199,8 @@ def isfile(path):
     manga_logging.log_debug("mangautility.isfile(" + path + ")")
     return os.path.isfile(path)
 
-def leading_zero(src):
-    manga_logging.log_debug("mangautility.leading_zero(" + src + ")")
+def pad_zero(src):
+    manga_logging.log_debug("mangautility.pad_zero(" + src + ")")
     if(src == ""):
         #Empty string
         manga_logging.log_warning("EMPTY STRING")
@@ -254,8 +252,8 @@ def leading_zero(src):
                         return True
     return True
 
-def leading_zero_dir(path):
-    manga_logging.log_debug("mangautility.leading_zero_dir(" + path + ")")
+def pad_zero_dir(path):
+    manga_logging.log_debug("mangautility.pad_zero_dir(" + path + ")")
     path_list = listdir(path)
     if(path_list == False):
         return False
@@ -263,7 +261,7 @@ def leading_zero_dir(path):
     path_list = sorted(path_list)
     for page in range(0, path_count):
         src = path + path_list[page]
-        if(leading_zero(src) == False):
+        if(pad_zero(src) == False):
             return False
 
 def listdir(path):
