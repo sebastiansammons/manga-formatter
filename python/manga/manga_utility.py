@@ -1,8 +1,8 @@
 import os
 import shutil
 import sqlite3
-import manga_config
-import manga_logging
+from . import manga_config
+from . import manga_logging
 
 def check_extension(src):
     manga_logging.log_debug("mangautility.check_extension(" + src + ")")

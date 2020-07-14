@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-import manga_config
+from . import manga_config
 
 
 #

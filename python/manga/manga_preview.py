@@ -1,6 +1,6 @@
-import manga_config
-import manga_logging
-import manga_utility
+from . import manga_config
+from . import manga_logging
+from . import manga_utility
 
 
 def auto_chapter_preview(manga, chapter_title):

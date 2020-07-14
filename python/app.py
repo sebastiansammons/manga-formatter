@@ -8,7 +8,6 @@ template_path = os.path.abspath('../html')
 app = Flask(__name__, template_folder = template_path)
 
 app.secret_key = "heyalright"
-
 #
 #Initialize Logger
 #
