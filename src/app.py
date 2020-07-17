@@ -1,28 +1,24 @@
-import os
+#app.py
 from flask import Flask, render_template, request, redirect, session
 import manga
+import os
 
 
-#Get template path
-template_path = os.path.abspath('../html')
-app = Flask(__name__, template_folder = template_path)
-
-app.secret_key = "heyalright"
 #
 #Initialize Logger
 #
 manga.log_config()
 
-#
-#Make sure path's in config are reachable
-#
-config_status = manga.check_manga_config()
+manga.log_debug("app = Flask(__name__)")
+app = Flask(__name__)
+
+app.secret_key = os.urandom(64)
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
     manga.log_debug("index()")
     if(manga.check_manga_config() == False):
-        session["error"] = manga.ERROR_MSG
+        session["error"] = manga.message_read()
         return redirect('/error')
     if(request.method == 'GET'):
         session.pop("format", None)
@@ -31,10 +27,9 @@ def index():
         session.pop("title", None)
         session.pop("preview", None)
         session.pop("error", None)
-        manga.ERROR_MSG = ""
         return render_template('index.html')
     else:
-        manga_title = request.form["manga"]
+        manga_title = request.form["manga_format"]
         if(manga_title == "auto"):
             return redirect('/auto')
         elif(manga_title == "manual"):
@@ -59,13 +54,13 @@ def auto_format():
             session["format"] = "auto_chapter"
             preview = manga.auto_chapter_preview(manga.get_manga(manga_title), title)
             if(preview == False):
-                session["error"] = manga.ERROR_MSG
+                session["error"] = manga.message_read()
                 return redirect('/error')
         elif(format_type == "volume"):
             session["format"] = "auto_volume"
             preview = manga.auto_volume_preview(manga.get_manga(manga_title), number, title)
             if(preview == False):
-                session["error"] = manga.ERROR_MSG
+                session["error"] = manga.message_read()
                 return redirect('/error')
         else:
             return redirect('/')
@@ -91,19 +86,19 @@ def manual_format():
                 session["format"] = "manual_single_chapter"
                 preview = manga.manual_single_chapter_preview(manga_title, number, title)
                 if(preview == False):
-                    session["error"] = manga.ERROR_MSG
+                    session["error"] = manga.message_read()
                     return redirect('/error')
             elif(chapter_type == "multiple"):
                 session["format"] = "manual_multiple_chapter"
                 preview = manga.manual_multiple_chapter_preview(manga_title)
                 if(preview == False):
-                    session["error"] = manga.ERROR_MSG
+                    session["error"] = manga.message_read()
                     return redirect('/error')
         elif(format_type == "volume"):
             session["format"] = "manual_volume"
             preview = manga.manual_volume_preview(manga_title, number, title)
             if(preview == False):
-                session["error"] = manga.ERROR_MSG
+                session["error"] = manga.message_read()
                 return redirect('/error')
         else:
             return redirect('/')
@@ -124,7 +119,7 @@ def full_format():
         else:
             result = manga.full_manga(manga_title)
             if(result == False):
-                session["error"] = manga.ERROR_MSG
+                session["error"] = manga.message_read()
                 return redirect('/error')
             return redirect('/')
 
@@ -173,7 +168,7 @@ def preview():
         elif(commit =="Abort"):
             return redirect('/')
         if(result == False):
-            session["error"] = manga.ERROR_MSG
+            session["error"] = manga.message_read()
             return redirect('/error')
         return redirect('/')
 
@@ -188,6 +183,3 @@ def error():
         return render_template('error.html', error = error)
     else:
         return redirect('/')
-
-if __name__ == "__main__":
-    app.run(debug = True)

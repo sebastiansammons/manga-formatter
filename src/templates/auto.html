@@ -4,17 +4,18 @@
         <title>Manga Formatter</title>
     </head>
     <h1>
-        MANGA FORMATTER
+        YOU WANT TO AUTO FORMAT
     </h1>
     <body>
         <div>
             <!--Auto Format Form-->
             <!--form action="formatqueue.html" method="POST"-->
-            <form name="aformat" action="." method="POST">
+            <form name="aformat" method="POST">
+            <!-- <form name="aformat" method="POST"> -->
                 <!--Select Format-->
                 <div>
                     <label>Select Format</label>
-                    <select name="fmat">
+                    <select name="format_type">
                         <option value="chapter">Chapter Format</option>
                         <option value="volume">Volume Format</option>
                     </select>                
@@ -25,17 +26,22 @@
                     <!--NEED TO FIND WAY TO SELECT BASED ON SQL-->
                     <select name="manga">
                         <option value="aot">Attack on Titan</option>
-                        <option value="op">One Piece</option>
+                        <option value="boruto">Boruto</option>
+                        <option value="dstone">Dr. STONE</option>
                         <option value="mha">My Hero Academia</option>
-                        <option value="dstone">Dr. Stone</option>
-                        <option value="pnl">Promised Neverland</option>
-                        <option value="s8">Samurai 8</option>
+                        <option value="op">One Piece</option>
+                        <option value="platend">Platinum End</option>
                     </select>
+                </div>
+                <!--Chapter/Volume Title-->
+                <div>
+                    <label>Chapter/Volume Title</label>
+                    <input type="text" name="title">
                 </div>
                 <!--Volume Ending At-->
                 <div>
-                    <label>Volume Ending At</label>
-                    <input type="text" name="volendat">
+                    <label>Last Chapter in Volume</label>
+                    <input type="text" name="last_chapter_in_volume">
                 </div>
                 <!--Auto Format-->
                 <label>Auto Format</label>
@@ -45,14 +51,5 @@
                 -->    
             </form>    
         </div>
-        <!--GO TO Manual Format Page-->
-        <div>
-            <form name="mformat" action="." method="post">
-                <label>Manual Format</label>
-                <input type="submit" name="manualformat" value="Manual Format">
-            </form>    
-        </div>
-
     </body>
-
 </html>

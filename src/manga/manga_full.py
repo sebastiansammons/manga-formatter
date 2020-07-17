@@ -1,3 +1,4 @@
+#manga_full.py
 from . import manga_config
 from . import manga_logging
 from . import manga_utility
@@ -5,7 +6,7 @@ from . import manga_utility
 
 def full_manga(manga):
     manga_logging.log_debug("mangafull.full_manga(" + manga + ")")
-    manga_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH
+    manga_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH
     if(check_full_manga(manga, manga_path) == False):
         return False
     if(full_manga_pad_zero(manga_path) == False):
@@ -41,7 +42,7 @@ def full_manga(manga):
     if(manga_utility.sqlite_close(connection) == False):
         return False
     #Get list of volume directory paths
-    #NOTE Ongoing manga's will have a "ZZZ No Volume Chapters" Directory, these don't have a released volume yet
+    #NOTE Ongoing manga's will have a "ZZZ Newly Released" Directory, these don't have a released volume yet
     volume_path = manga_utility.listdir(manga_path)
     if(volume_path == False):
         return False
@@ -52,9 +53,9 @@ def full_manga(manga):
     #Every volume
     for volume in range(0, volume_count):
         #Get new volume directory path
-        if(volume_path[volume] == "ZZZ No Volume Chapters"):
-            #"ZZZ No Volume Chapters" directory
-            current_volume_path = "New Chapters/"
+        if(volume_path[volume] == "ZZZ Newly Released"):
+            #"ZZZ Newly Released" directory
+            current_volume_path = "Newly Released/"
         else:
             #"Volume ##" directory
             if(volume_title[volume] == ""):
@@ -64,7 +65,7 @@ def full_manga(manga):
             else:
                 current_volume_path = manga + " Volume " + str(volume_number[volume]).zfill(2) + " - " + manga_utility.remove_windows_char(volume_title[volume]) + "/"
         #Create new volume directory
-        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + current_volume_path
+        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUMES_SUBPATH + current_volume_path
         if(manga_utility.mkdir(new_volume_path) == False):
             return False
         #Get list of Chapter directory paths within the current Volume
@@ -90,8 +91,8 @@ def full_manga(manga):
                     return False
                 page_count = len(chapter_pages)
                 chapter_pages = sorted(chapter_pages)
-                if(volume_path[volume] == "ZZZ No Volume Chapters"):
-                    #"ZZZ No Volume Chapters" Directory. Make directories for each chapter
+                if(volume_path[volume] == "ZZZ Newly Released"):
+                    #"ZZZ Newly Released" Directory. Make directories for each chapter
                     if(manga == "One Piece"):
                         new_chapter_path = new_volume_path + str(chapter_number[manga_count]).zfill(4) + "/"
                     else:
@@ -109,14 +110,19 @@ def full_manga(manga):
                         if(page == 0):
                             #First page make a copy of the cover, put in Cover
                             op_cover_src = page_src[page]
-                            op_cover_dest = manga_config.OP_COVER_PATH + "CH" + str(chapter_number[manga_count]).zfill(4) + " Cover" + manga_utility.get_extension(page_src[page])
+                            if(chapter_number[manga_count] < 501):
+                                op_cover_dest = manga_config.MANGA_PATH + manga + manga_config.OP_COVER_SUBPATH + "1-500/CH" + str(chapter_number[manga_count]).zfill(4) + " Cover" + manga_utility.get_extension(page_src[page])
+                            elif(chapter_number[manga_count] < 1001):
+                                op_cover_dest = manga_config.MANGA_PATH + manga + manga_config.OP_COVER_SUBPATH + "501-1000/CH" + str(chapter_number[manga_count]).zfill(4) + " Cover" + manga_utility.get_extension(page_src[page])
+                            else:
+                                op_cover_dest = manga_config.MANGA_PATH + manga + manga_config.OP_COVER_SUBPATH + "1001-End/CH" + str(chapter_number[manga_count]).zfill(4) + " Cover" + manga_utility.get_extension(page_src[page])
                             manga_utility.copyfile(op_cover_src, op_cover_dest)
-                        if(volume_path[volume] == "ZZZ No Volume Chapters"):
+                        if(volume_path[volume] == "ZZZ Newly Released"):
                             page_dest[page] = new_chapter_path + manga + " - CH" + str(chapter_number[manga_count]).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + manga_utility.remove_windows_char(chapter_title[manga_count]) + manga_utility.get_extension(page_src[page])
                         else:
                             page_dest[page] = new_volume_path + manga + " - CH" + str(chapter_number[manga_count]).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + manga_utility.remove_windows_char(chapter_title[manga_count]) + manga_utility.get_extension(page_src[page])
                     else:
-                        if(volume_path[volume] == "ZZZ No Volume Chapters"):
+                        if(volume_path[volume] == "ZZZ Newly Released"):
                             page_dest[page] = new_chapter_path + manga + " - CH" + str(chapter_number[manga_count]).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + manga_utility.remove_windows_char(chapter_title[manga_count]) + manga_utility.get_extension(page_src[page])
                         else:
                             page_dest[page] = new_volume_path + manga + " - CH" + str(chapter_number[manga_count]).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + manga_utility.remove_windows_char(chapter_title[manga_count]) + manga_utility.get_extension(page_src[page])
@@ -129,15 +135,9 @@ def full_manga(manga):
         #Remove old volume directory
         manga_utility.rmdir(manga_path + volume_path[volume])
     #
-    #Remove old "New Chapters" directory
+    #Remove old "Newly Released" directory
     #
-    manga_utility.rmdir(manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH)
-    #
-    #Move new "New Chapters" directory to original path
-    #
-    manga_utility.copydir(manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + "New Chapters/", manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH)
-    #Remove src
-    manga_utility.rmdir(manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + "New Chapters/")
+    manga_utility.rmdir(manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH)
 
 def full_manga_pad_zero(manga_path):
     manga_logging.log_debug("mangafull.full_manga_pad_zero(" + manga_path + ")")
@@ -174,6 +174,11 @@ def full_manga_pad_zero(manga_path):
 
 def check_full_manga(manga,manga_path):
     manga_logging.log_debug("mangafull.check_full_manga(" + manga + ", " + manga_path + ")")
+    #Check to see if manga is there
+    if(manga_utility.isdir(manga_path)):
+        manga_logging.log_error("[" + manga + "] DOES NOT EXIST")
+        manga_logging.message_write("[" + manga + "] DOES NOT EXIST")
+        return False
     #Connect to SQLite and get appropriate data
     sql_name = manga_utility.sqlite_get_name(manga)
     connection = manga_utility.sqlite_get_connection(manga_config.DB_FILE_PATH)
@@ -221,11 +226,10 @@ def check_full_manga(manga,manga_path):
                 page_count = len(chapter_pages)
                 if(page_count == 0):
                     manga_logging.log_error("[" + current_chapter_path + "] IS EMPTY")
-                    manga_logging.ERROR_MSG = "[" + current_chapter_path + "] IS EMPTY"
+                    manga_logging.message_write("[" + current_chapter_path + "] IS EMPTY")
                     return False
                 chapter_found += 1
     if(chapter_found != total_chapter_count):
         manga_logging.log_error("[" + manga_path + "] HAS A MISSING CHAPTER")
-        manga_logging.ERROR_MSG = "[" + manga_path + "] HAS A MISSING CHAPTER"
+        manga_logging.message_write("[" + manga_path + "] HAS A MISSING CHAPTER")
         return False
-        
