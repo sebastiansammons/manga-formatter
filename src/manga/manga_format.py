@@ -1,6 +1,7 @@
-import manga_config
-import manga_logging
-import manga_utility
+#manga_format.py
+from . import manga_config
+from . import manga_logging
+from . import manga_utility
 
 
 def auto_chapter_format(manga, chapter_title):
@@ -25,9 +26,9 @@ def auto_chapter_format(manga, chapter_title):
     new_chapter_number = query_output[0] + 1
     #Create directory path for the new chapter
     if(manga == "One Piece"):
-        new_chapter_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH + str(new_chapter_number).zfill(4) + "/"
+        new_chapter_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH + str(new_chapter_number).zfill(4) + "/"
     else:
-        new_chapter_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH + str(new_chapter_number).zfill(3) + "/"
+        new_chapter_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH + str(new_chapter_number).zfill(3) + "/"
     #Make new directory
     if(manga_utility.mkdir(new_chapter_path) == False):
         return False
@@ -58,7 +59,12 @@ def auto_chapter_format(manga, chapter_title):
     #Make copy of the chapter cover for One Piece
     if(manga == "One Piece"):
         op_cover_src = page_dest[0]
-        op_cover_dest = manga_config.OP_COVER_PATH + "CH" + str(new_chapter_number).zfill(4) + " Cover" + manga_utility.get_extension(page_src[0])
+        if(new_chapter_number < 501):
+            op_cover_dest = manga_config.MANGA_PATH + manga + manga_config.OP_COVER_SUBPATH + "1-500/CH" + str(new_chapter_number).zfill(4) + " Cover" + manga_utility.get_extension(page_src[0])
+        elif(new_chapter_number < 1001):
+            op_cover_dest = manga_config.MANGA_PATH + manga + manga_config.OP_COVER_SUBPATH + "501-1000/CH" + str(new_chapter_number).zfill(4) + " Cover" + manga_utility.get_extension(page_src[0])
+        else:
+            op_cover_dest = manga_config.MANGA_PATH + manga + manga_config.OP_COVER_SUBPATH + "1001-End/CH" + str(new_chapter_number).zfill(4) + " Cover" + manga_utility.get_extension(page_src[0])
         manga_utility.copyfile(op_cover_src, op_cover_dest)
     return True
 
@@ -84,9 +90,9 @@ def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     first_chapter_in_volume = query_output[0]
     #New volume directory path
     if(manga == "One Piece"):
-        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
+        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
     else:
-        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUME_CHAPTERS_PATH + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/"
+        new_volume_path = manga_config.MANGA_PATH + manga + manga_config.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/"
     #Create new volume directory
     if(manga_utility.mkdir(new_volume_path) == False):
         return False
@@ -109,9 +115,9 @@ def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     chapter_filename = [None] * chapter_count
     for chapter_number in range(first_chapter_in_volume, int(last_chapter_of_new_volume) + 1):
         if(manga == "One Piece"):
-            chapter_path[chapter_number - first_chapter_in_volume] = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH + str(chapter_number).zfill(4) + "/"
+            chapter_path[chapter_number - first_chapter_in_volume] = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH + str(chapter_number).zfill(4) + "/"
         else:
-            chapter_path[chapter_number - first_chapter_in_volume] = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_PATH + str(chapter_number).zfill(3) + "/"
+            chapter_path[chapter_number - first_chapter_in_volume] = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH + str(chapter_number).zfill(3) + "/"
         chapter_filename[chapter_number - first_chapter_in_volume] = manga_utility.listdir(chapter_path[chapter_number - first_chapter_in_volume])
         if(chapter_filename[chapter_number - first_chapter_in_volume] == False):
             return False
