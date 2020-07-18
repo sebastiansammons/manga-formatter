@@ -1,17 +1,32 @@
-Sebastian’s manga formatter (README.md not updated as of 11/11/2018)
+Sebastian’s Manga Formatting tool (README.md updated as of 07/17/2020)
 
-This project formats a new chapter or volume of manga into my specific file structure. I use the formatted volumes to create pdf’s for me to read on my phone or tablet. Every file is typically a jpg or png image mirroring a page of manga. 
-I use SQLite to keep track of every manga title’s
--currently released chapter number
--currently released volume number 
--the first chapter number that will be in the next volume.
+This tool is still a work in progress. But for now the functionality works the way I want it to.
 
-When the formatter starts the user selects which type of format to run, and which manga title to format. It has an optional text field used for volume format. 
+Some additional changes I might add:
+-update webUI's html, integrate some css and javascript. Basically make a better front end.
+-the container is still in "development" mode. Not a "production" tool
+-add funtionality to customize the format so if other people want to use this tool with their own format in mind, they can.
 
-For chapter format, a new directory is created based on the new chapter’s number at a specific location. The formatter grabs each page from a queue directory, renames each page based on the manga title, chapter number, and page number and moves the files to the new directory. The DB table is then updated with the new current chapter number.
 
-For volume format, the formatter grabs the volume cover from the queue, creates the new directory and renames the cover page file accordingling. Then the formatter will move all the chapter pages that are going to be in the new volume into the new directory. This is done by grabbing the first chapter number of the new volume from sql and the value that the user entered in the text field [e.g. first chapter is chapter 98(sql) and last chapter is chapter 108(user entry) volume has 11 chapters]. This creates one directory with every page in the volume. (Then I manually create the pdf outside of this program). The DB table is then updated with the new volume number and first chapter of new volume number (108++)
+This tool is designed to format a chapter, batch of chapters, a volume or an entire collection of a manga into a specific naming convention. I use this naming convention to create directoriess filled with chapter pages(image files) that are sorted to mirror a book. I used to rename every file manually every week but now it's automatic! The tool is written in python, uses SQlite for it's database and uses the flask framework to create the webUI. This was my first project using python, creating and designing a web interface, and creating a Docker container. The tool was designed to become its own container and have it run from my home server along with all of my other containers using docker-compose  There are three main options for formating.
 
-Both formats will show a log of every move/copy being made so I can double check before committing to the format.
+Auto Format
+Manual Fortmat
+Full Manga Format
 
-This project is still a work in progress. The GUI needs to be touched up, I have a lot of other error handling I need to work on, and I need to clean up my code
+The naming conventions are:
+    A page(image file):                     [manga] - CH[###]PG[##] - [title]
+    A Volume(book) cover(image file):       [manga] Volume [##] - [title]
+
+#Note: Since this tool was designed for a container, all paths are relative to the location you mount the directories /manga and /appdata. If you want to run this tool outside of a the container, you should only have the change manga_config.py. For the preview type you would need to make an environment variable PREVIEW_TYPE to be either "SIMPLE" or "DETAILED". By default the preview will show a simple preview if there is no environemnt variable.
+
+Auto Format:
+Auto was designed for ongoing manga's that I read to rename the weekly(or monthly) released chapters and put them in their correct location. The two sub options for Auto Format are:
+    Auto Chapter
+    Auto Volume
+
+Manual Format:
+Manual was mostly designed for any ongoing manga's that I have that have errors in their name or are in order. This is so I can quickly change a single chapter, multiple chapters, or an entire volume if I need to.
+
+Full Manga Format:
+Full Manga is used for any new ongoing or completed manga that I want to add to my library.
