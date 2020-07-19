@@ -1,0 +1,70 @@
+.inputmanga {
+    top: 10vh;
+    height: 6vh;
+    left: 3vw;
+    width: 50vw;
+    font-size: 5vh;
+    font-family: 'Times New Roman';
+    color: #dadada;
+    cursor: text;
+}
+
+.inputmanga:hover {
+    cursor: text;
+}
+
+.inputtitle {
+    top: 19vh;
+    height: 6vh;
+    left: 3vw;
+    width: 70vw;
+    font-size: 5vh;
+    font-family: 'Times New Roman';
+    color: #dadada;
+    cursor: text;
+}
+
+.inputtitle:hover {
+    cursor: text;
+}
+
+.inputtitle:focus {
+    border: solid;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.inputnumber {
+    top: 28vh;
+    height: 6vh;
+    left: 3vw;
+    width: 37vw;
+    font-size: 5vh;
+    font-family: 'Times New Roman';
+    color: #dadada;
+    cursor: text;
+}
+
+.inputnumber:hover {
+    cursor: text;
+}
+
+.inputnumber:focus {
+    border: solid;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.manualvolume {
+    top: 37vh;
+    width: 20vw;
+    left: 3vw;
+    height: 7vh;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.manualvolume:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}

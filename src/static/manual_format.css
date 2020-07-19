@@ -1,0 +1,44 @@
+.single {
+    top: 6vh;
+    width: 45vw;
+    margin-left: 3vw;
+    left: 0vw;
+    height: 42.5vh;
+    color: #3492aa;
+    border-color: #3492aa;
+}
+
+.single:hover {
+    color: #dadada;
+    background-color: #3492aa;
+}
+
+.multi {
+    right: 0vw;
+    top: 6vh;
+    width: 45vw;
+    margin-right: 3vw;
+    height: 42.5vh;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.multi:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}
+
+.volume {
+    top: 52.5vh;
+    height: 45vh;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    width: 94vw;
+    color:#ca3e47;
+    border-color: #ca3e47;
+}
+
+.volume:hover {
+    color: #dadada;
+    background-color: #ca3e47;
+}

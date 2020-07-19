@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Format Queue</title>
+        <title>Format Preview</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/preview.css">
     </head>
     <body>
         <!--Commit Format-->
@@ -12,12 +14,12 @@
             {% endfor %}
         </h5>
         <form name="commit" method="POST">
-            <label>Commit/Abort</label>
-            <select name="commit">
-                <option value="Commit">Commit</option>
-                <option value="Abort">Abort</option>
-             </select> 
-             <input type="submit" name="commit" value="Commit">
+            <div>
+                <input class="commit" type="submit" name="choice" value="Commit">
+            </div>
+            <div>
+                <input class="abort" type="submit" name="choice" value="Abort">
+            </div>
         </form>
     </body>
     </div>

@@ -1,0 +1,61 @@
+.selectmanga {
+    top: 10vh;
+    height: 6vh;
+    left: 3vw;
+}
+
+.inputtitle {
+    top: 18vh;
+    height: 6vh;
+    left: 3vw;
+    width: 70vw;
+    font-size: 5vh;
+    font-family: 'Times New Roman';
+    color: #dadada;
+    cursor: text;
+}
+
+.inputtitle:hover {
+    cursor: text;
+}
+
+.inputtitle:focus {
+    border: solid;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.inputlciv {
+    top: 27vh;
+    height: 6vh;
+    left: 3vw;
+    width: 45.5vw;
+    font-size: 5vh;
+    font-family: 'Times New Roman';
+    color: #dadada;
+    cursor: text;
+}
+
+.inputlciv:hover {
+    cursor: text;
+}
+
+.inputlciv:focus {
+    border: solid;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.autovolume {
+    top: 36vh;
+    width: 30vw;
+    left: 3vw;
+    height: 7vh;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.autovolume:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}

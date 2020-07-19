@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/auto_volume.css">
+    </head>
+    <body>
+        <h1>
+            AUTO VOLUME
+        </h1>
+        <div>
+            <!--Auto Chapter Form-->
+            <form name="aformat" method="POST">
+                <div>
+                    <!--NEED TO FIND WAY TO SELECT BASED ON SQL-->
+                    <select class="selectmanga" name="manga">
+                        <option value="aot">Attack on Titan</option>
+                        <option value="boruto">Boruto</option>
+                        <option value="dstone">Dr. STONE</option>
+                        <option value="mha">My Hero Academia</option>
+                        <option value="op">One Piece</option>
+                        <option value="platend">Platinum End</option>
+                    </select>
+                </div>
+                <!--Chapter/Volume Title-->
+                <div>
+                    <input class="inputtitle" type="text" name="title" placeholder="Volume Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Title'" autocomplete="off">
+                </div>
+                <div>
+                    <input class="inputlciv" type="text" name="last_chapter_in_volume" placeholder="Last Chapter Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Last Chapter Number'" autocomplete="off">
+                </div>
+                <!--Auto Format-->
+                <div>
+                    <input class="autovolume" type="submit" name="auto_volume" value="Auto Volume">
+                </div>
+                <div>
+                    <input class="mainmenu" type="submit" name="auto_volume" value="Main Menu">
+                </div>
+            </form>    
+        </div>
+    </body>
+
+</html>

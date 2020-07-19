@@ -1,0 +1,28 @@
+h2 {
+    margin-top: 15vh;
+    margin-bottom: 0vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    top: 15vh;
+    font-family: 'Times New Roman';
+    font-size: 4vh;
+    letter-spacing: 2px;
+    text-align: center;
+    color: #dadada;
+    word-wrap: break-word;
+    /* background-color: teal; */
+}
+
+.back {
+    top: 65vh;
+    width: 30vw;
+    left: 35vw;
+    height: 10vh;
+    color: #ca3e47;
+    border-color: #ca3e47;
+}
+
+.back:hover {
+    color: #dadada;
+    background-color: #ca3e47;
+}
