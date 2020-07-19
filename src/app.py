@@ -17,9 +17,9 @@ app.secret_key = os.urandom(64)
 @app.route('/', methods = ['GET', 'POST'])
 def index():
     manga.log_debug("index()")
-    # if(manga.check_manga_config() == False):
-    #     session["error"] = manga.message_read()
-    #     return redirect('/error')
+    if(manga.check_manga_config() == False):
+        session["error"] = manga.message_read()
+        return redirect('/error')
     if(request.method == 'GET'):
         session.pop("format", None)
         session.pop("manga", None)
