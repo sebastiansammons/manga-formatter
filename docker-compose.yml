@@ -1,0 +1,19 @@
+#this is what I include in my home servers's docker-compose.yml
+version: '3'
+services:
+  manga_format:
+    image: imthefridge/manga-format
+    container_name: manga-format
+    ports:
+      - "5000:5000"
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - <path to /manga>:/manga
+      - <path to /appdata>:/appdata
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - PREVIEW_TYPE="SIMPLE"
+      # Other Preview type
+      # - PREVIEW_TYPE="DETAILIED"
