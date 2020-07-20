@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Format Queue</title>
+        <title>Preview - Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/preview.css">
     </head>
     <body>
-        <!--Commit Format-->
-        <h5>
-            <!-- Show Preview -->
-            {% for i in range(0,len) %}
-            <div>{{preview[i]}}</div>
-            {% endfor %}
-        </h5>
-        <form name="commit" method="POST">
-            <label>Commit/Abort</label>
-            <select name="commit">
-                <option value="Commit">Commit</option>
-                <option value="Abort">Abort</option>
-             </select> 
-             <input type="submit" name="commit" value="Commit">
-        </form>
+        <div>
+            <h1>PREVIEW</h1>
+            <!-- Preview -->
+            <h5>
+                {% for i in range(0,len) %}
+                <div>{{preview[i]}}</div>
+                {% endfor %}
+            </h5>
+            <!-- Commit Form -->
+            <form name="commit" method="POST">
+                <!-- Commit -->
+                <div>
+                    <input class="commit" type="submit" name="choice" value="Commit">
+                </div>
+                <!-- Abort -->
+                <div>
+                    <input class="abort" type="submit" name="choice" value="Abort">
+                </div>
+            </form>
+        </div>
     </body>
-    </div>
 </html>

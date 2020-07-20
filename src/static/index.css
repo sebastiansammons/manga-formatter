@@ -1,0 +1,41 @@
+.autoformat {
+    top: 6vh;
+    left: 3vw;
+    height: 42.5vh;
+    width: 94vw;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.autoformat:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}
+
+.manualformat {
+    top: 52.5vh;
+    left: 3vw;
+    height: 45vh;
+    width: 45vw;
+    color: #c98936;
+    border-color: #c98936;
+}
+
+.manualformat:hover {
+    color: #dadada;
+    background-color: #c98936;
+}
+
+.fullformat {
+    top: 52.5vh;
+    right: 3vw;
+    height: 45vh;
+    width: 45vw;
+    color: #602080;
+    border-color: #602080;
+}
+
+.fullformat:hover {
+    color: #dadada;
+    background-color: #602080;
+}

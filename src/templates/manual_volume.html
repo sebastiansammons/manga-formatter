@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Manual Volume - Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/manual_volume.css">
+    </head>
+    <body>
+        <div>
+            <h1>MANUAL VOLUME</h1>
+            <!--Manual Volume Form-->
+            <form name = "msingle" method = "POST">
+                <!-- Manga -->
+                <div>
+                    <input class="inputmanga" type="text" name="manga" placeholder="Manga" onfocus="this.placeholder = ''" onblur="this.placeholder='Manga'" autocomplete="off">
+                </div>
+                <!-- Volume Title -->
+                <div>
+                    <input class="inputtitle" type="text" name="title" placeholder="Volume Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Title'" autocomplete="off">
+                </div>
+                <!-- Volume Number -->
+                <div>
+                    <input class="inputnumber" type="text" name="number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
+                </div>
+                <!--Manual Format-->
+                <div>
+                    <input class="manualvolume" type="submit" name="manual_volume" value="Volume">
+                </div>
+                <!-- Main Menu -->
+                <div>
+                    <input class="mainmenu" type="submit" name="manual_volume" value="Main Menu">
+                </div>
+            </form>    
+        </div>  
+    </body>
+</html>

@@ -161,22 +161,6 @@ def get_preview_type():
     else:
         return "DETAILED"
 
-#temp workaround
-def get_manga(manga):
-    manga_logging.log_debug("mangautility.get_manga(" + manga + ")")
-    if(manga == "aot"):
-        return "Attack on Titan"
-    elif(manga == "op"):
-        return "One Piece"
-    elif(manga == "mha"):
-        return "My Hero Academia"
-    elif(manga == "dstone"):
-        return "Dr. STONE"
-    elif(manga == "boruto"):
-        return "Boruto"
-    elif(manga == 'platend'):
-        return "Platinum End"
-
 def isdir(path):
     manga_logging.log_debug("mangautility.isdir(" + path + ")")
     return os.path.isdir(path)
