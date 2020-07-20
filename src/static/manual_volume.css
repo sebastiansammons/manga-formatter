@@ -1,10 +1,10 @@
 .inputmanga {
     top: 10vh;
-    height: 6vh;
     left: 3vw;
+    height: 6vh;
     width: 50vw;
-    font-size: 5vh;
     font-family: 'Times New Roman';
+    font-size: 5vh;
     color: #dadada;
     cursor: text;
 }
@@ -15,11 +15,11 @@
 
 .inputtitle {
     top: 19vh;
-    height: 6vh;
     left: 3vw;
+    height: 6vh;
     width: 70vw;
-    font-size: 5vh;
     font-family: 'Times New Roman';
+    font-size: 5vh;
     color: #dadada;
     cursor: text;
 }
@@ -28,19 +28,13 @@
     cursor: text;
 }
 
-.inputtitle:focus {
-    border: solid;
-    border-width: 4px;
-    border-radius: 8px;
-}
-
 .inputnumber {
     top: 28vh;
-    height: 6vh;
     left: 3vw;
+    height: 6vh;
     width: 37vw;
-    font-size: 5vh;
     font-family: 'Times New Roman';
+    font-size: 5vh;
     color: #dadada;
     cursor: text;
 }
@@ -49,22 +43,16 @@
     cursor: text;
 }
 
-.inputnumber:focus {
-    border: solid;
-    border-width: 4px;
-    border-radius: 8px;
-}
-
 .manualvolume {
     top: 37vh;
-    width: 20vw;
     left: 3vw;
     height: 7vh;
-    color: #34aa57;
-    border-color: #34aa57;
+    width: 20vw;
+    color: #3492aa;
+    border-color: #3492aa;
 }
 
 .manualvolume:hover {
     color: #dadada;
-    background-color: #34aa57;
+    background-color: #3492aa;
 }

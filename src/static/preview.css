@@ -1,16 +1,16 @@
 h5 {
-    margin-top: 5vh;
+    margin-top: 0vh;
     margin-bottom: 0vh;
     margin-left: 3vw;
-    margin-right: 3vw;
+    margin-right: 0vw;
     top: 15vh;
     height: 75vh;
+    width: 94vw;
     font-family: 'Times New Roman';
     font-size: 1.5vh;
     letter-spacing: 1px;
     color: #dadada;
     word-wrap: break-word;
-    /* background-color: teal; */
     overflow: scroll;
     overflow-x: hidden;
     scroll-behavior: auto;
@@ -21,13 +21,13 @@ h5 {
     width: 35vw;
     left: 10vw;
     height: 10vh;
-    color: #3492aa;
-    border-color: #3492aa;
+    color: #34aa57;
+    border-color: #34aa57;
 }
 
 .commit:hover {
     color: #dadada;
-    background-color: #3492aa;
+    background-color: #34aa57;
 }
 
 .abort {

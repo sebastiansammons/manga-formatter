@@ -70,7 +70,7 @@ def auto_chapter():
             session["manga"] = manga_title
             session["title"] = title
             session["format"] = "auto_chapter"
-            preview = manga.auto_chapter_preview(manga.get_manga(manga_title), title)
+            preview = manga.auto_chapter_preview(manga_title, title)
             if(preview == False):
                 session["error"] = manga.message_read()
                 return redirect('/error')
@@ -98,7 +98,7 @@ def auto_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "auto_volume"
-            preview = manga.auto_volume_preview(manga.get_manga(manga_title), number, title)
+            preview = manga.auto_volume_preview(manga_title, number, title)
             if(preview == False):
                 session["error"] = manga.message_read()
                 return redirect('/error')
@@ -246,9 +246,9 @@ def preview():
         return render_template('preview.html', preview = preview, len = len(preview))
     else:
         if "format" in session:
-            format = session["format"]
+            manga_format = session["format"]
         else:
-            format = ""
+            manga_format = ""
         if "manga" in session:
             manga_title = session["manga"]
         else:
@@ -261,18 +261,18 @@ def preview():
             title = session["title"]
         else:
             title = ""
-        commit = request.form['commit']
+        commit = request.form['choice']
         if(commit == "Commit"):
             manga.log_debug("Commit to format")
-            if(format == "auto_chapter"):
-                result = manga.auto_chapter_format(manga.get_manga(manga_title), title)
-            elif(format == "auto_volume"):
-                result = manga.auto_volume_format(manga.get_manga(manga_title), number, title)
-            elif(format == "manual_single_chapter"):
+            if(manga_format == "auto_chapter"):
+                result = manga.auto_chapter_format(manga_title, title)
+            elif(manga_format == "auto_volume"):
+                result = manga.auto_volume_format(manga_title, number, title)
+            elif(manga_format == "manual_single_chapter"):
                 result = manga.manual_single_chapter_format(manga_title, number, title)
-            elif(format == "manual_multiple_chapter"):
+            elif(manga_format == "manual_multiple_chapter"):
                 result = manga.manual_multiple_chapter_format(manga_title)
-            elif(format == "manual_volume"):
+            elif(manga_format == "manual_volume"):
                 result = manga.manual_volume_format(manga_title, number, title)
             else:
                 manga.log_critical("MAJOR ERROR")

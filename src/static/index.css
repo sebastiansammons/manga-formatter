@@ -1,44 +1,41 @@
 .autoformat {
     top: 6vh;
+    left: 3vw;
     height: 42.5vh;
-    margin-left: 3vw;
-    margin-right: 3vw;
     width: 94vw;
-    color:#ca3e47;
-    border-color: #ca3e47;
-}
-
-.autoformat:hover {
-    color: #dadada;
-    background-color: #ca3e47;
-}
-
-.manualformat {
-    top: 52.5vh;
-    width: 45vw;
-    margin-left: 3vw;
-    left: 0vw;
-    height: 45vh;
-    color: #3492aa;
-    border-color: #3492aa;
-}
-
-.manualformat:hover {
-    color: #dadada;
-    background-color: #3492aa;
-}
-
-.fullformat {
-    right: 0vw;
-    top: 52.5vh;
-    width: 45vw;
-    margin-right: 3vw;
-    height: 45vh;
     color: #34aa57;
     border-color: #34aa57;
 }
 
-.fullformat:hover {
+.autoformat:hover {
     color: #dadada;
     background-color: #34aa57;
+}
+
+.manualformat {
+    top: 52.5vh;
+    left: 3vw;
+    height: 45vh;
+    width: 45vw;
+    color: #c98936;
+    border-color: #c98936;
+}
+
+.manualformat:hover {
+    color: #dadada;
+    background-color: #c98936;
+}
+
+.fullformat {
+    top: 52.5vh;
+    right: 3vw;
+    height: 45vh;
+    width: 45vw;
+    color: #602080;
+    border-color: #602080;
+}
+
+.fullformat:hover {
+    color: #dadada;
+    background-color: #602080;
 }

@@ -1,10 +1,10 @@
 .inputmanga {
     top: 15vh;
-    height: 6vh;
     left: 3vw;
+    height: 6vh;
     width: 70vw;
-    font-size: 5vh;
     font-family: 'Times New Roman';
+    font-size: 5vh;
     color: #dadada;
     cursor: text;
 }
@@ -13,22 +13,16 @@
     cursor: text;
 }
 
-.inputmanga:focus {
-    border: solid;
-    border-width: 4px;
-    border-radius: 8px;
-}
-
 .manualmulti {
     top: 25vh;
-    width: 32vw;
     left: 3vw;
     height: 7vh;
-    color: #3492aa;
-    border-color: #3492aa;
+    width: 32vw;
+    color: #c98936;
+    border-color: #c98936;
 }
 
 .manualmulti:hover {
     color: #dadada;
-    background-color: #3492aa;
+    background-color: #c98936;
 }

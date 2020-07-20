@@ -1,41 +1,40 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Manga Formatter</title>
+        <title>Auto Chapter - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
         <link rel="stylesheet" href="../static/auto_chapter.css">
     </head>
     <body>
-        <h1>
-            AUTO CHAPTER
-        </h1>
         <div>
+            <h1>AUTO CHAPTER</h1>
             <!--Auto Chapter Form-->
             <form name="aformat" method="POST">
+                <!-- Manga -->
                 <div>
                     <!--NEED TO FIND WAY TO SELECT BASED ON SQL-->
                     <select class="selectmanga" name="manga">
-                        <option value="aot">Attack on Titan</option>
-                        <option value="boruto">Boruto</option>
-                        <option value="dstone">Dr. STONE</option>
-                        <option value="mha">My Hero Academia</option>
-                        <option value="op">One Piece</option>
-                        <option value="platend">Platinum End</option>
+                        <option value="Attack on Titan">Attack on Titan</option>
+                        <option value="Boruto">Boruto</option>
+                        <option value="Dr. STONE">Dr. STONE</option>
+                        <option value="My Hero Academia">My Hero Academia</option>
+                        <option value="One Piece">One Piece</option>
+                        <option value="Platinum End">Platinum End</option>
                     </select>
                 </div>
-                <!--Chapter/Volume Title-->
+                <!--Chapter Title-->
                 <div>
                     <input class="inputtitle" type="text" name="title" placeholder="Chapter Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Chapter Title'" autocomplete="off">
                 </div>
-                <!--Auto Format-->
+                <!--Auto Chapter-->
                 <div>
                     <input class="autochapter" type="submit" name="auto_chapter" value="Auto Chapter">
                 </div>
+                <!-- Main Menu -->
                 <div>
                     <input class="mainmenu" type="submit" name="auto_chapter" value="Main Menu">
                 </div>
             </form>    
         </div>
     </body>
-
 </html>
