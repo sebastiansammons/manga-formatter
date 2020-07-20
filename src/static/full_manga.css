@@ -1,0 +1,31 @@
+.inputmanga {
+    top: 15vh;
+    left: 3vw;
+    height: 6vh;
+    width: 70vw;
+    font-family: 'Times New Roman';
+    font-size: 5vh;
+    color: #dadada;
+    cursor: text;
+}
+
+.inputmanga:hover {
+    cursor: text;
+}
+
+.fullformat {
+    top: 25vh;
+    left: 3vw;
+    height: 7vh;
+    width: 45vw;
+    /* color: #3492aa;
+    border-color: #3492aa; */
+    color: #602080;
+    border-color: #602080;
+}
+
+.fullformat:hover {
+    color: #dadada;
+    /* background-color: #3492aa; */
+    background-color: #602080;
+}

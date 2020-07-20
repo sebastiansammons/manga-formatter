@@ -1,0 +1,45 @@
+h5 {
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+    margin-left: 3vw;
+    margin-right: 0vw;
+    top: 15vh;
+    height: 75vh;
+    width: 94vw;
+    font-family: 'Times New Roman';
+    font-size: 1.5vh;
+    letter-spacing: 1px;
+    color: #dadada;
+    word-wrap: break-word;
+    overflow: scroll;
+    overflow-x: hidden;
+    scroll-behavior: auto;
+}
+
+.commit {
+    top: 85vh;
+    width: 35vw;
+    left: 10vw;
+    height: 10vh;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.commit:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}
+
+.abort {
+    top: 85vh;
+    width: 35vw;
+    left: 50vw;
+    height: 10vh;
+    color: #ca3e47;
+    border-color: #ca3e47;
+}
+
+.abort:hover {
+    color: #dadada;
+    background-color: #ca3e47;
+}

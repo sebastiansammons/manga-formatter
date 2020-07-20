@@ -1,0 +1,94 @@
+* {
+    outline: none;
+}
+
+body {
+    position: relative;
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    background-color: #1b2129;
+}
+
+h1 {
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    font-family: Impact;
+    font-size: 4vh;
+    color: #dadada;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+input {
+    position: fixed;
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    font-family: Impact;
+    font-size: 5vh;
+    color: #dadada;
+    background-color: #272a30;
+    border: solid;
+    border-width: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+input:hover {
+    transition-duration: 0.35s;
+    cursor: pointer;
+}
+
+input:focus {
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+select {
+    position: fixed;
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    font-family: 'Times New Roman';
+    font-size: 5vh;
+    color: #dadada;
+    cursor: pointer;
+    background-color: #272a30;
+    border: solid;
+    border-color: #dadada;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.mainmenu {
+    position: fixed;
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    top: 1.5vh;
+    left: 3vh;
+    font-family: Impact;
+    font-size: 2vh;
+
+    color: #ca3e47;
+    background-color: #272a30;
+    border: solid;
+    border-color: #ca3e47;
+    border-width: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.mainmenu:hover {
+    color: #dadada;
+    background-color: #ca3e47;
+    transition-duration: 0.35s;
+    cursor: pointer;
+}

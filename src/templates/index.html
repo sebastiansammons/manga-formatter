@@ -1,36 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Manga Formatter</title>
+        <title>Main Menu - Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/index.css">
     </head>
-    <h1>
-        MANGA FORMATTER
-    </h1>
     <body>
         <div>
-            <!--Format Form-->
-            <!-- WIP -->
-            <!-- <div>
-                <form name="auto" method="POST">
-                    <input type="submit" name="auto" value="Auto Format">
-                </form>
-            </div>
-            <div>
-                <form name="manual" method="POST">
-                    <input type="submit" name="manual" value="Manual Format">
-                </form>            
-            </div> -->
-
-             <!-- BEFORE -->
+            <h1>WHAT FORMAT TYPE?</h1>
+            <!-- Main Menu Form -->
             <form name="format" method="POST">
-                Select Format
-                <label>Select Format</label>
-                <select name="manga_format">
-                    <option value="auto">Auto Format</option>
-                    <option value="manual">Manual Format</option>
-                    <option value="full">Full Manga Format</option>
-                 </select> 
-                 <input type="submit" name="submitformat" value="Format">
+                <!-- Auto Format -->
+                <div>
+                    <input class="autoformat" type="submit" name="manga_format" value="Auto">
+                </div>
+                <!-- Manual Format -->
+                <div>
+                    <input class="manualformat" type="submit" name="manga_format" value="Manual">
+                </div>
+                <!-- Full Manga Format -->
+                <div>
+                    <input class="fullformat" type="submit" name="manga_format" value="Full Manga">
+                </div>
             </form>
         </div>
     </body>

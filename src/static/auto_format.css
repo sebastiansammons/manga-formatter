@@ -1,0 +1,27 @@
+.chapter {
+    top: 6vh;
+    left: 3vw;
+    height: 91.5vh;
+    width: 45vw;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.chapter:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}
+
+.volume {
+    top: 6vh;
+    right: 3vw;
+    height: 91.5vh;
+    width: 45vw;
+    color: #3492aa;
+    border-color: #3492aa;
+}
+
+.volume:hover {
+    color: #dadada;
+    background-color: #3492aa;
+}
