@@ -156,10 +156,10 @@ def get_extension(src):
 
 def get_preview_type():
     manga_logging.log_debug("get_preview_type()")
-    if(os.getenv("PREVIEW_TYPE", "SIMPLE") == "SIMPLE"):
-        return "SIMPLE"
-    else:
+    if(os.getenv("PREVIEW_TYPE", "SIMPLE") == "DETAILED"):
         return "DETAILED"
+    else:
+        return "SIMPLE"
 
 def isdir(path):
     manga_logging.log_debug("mangautility.isdir(" + path + ")")
