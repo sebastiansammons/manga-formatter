@@ -1,3 +1,4 @@
 #.gitignore
 __pycache__/
 manga/__pycache__/
+docker-compose_testing.yml

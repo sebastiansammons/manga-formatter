@@ -172,9 +172,9 @@ def manual_single_chapter_format(manga, chapter_number, chapter_title):
     for page in range(0, page_count):
         page_src[page] = manga_config.SOURCE_PATH + str(chapter_pages[page])
         if(chapter_title == ""):
-            page_dest[page] = new_chapter_path + manga + " CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + manga_utility.get_extension(page_src[page])
+            page_dest[page] = new_chapter_path + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + manga_utility.get_extension(page_src[page])
         else:
-            page_dest[page] = new_chapter_path + manga + " CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
+            page_dest[page] = new_chapter_path + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + manga_utility.get_extension(page_src[page])
     #Rename
     if(manga_utility.rename(page_src, page_dest) == False):
         return False
