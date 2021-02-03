@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #manga_utility.py
 import os
 import shutil
@@ -854,4 +853,3 @@ def sqlite_get_name(manga):
     else:
         result = manga.replace(' ', '_')
         return result
->>>>>>> 09afc7331442fafec89a06d0e4f2157110129f2f
