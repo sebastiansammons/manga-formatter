@@ -11,7 +11,9 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    env:
+      PUID: 1001
+      PGID: 1001
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -19,9 +21,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8.4
-      - env:
-          PGID: 1000
-          PUID: 1000
+      - run: cat /etc/passwd
+      - run: whoami
+      - run: who
       - run: python3 -m unittest discover
           
 
