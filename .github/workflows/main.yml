@@ -22,6 +22,8 @@ jobs:
         with:
           python-version: 3.8.4
       - run: cat /etc/passwd
+      - run: whoami
+      - run: who
       - run: python3 -m unittest discover
           
 
