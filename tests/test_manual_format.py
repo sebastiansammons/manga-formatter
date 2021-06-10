@@ -10,19 +10,19 @@ from ..src.manga import manga_format
 class TestManualFormat(unittest.TestCase):
 
     def setUp(self):
-        manga_config.SOURCE_PATH = "./manga-formatter/tests/data/test_format/src/"
-        manga_config.DESTINATION_PATH = "./manga-formatter/tests/data/test_format/dest/"
-        os.mkdir("./manga-formatter/tests/data/test_format/dest/")
+        manga_config.SOURCE_PATH = "./tests/data/test_format/src/"
+        manga_config.DESTINATION_PATH = "./tests/data/test_format/dest/"
+        os.mkdir("./tests/data/test_format/dest/")
 
     def tearDown(self):
         try:
-            shutil.rmtree("./manga-formatter/tests/data/test_format/dest/")
-            shutil.rmtree("./manga-formatter/tests/data/test_format/src/")
+            shutil.rmtree("./tests/data/test_format/dest/")
+            shutil.rmtree("./tests/data/test_format/src/")
         except:
             pass
 
     def test_single_chapter(self):
-        shutil.copytree("./manga-formatter/tests/data/test_format/manual_single_chapter/src/", manga_config.SOURCE_PATH)
+        shutil.copytree("./tests/data/test_format/manual_single_chapter/src/", manga_config.SOURCE_PATH)
         manga_format.manual_single_chapter_format("Blue Box", 6, "Good Manga")
         new_chapter = Files(manga_config.DESTINATION_PATH + "006/")
         self.assertEqual(new_chapter.filenames[0], "Blue Box - CH006PG01 - Good Manga.jpg")
@@ -30,7 +30,7 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(new_chapter.count, 17)
         shutil.rmtree(manga_config.SOURCE_PATH)
 
-        shutil.copytree("./manga-formatter/tests/data/test_format/manual_single_chapter/src - multi/", manga_config.SOURCE_PATH)
+        shutil.copytree("./tests/data/test_format/manual_single_chapter/src - multi/", manga_config.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format("Naruto")
         new_chapter = Files(manga_config.DESTINATION_PATH + "138/")
         self.assertEqual(new_chapter.filenames[0], "Naruto - CH138PG01 - Single Chapter.jpg")
@@ -39,7 +39,7 @@ class TestManualFormat(unittest.TestCase):
 
 
     def test_multi_chapter(self):
-        shutil.copytree("./manga-formatter/tests/data/test_format/manual_multi_chapter/src/", manga_config.SOURCE_PATH)
+        shutil.copytree("./tests/data/test_format/manual_multi_chapter/src/", manga_config.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format("Bleach")
         new_chapter = Files(manga_config.DESTINATION_PATH + "001/")
         self.assertEqual(new_chapter.filenames[0], "Bleach - CH001PG01 - New Series.jpeg")
@@ -58,7 +58,7 @@ class TestManualFormat(unittest.TestCase):
         shutil.rmtree(manga_config.SOURCE_PATH)
 
     def test_manual_volume(self):
-        shutil.copytree("./manga-formatter/tests/data/test_format/manual_volume/src/", manga_config.SOURCE_PATH)
+        shutil.copytree("./tests/data/test_format/manual_volume/src/", manga_config.SOURCE_PATH)
         manga_format.manual_volume_format("One Piece", 23, "Best Volume Ever!")
         new_volume = Files(manga_config.DESTINATION_PATH + "One Piece Volume 23 - Best Volume Ever!/")
         self.assertEqual(new_volume.filenames[0], "One Piece - CH096PG01 - New.jpg")
