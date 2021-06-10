@@ -9,18 +9,18 @@ from ..src.manga import manga_config
 class TestFiles(unittest.TestCase):
 
     def test_Files(self):
-        Files01 = Files("./manga-formatter/tests/data/test_Files/Files/Files01")
-        Files02 = Files("./manga-formatter/tests/data/test_Files/Files/Files02")
-        Files03 = Files("./manga-formatter/tests/data/test_Files/Files/Files03")
-        Files04 = Files("./manga-formatter/tests/data/test_Files/Files/Files04")
+        Files01 = Files("./tests/data/test_Files/Files/Files01")
+        Files02 = Files("./tests/data/test_Files/Files/Files02")
+        Files03 = Files("./tests/data/test_Files/Files/Files03")
+        Files04 = Files("./tests/data/test_Files/Files/Files04")
         list01 = ["file01.jpg", "file02.jpg", "file03.jpg"]
         list02 = []
         list03 = ["file01.jpg", "file02.jpg", "path01", "path02"]
         list04 = ["path01", "path02", "path03"]
-        self.assertEqual(Files01.path, "./manga-formatter/tests/data/test_Files/Files/Files01")
-        self.assertEqual(Files02.path, "./manga-formatter/tests/data/test_Files/Files/Files02")
-        self.assertEqual(Files03.path, "./manga-formatter/tests/data/test_Files/Files/Files03")
-        self.assertEqual(Files04.path, "./manga-formatter/tests/data/test_Files/Files/Files04")
+        self.assertEqual(Files01.path, "./tests/data/test_Files/Files/Files01")
+        self.assertEqual(Files02.path, "./tests/data/test_Files/Files/Files02")
+        self.assertEqual(Files03.path, "./tests/data/test_Files/Files/Files03")
+        self.assertEqual(Files04.path, "./tests/data/test_Files/Files/Files04")
         self.assertEqual(Files01.filenames, list01)
         self.assertEqual(Files02.filenames, list02)
         self.assertEqual(Files03.filenames, list03)
@@ -34,12 +34,12 @@ class TestFiles(unittest.TestCase):
         self.assertEqual(Files04.filenames[2], list04[2])
 
     def test_isfile(self):
-        file_obj = Files("./manga-formatter/tests/data/test_Files/isfile/")
+        file_obj = Files("./tests/data/test_Files/isfile/")
         self.assertEqual(file_obj.isfile(), True)
         self.assertEqual(file_obj.isfile(1), False)
             
     def test_ext(self):
-        file_obj = Files("./manga-formatter/tests/data/test_Files/ext/")
+        file_obj = Files("./tests/data/test_Files/ext/")
         self.assertEqual(file_obj.ext(), ".txt")
         self.assertEqual(file_obj.ext(1), ".txt")
         self.assertEqual(file_obj.ext(2), -1)
@@ -47,12 +47,12 @@ class TestFiles(unittest.TestCase):
 
     # TODO update for preview option
     def test_pad_zero(self):
-        src01 = "./manga-formatter/tests/data/test_Files/pad_zero/src/test01/"
-        src02 = "./manga-formatter/tests/data/test_Files/pad_zero/src/test02/"
-        src03 = "./manga-formatter/tests/data/test_Files/pad_zero/src/test03/"
-        dest01 = "./manga-formatter/tests/data/test_Files/pad_zero/dest/test01/"
-        dest02 = "./manga-formatter/tests/data/test_Files/pad_zero/dest/test02/"
-        dest03 = "./manga-formatter/tests/data/test_Files/pad_zero/dest/test03/"
+        src01 = "./tests/data/test_Files/pad_zero/src/test01/"
+        src02 = "./tests/data/test_Files/pad_zero/src/test02/"
+        src03 = "./tests/data/test_Files/pad_zero/src/test03/"
+        dest01 = "./tests/data/test_Files/pad_zero/dest/test01/"
+        dest02 = "./tests/data/test_Files/pad_zero/dest/test02/"
+        dest03 = "./tests/data/test_Files/pad_zero/dest/test03/"
         shutil.copytree(src01, dest01)
         shutil.copytree(src02, dest02)
         shutil.copytree(src03, dest03)
@@ -79,13 +79,13 @@ class TestFiles(unittest.TestCase):
         shutil.rmtree(dest03)
 
     def test_copyfile(self):
-        src01 = "./manga-formatter/tests/data/test_Files/copyfile/src/test01/"
-        src02 = "./manga-formatter/tests/data/test_Files/copyfile/src/test02/"
-        src03 = "./manga-formatter/tests/data/test_Files/copyfile/src/test03/"
-        dest01 = "./manga-formatter/tests/data/test_Files/copyfile/dest/test01/"
-        dest02 = "./manga-formatter/tests/data/test_Files/copyfile/dest/test02/"
-        dest03 = "./manga-formatter/tests/data/test_Files/copyfile/dest/test03/"
-        dest04 = "./manga-formatter/tests/data/test_Files/copyfile/dest/test04"
+        src01 = "./tests/data/test_Files/copyfile/src/test01/"
+        src02 = "./tests/data/test_Files/copyfile/src/test02/"
+        src03 = "./tests/data/test_Files/copyfile/src/test03/"
+        dest01 = "./tests/data/test_Files/copyfile/dest/test01/"
+        dest02 = "./tests/data/test_Files/copyfile/dest/test02/"
+        dest03 = "./tests/data/test_Files/copyfile/dest/test03/"
+        dest04 = "./tests/data/test_Files/copyfile/dest/test04"
         os.mkdir(dest01)
         shutil.copytree(src02, dest02)
         os.mkdir(dest03)
@@ -101,18 +101,18 @@ class TestFiles(unittest.TestCase):
         shutil.rmtree(dest03)
 
     def test_rename(self):
-        og01 = "./manga-formatter/tests/data/test_Files/rename/original/test01"
-        og02 = "./manga-formatter/tests/data/test_Files/rename/original/test02"
-        og03 = "./manga-formatter/tests/data/test_Files/rename/original/test03"
-        og04 = "./manga-formatter/tests/data/test_Files/rename/original/test04"
-        src01 = "./manga-formatter/tests/data/test_Files/rename/src/test01/"
-        src02 = "./manga-formatter/tests/data/test_Files/rename/src/test02/"
-        src03 = "./manga-formatter/tests/data/test_Files/rename/src/test03/"
-        src04 = "./manga-formatter/tests/data/test_Files/rename/src/test04/"
-        dest01 = "./manga-formatter/tests/data/test_Files/rename/dest/test01/"
-        dest02 = "./manga-formatter/tests/data/test_Files/rename/dest/test02/"
-        dest03 = "./manga-formatter/tests/data/test_Files/rename/dest/test03/"
-        dest04 = "./manga-formatter/tests/data/test_Files/rename/dest/test04/"
+        og01 = "./tests/data/test_Files/rename/original/test01"
+        og02 = "./tests/data/test_Files/rename/original/test02"
+        og03 = "./tests/data/test_Files/rename/original/test03"
+        og04 = "./tests/data/test_Files/rename/original/test04"
+        src01 = "./tests/data/test_Files/rename/src/test01/"
+        src02 = "./tests/data/test_Files/rename/src/test02/"
+        src03 = "./tests/data/test_Files/rename/src/test03/"
+        src04 = "./tests/data/test_Files/rename/src/test04/"
+        dest01 = "./tests/data/test_Files/rename/dest/test01/"
+        dest02 = "./tests/data/test_Files/rename/dest/test02/"
+        dest03 = "./tests/data/test_Files/rename/dest/test03/"
+        dest04 = "./tests/data/test_Files/rename/dest/test04/"
         shutil.copytree(og01, src01)
         shutil.copytree(og02, src02)
         shutil.copytree(og03, src03)

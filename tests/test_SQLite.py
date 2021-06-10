@@ -12,19 +12,19 @@ from ..src.manga import manga_config
 class TestSQLite(unittest.TestCase):
 
     def setUp(self):
-        shutil.copyfile("./manga-formatter/tests/data/db/test_manga.db", "./manga-formatter/tests/data/test_SQLite/test_manga.db")
-        self.manga_db = SQLite("./manga-formatter/tests/data/test_SQLite/test_manga.db")
+        shutil.copyfile("./tests/data/db/test_manga.db", "./tests/data/test_SQLite/test_manga.db")
+        self.manga_db = SQLite("./tests/data/test_SQLite/test_manga.db")
 
     def tearDown(self):
         self.manga_db.close()
-        os.remove("./manga-formatter/tests/data/test_SQLite/test_manga.db")
+        os.remove("./tests/data/test_SQLite/test_manga.db")
 
     def test_sqlite(self):
-        not_a_db = SQLite("./manga-formatter/tests/data/test_SQLite/notadb.txt")
-        dir_db = SQLite("./manga-formatter/tests/data/test_SQLite/")
-        fake_db = SQLite("./manga-formatter/tests/data/test_SQLite/fakedb.db")
-        empty_db = SQLite("./manga-formatter/tests/data/test_SQLite/empty.db")
-        double_db = SQLite("./manga-formatter/tests/data/test_SQLite/test_manga.db")
+        not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
+        dir_db = SQLite("./tests/data/test_SQLite/")
+        fake_db = SQLite("./tests/data/test_SQLite/fakedb.db")
+        empty_db = SQLite("./tests/data/test_SQLite/empty.db")
+        double_db = SQLite("./tests/data/test_SQLite/test_manga.db")
         self.assertEqual(not_a_db.connection, None)
         self.assertEqual(not_a_db.cursor, None)
         self.assertEqual(dir_db.connection, None)
@@ -52,11 +52,11 @@ class TestSQLite(unittest.TestCase):
         #add query isn't string test?
 
         #bad db
-        not_a_db = SQLite("./manga-formatter/tests/data/test_SQLite/notadb.txt")
+        not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.execute("SELECT * FROM FAKETABLE")
         self.assertEqual(result, False)
 
-        dir_db = SQLite("./manga-formatter/tests/data/test_SQLite/")
+        dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.execute("SELECT * FROM FAKETABLE")
         self.assertEqual(result, False)
 
@@ -110,7 +110,7 @@ class TestSQLite(unittest.TestCase):
         self.assertEqual(result, [7])
         self.manga_db.commit()
         self.manga_db.close()
-        self.manga_db = SQLite("./manga-formatter/tests/data/test_SQLite/test_manga.db")
+        self.manga_db = SQLite("./tests/data/test_SQLite/test_manga.db")
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [7])
 
@@ -120,15 +120,15 @@ class TestSQLite(unittest.TestCase):
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [8])
         self.manga_db.close()
-        self.manga_db = SQLite("./manga-formatter/tests/data/test_SQLite/test_manga.db")
+        self.manga_db = SQLite("./tests/data/test_SQLite/test_manga.db")
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertNotEqual(result, [8])
 
         #commit bad .db
-        not_a_db = SQLite("./manga-formatter/tests/data/test_SQLite/notadb.txt")
+        not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.commit()
         self.assertEqual(result, False)
-        dir_db = SQLite("./manga-formatter/tests/data/test_SQLite/")
+        dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.commit()
         self.assertEqual(result, False)
 
@@ -145,10 +145,10 @@ class TestSQLite(unittest.TestCase):
         self.assertEqual(result, False)
 
         #close bad db
-        not_a_db = SQLite("./manga-formatter/tests/data/test_SQLite/notadb.txt")
+        not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.close()
         self.assertEqual(result, False)
-        dir_db = SQLite("./manga-formatter/tests/data/test_SQLite/")
+        dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.close()
         self.assertEqual(result, False)
 
