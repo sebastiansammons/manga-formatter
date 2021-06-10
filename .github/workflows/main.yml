@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: 3.8.4
       - run: pwd
-      - run: cd ..
+      - run: cd /home/runner/work/manga-formatter
       - run: pwd
       - run: ls 
       - run: python3 -m unittest discover
