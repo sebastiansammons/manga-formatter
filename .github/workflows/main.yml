@@ -19,10 +19,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8.4
-      - run: pwd
-      - run: cd /home/runner/work/manga-formatter
-      - run: pwd
-      - run: ls 
+      - env:
+          PGID: 1000
+          PUID: 1000
       - run: python3 -m unittest discover
           
 
