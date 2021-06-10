@@ -1,7 +1,9 @@
 #test_Directory.py
 import unittest
-from ..src.manga import Directory
-from ..src.manga import manga_config
+# from ..src.manga import Directory
+# from ..src.manga import manga_config
+import src.manga.Directory as Directory
+import src.manga.manga_config as manga_config
 
 class TestDirectory(unittest.TestCase):
 

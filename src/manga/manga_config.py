@@ -19,8 +19,8 @@ OP_COVER_SUBPATH = "/Cover Pages/"
 # DB_FILE_PATH = "/container/db/test_manga.db"
 
 #TestingPaths (Command Line)
-MANGA_PATH = "./manga-formatter/tests/data/container/manga/"
-SOURCE_PATH = "./manga-formatter/tests/data/container/source/"
-DESTINATION_PATH = "./manga-formatter/tests/data/container/destination/"
-LOGS_PATH = "./manga-formatter/tests/data/container/logs/"
-DB_FILE_PATH = "./manga-formatter/tests/data/container/db/test_manga.db"
+MANGA_PATH = "./tests/data/container/manga/"
+SOURCE_PATH = "./tests/data/container/source/"
+DESTINATION_PATH = "./tests/data/container/destination/"
+LOGS_PATH = "./tests/data/container/logs/"
+DB_FILE_PATH = "./tests/data/container/db/test_manga.db"

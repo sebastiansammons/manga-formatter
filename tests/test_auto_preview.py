@@ -2,8 +2,10 @@
 import shutil
 import unittest
 import logging
-from ..src.manga import manga_config
-from ..src.manga import manga_preview
+# from ..src.manga import manga_config
+# from ..src.manga import manga_preview
+import src.manga.manga_config as manga_config
+import src.manga.manga_preview as manga_preview
 
 
 

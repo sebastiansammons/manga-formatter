@@ -1,9 +1,13 @@
 # test_check.py
 import shutil
 import unittest
-from ..src.manga import SQLite
-from ..src.manga import manga_config
-from ..src.manga import manga_check
+# from ..src.manga import SQLite
+# from ..src.manga import manga_config
+# from ..src.manga import manga_check
+import src.manga.SQLite as SQLite
+import src.manga.manga_config as manga_config
+import src.manga.manga_check as manga_check
+
 
 class TestCheck(unittest.TestCase):
 

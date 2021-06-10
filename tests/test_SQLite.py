@@ -4,8 +4,8 @@ import os
 import shutil
 import sqlite3
 from unittest.mock import patch
-from ..src.manga import SQLite
-from ..src.manga import manga_config
+import src.manga.SQLite as SQLite
+import src.manga.manga_config as manga_config
 
 @patch.dict('os.environ', {'PGID': '1000'})
 @patch.dict('os.environ', {'PUID': '1000'})

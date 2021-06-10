@@ -3,8 +3,10 @@ import unittest
 import shutil
 import os
 from unittest.case import SkipTest
-from ..src.manga import manga_config
-from ..src.manga import manga_format
+# from ..src.manga import manga_config
+# from ..src.manga import manga_format
+import src.manga.manga_config as manga_config
+import src.manga.manga_format as manga_format
 
 
 @SkipTest
