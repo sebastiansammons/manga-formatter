@@ -1,7 +1,9 @@
 #__init__.py
 from .manga_config import *
-from .manga_format import *
-from .manga_full import *
-from .manga_logging import *
+from .Directory import *
+from .Files import *
+from .SQLite import *
+from .manga_check import *
 from .manga_preview import *
-from .manga_utility import *
+from .manga_format import *
+from .manga_error import *

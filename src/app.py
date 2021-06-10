@@ -1,24 +1,36 @@
 #app.py
 from flask import Flask, render_template, request, redirect, session
-import manga
+# import manga
+from . import manga
 import os
+import logging
 
 
 #
 #Initialize Logger
 #
-manga.log_config()
 
-manga.log_debug("app = Flask(__name__)")
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s|%(funcName)-30s|%(levelname)-7s|%(message)s')
+file_handler = logging.FileHandler(manga.LOGS_PATH + "manga.log")
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+stream_handler.setLevel(logging.WARNING)
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
+
 app = Flask(__name__)
-
 app.secret_key = os.urandom(64)
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
-    manga.log_debug("index()")
     if(manga.check_manga_config() == False):
-        session["error"] = manga.message_read()
+        session["error"] =  manga.error_read()
         return redirect('/error')
     if(request.method == 'GET'):
         session.pop("format", None)
@@ -35,11 +47,11 @@ def index():
         elif(manga_format == "Manual"):
             return redirect('/manual')
         elif(manga_format == "Full Manga"):
-            return redirect('/full')
+            return redirect('/')
+            # return redirect('/full')
 
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
-    manga.log_debug("auto_format()")
     if(request.method == 'GET'):
         return render_template('auto_format.html')
     else:
@@ -51,13 +63,11 @@ def auto_format():
         elif(format_type == "Main Menu"):
             return redirect('/')    
         else:
-            manga.log_error("AUTO FORMAT SELECTION ERROR")
             session["error"] = "AUTO FORMAT SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/auto/chapter', methods = ['GET', 'POST'])
 def auto_chapter():
-    manga.log_debug("auto_chapter()")
     if(request.method == 'GET'):
         return render_template('auto_chapter.html')
     else:
@@ -70,20 +80,18 @@ def auto_chapter():
             session["manga"] = manga_title
             session["title"] = title
             session["format"] = "auto_chapter"
-            preview = manga.auto_chapter_preview(manga_title, title)
-            if(preview == False):
-                session["error"] = manga.message_read()
+            check = manga.check_auto_chapter(manga_title, title)
+            if(check == False):
+                session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = preview
+            session["preview"] = manga.auto_chapter_preview(manga_title, title)
             return redirect('/preview')
         else:
-            manga.log_error("CHAPTER SELECTION ERROR")
             session["error"] = "CHAPTER SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/auto/volume', methods = ['GET', 'POST'])
 def auto_volume():
-    manga.log_debug("auto_volume()")
     if(request.method == 'GET'):
         return render_template('auto_volume.html')
     else:
@@ -98,20 +106,18 @@ def auto_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "auto_volume"
-            preview = manga.auto_volume_preview(manga_title, number, title)
-            if(preview == False):
-                session["error"] = manga.message_read()
+            check = manga.check_auto_volume(manga_title, number, title)
+            if(check == False):
+                session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = preview
+            session["preview"] = manga.auto_volume_preview(manga_title, number, title)
             return redirect('/preview')
         else:
-            manga.log_error("VOLUME SELECTION ERROR")
             session["error"] = "VOLUME SELECTION ERROR"
             return redirect('/error')    
 
 @app.route('/manual', methods = ['GET', 'POST'])
 def manual_format():
-    manga.log_debug("manual_format()")
     if(request.method == 'GET'):
         return render_template('manual_format.html')
     else:
@@ -125,13 +131,11 @@ def manual_format():
         elif(format_type == "Main Menu"):
             return redirect('/')
         else:
-            manga.log_error("AUTO FORMAT SELECTION ERROR")
             session["error"] = "AUTO FORMAT SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/manual/single', methods = ['GET', 'POST'])
 def manual_single():
-    manga.log_debug("manual_single()")
     if(request.method == 'GET'):
         return render_template('manual_single.html')
     else:
@@ -146,20 +150,18 @@ def manual_single():
             session["number"] = number
             session["title"] = title
             session["format"] = "manual_single_chapter"
-            preview = manga.manual_single_chapter_preview(manga_title, number, title)
-            if(preview == False):
-                session["error"] = manga.message_read()
+            check = manga.check_manual_single_chapter(manga_title, number, title)
+            if(check == False):
+                session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = preview
+            session["preview"] = manga.manual_single_chapter_preview(manga_title, number, title)
             return redirect('/preview')
         else:
-            manga.log_error("MANUAL CHAPTER SELECTION ERROR")
             session["error"] = "MANUAL CHAPTER SELECTION ERROR"
             return redirect('/error')  
 
 @app.route('/manual/multi', methods = ['GET', 'POST'])
 def manual_multi():
-    manga.log_debug("manual_multi()")
     if(request.method == 'GET'):
         return render_template('manual_multi.html')
     else:
@@ -170,20 +172,18 @@ def manual_multi():
             manga_title = request.form['manga']
             session["manga"] = manga_title
             session["format"] = "manual_multiple_chapter"
-            preview = manga.manual_multiple_chapter_preview(manga_title)
-            if(preview == False):
-                session["error"] = manga.message_read()
+            check = manga.check_manual_multiple_chapter(manga_title)
+            if(check == False):
+                session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = preview
+            session["preview"] = manga.manual_multiple_chapter_preview(manga_title)
             return redirect('/preview')
         else:
-            manga.log_error("MANUAL CHAPTER SELECTION ERROR")
             session["error"] = "MANUAL CHAPTER SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/manual/volume', methods = ['GET', 'POST'])
 def manual_volume():
-    manga.log_debug("manual_volume()")
     if(request.method == 'GET'):
         return render_template('manual_volume.html')
     else:
@@ -198,20 +198,18 @@ def manual_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "manual_volume"
-            preview = manga.manual_volume_preview(manga_title, number, title)
-            if(preview == False):
-                session["error"] = manga.message_read()
+            check = manga.check_manual_volume(manga_title, number, title)
+            if(check == False):
+                session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = preview
+            session["preview"] = manga.manual_volume_preview(manga_title, number, title)
             return redirect('/preview')
         else:
-            manga.log_error("MANUAL VOLUME SELECTION ERROR")
             session["error"] = "MANUAL VOLUME SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/full', methods = ['GET', 'POST'])
 def full_format():
-    manga.log_debug("full_format()")
     if(request.method == 'GET'):
         return render_template('full_manga.html')
     else:
@@ -221,23 +219,22 @@ def full_format():
         elif(submit == "Full Manga Format"):
             manga_title = request.form['manga']
             if(manga_title == ""):
-                manga.log_warning("EMPTY MANGA TITLE")
                 session["error"] = "EMPTY MANGA TITLE"
                 return redirect('/error')
             else:
-                result = manga.full_manga(manga_title)
-                if(result == False):
-                    session["error"] = manga.message_read()
+                # check = manga.full_manga(manga_title)
+                check = False
+                if(check == False):
+                    session["error"] = "FULL MANGA NOT AVAILABLE"
+                    # session["error"] =  manga.error_read()
                     return redirect('/error')
                 return redirect('/')
         else:
-            manga.log_error("FULL MANGA SELECTION ERROR")
             session["error"] = "FULL MANGA SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/preview', methods = ['GET', 'POST'])
 def preview():
-    manga.log_debug("preview()")
     if(request.method == 'GET'):
         if "preview" in session:
             preview = session["preview"]
@@ -263,7 +260,6 @@ def preview():
             title = ""
         commit = request.form['choice']
         if(commit == "Commit"):
-            manga.log_debug("Commit to format")
             if(manga_format == "auto_chapter"):
                 result = manga.auto_chapter_format(manga_title, title)
             elif(manga_format == "auto_volume"):
@@ -275,18 +271,17 @@ def preview():
             elif(manga_format == "manual_volume"):
                 result = manga.manual_volume_format(manga_title, number, title)
             else:
-                manga.log_critical("MAJOR ERROR")
                 session["error"] = "MAJOR ERROR"
         elif(commit =="Abort"):
             return redirect('/')
         if(result == False):
-            session["error"] = manga.message_read()
+            session["error"] =  manga.error_read()
             return redirect('/error')
         return redirect('/')
 
 @app.route('/error', methods = ['GET', 'POST'])
 def error():
-    manga.log_debug("error()")
+    # manga.log_debug("error()")
     if(request.method == 'GET'):
         if "error" in session:
             error = session["error"]

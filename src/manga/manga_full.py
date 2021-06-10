@@ -1,9 +1,8 @@
 #manga_full.py
 from . import manga_config
 from . import manga_logging
-from . import manga_utility
 
-
+# TODO UPDATE LATER, DISABLE FOR NOW
 def full_manga(manga):
     manga_logging.log_debug("mangafull.full_manga(" + manga + ")")
     manga_path = manga_config.MANGA_PATH + manga + manga_config.NEW_CHAPTERS_SUBPATH
@@ -233,3 +232,9 @@ def check_full_manga(manga,manga_path):
         manga_logging.log_error("[" + manga_path + "] HAS A MISSING CHAPTER")
         manga_logging.message_write("[" + manga_path + "] HAS A MISSING CHAPTER")
         return False
+
+    # #really needed?
+    # def remove_windows_char(self, file = 0):
+    #     windows_char_not_allowed = '*\:?"<>|/'
+    #     for char in windows_char_not_allowed:
+    #         self.filenames[file] = self.filenames[file][char].replace(char, '')
