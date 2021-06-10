@@ -18,7 +18,7 @@ logger.addHandler(stream_handler)
 try:
     shutil.chown(mc.LOGS_PATH + "manga.log", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
 except PermissionError:
-    logger.warnging("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
+    logger.warning("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
 
 class Directory:
     def __init__(self, path):
@@ -57,7 +57,7 @@ class Directory:
                 try:
                     shutil.chown(self.path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
                 except PermissionError:
-                    logger.warnging("COULD NOT CHOWN " + self.path)
+                    logger.warning("COULD NOT CHOWN " + self.path)
                 logger.debug("[" + self.path + "] CREATED")
                 return True
             except FileExistsError:

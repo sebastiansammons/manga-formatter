@@ -21,7 +21,7 @@ logger.addHandler(stream_handler)
 try:
     shutil.chown(mc.LOGS_PATH + "manga.log", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
 except PermissionError:
-    logger.warnging("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
+    logger.warning("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
 
 def auto_chapter_format(manga, chapter_title):
     chapter_pages = Files(mc.SOURCE_PATH)

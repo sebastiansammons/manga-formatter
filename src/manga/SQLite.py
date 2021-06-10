@@ -19,7 +19,7 @@ logger.addHandler(stream_handler)
 try:
     shutil.chown(mc.LOGS_PATH + "manga.log", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
 except PermissionError:
-    logger.warnging("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
+    logger.warning("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
 
 class SQLite:
     def __init__(self, path):
