@@ -55,11 +55,11 @@ class Directory:
                 logger.debug("[" + self.path + "] CREATED")
                 return True
             except FileExistsError:
-                logger.exception("[" + self.path + "] ALREADY EXISTS")
+                logger.error("[" + self.path + "] ALREADY EXISTS")
                 me.error_write("[" + self.path + "] ALREADY EXISTS")
                 return False
         elif(self.num_files() > 0):
-            logger.exception("[" + self.path + "] ALREADY EXISTS")
+            logger.error("[" + self.path + "] ALREADY EXISTS")
             me.error_write("[" + self.path + "] ALREADY EXISTS")
             return False
         else:

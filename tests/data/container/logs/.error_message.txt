@@ -1,0 +1,1 @@
+[Select * from fake_table] IS NOT A VALID OPERATION

@@ -2,11 +2,12 @@
 import unittest
 import shutil
 import os
+from unittest.case import SkipTest
 from ..src.manga import manga_config
 from ..src.manga import manga_format
 
 
-
+@SkipTest
 class TestVisualCheck(unittest.TestCase):
 
     def setUp(self):
