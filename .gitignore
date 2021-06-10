@@ -3,4 +3,3 @@ __pycache__/
 manga/__pycache__/
 docker-compose_testing.yml
 tests/__pycache__/
-tests/data/
