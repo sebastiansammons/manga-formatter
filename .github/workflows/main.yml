@@ -19,9 +19,8 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8.4
-      - env:
-          PGID: 1000
-          PUID: 1000
+      - run: PUID=1000
+      - run: PGID=1000
       - run: python3 -m unittest discover
           
 
