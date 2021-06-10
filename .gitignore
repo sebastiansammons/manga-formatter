@@ -4,3 +4,5 @@ manga/__pycache__/
 docker-compose_testing.yml
 tests/__pycache__/
 tests/data/logs/manga.log
+tests/data/container/logs/manga.log
+.error_message.txt

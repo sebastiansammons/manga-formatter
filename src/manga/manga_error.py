@@ -17,9 +17,15 @@ def error_write(message):
         with open(mc.LOGS_PATH + ".error_message.txt", 'w', encoding = "utf8") as fp:
             fp.write(message)
             fp.close
-            shutil.chown(mc.LOGS_PATH + ".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            try:
+                shutil.chown(mc.LOGS_PATH + ".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            except PermissionError:
+                pass
     except FileNotFoundError:
         with open(".error_message.txt", 'w', encoding = "utf8") as fp:
             fp.write(message)
             fp.close
-            shutil.chown(".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            try:
+                shutil.chown(".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            except PermissionError:
+                pass

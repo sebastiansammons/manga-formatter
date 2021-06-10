@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s|%(funcName)-30s|%(levelname)-7s|%(message)s')
 file_handler = logging.FileHandler(mc.LOGS_PATH + "manga.log")
-shutil.chown(mc.LOGS_PATH + "manga.log", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 stream_handler = logging.StreamHandler()
@@ -16,6 +15,10 @@ stream_handler.setFormatter(formatter)
 stream_handler.setLevel(logging.WARNING)
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
+try:
+    shutil.chown(mc.LOGS_PATH + "manga.log", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+except PermissionError:
+    logger.warnging("COULD NOT CHOWN " + mc.LOGS_PATH + "manga.log")
 
 class Directory:
     def __init__(self, path):
@@ -51,7 +54,10 @@ class Directory:
         if(not(self.isdir())):
             try:
                 os.mkdir(self.path)
-                shutil.chown(self.path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                try:
+                    shutil.chown(self.path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                except PermissionError:
+                    logger.warnging("COULD NOT CHOWN " + self.path)
                 logger.debug("[" + self.path + "] CREATED")
                 return True
             except FileExistsError:
