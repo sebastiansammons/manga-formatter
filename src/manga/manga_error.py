@@ -1,0 +1,25 @@
+# manga_error.py
+import os
+import shutil
+from . import manga_config as mc
+
+def error_read():
+    try:
+        with open(mc.LOGS_PATH + ".error_message.txt",'r', encoding = "utf8") as fp:
+            message = fp.readline()
+            fp.close
+            return message
+    except FileNotFoundError:
+        return ""
+
+def error_write(message):
+    try:
+        with open(mc.LOGS_PATH + ".error_message.txt", 'w', encoding = "utf8") as fp:
+            fp.write(message)
+            fp.close
+            shutil.chown(mc.LOGS_PATH + ".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+    except FileNotFoundError:
+        with open(".error_message.txt", 'w', encoding = "utf8") as fp:
+            fp.write(message)
+            fp.close
+            shutil.chown(".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
