@@ -289,4 +289,58 @@ def error():
             error = "UNKNOWN"
         return render_template('error.html', error = error)
     else:
-        return redirect('/')
+        submit = request.form['error_action']
+        if(submit == "Try Again"):
+            if "format" in session:
+                manga_format = session["format"]
+            else:
+                manga_format = ""
+            if "manga" in session:
+                manga_title = session["manga"]
+            else:
+                manga_title = ""
+            if "number" in session:
+                number = session["number"]
+            else:
+                number = ""
+            if "title" in session:
+                title = session["title"]
+            else:
+                title = ""
+            if(manga_format == "auto_chapter"):
+                check = manga.check_auto_chapter(manga_title, title)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session["preview"] = manga.auto_chapter_preview(manga_title, title)
+                return redirect('/preview')
+            elif(manga_format == "auto_volume"):
+                check = manga.check_auto_volume(manga_title, number, title)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session["preview"] = manga.auto_volume_preview(manga_title, number, title)
+                return redirect('/preview')
+            elif(manga_format == "manual_single_chapter"):
+                check = manga.check_manual_single_chapter(manga_title, number, title)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session["preview"] = manga.manual_single_chapter_preview(manga_title, number, title)
+                return redirect('/preview')
+            elif(manga_format == "manual_multiple_chapter"):
+                check = manga.check_manual_multiple_chapter(manga_title)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session["preview"] = manga.manual_multiple_chapter_preview(manga_title)
+                return redirect('/preview')
+            elif(manga_format == "manual_volume"):
+                check = manga.check_manual_volume(manga_title, number, title)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session["preview"] = manga.manual_volume_preview(manga_title, number, title)
+                return redirect('/preview')
+        else:
+            return redirect('/')

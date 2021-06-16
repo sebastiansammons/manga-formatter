@@ -13,16 +13,30 @@ h2 {
     /* background-color: teal; */
 }
 
-.back {
+.menu {
     top: 65vh;
     width: 30vw;
-    left: 35vw;
+    left: 55vw;
     height: 10vh;
     color: #ca3e47;
     border-color: #ca3e47;
 }
 
-.back:hover {
+.menu:hover {
     color: #dadada;
     background-color: #ca3e47;
+}
+
+.retry {
+    top: 65vh;
+    width: 30vw;
+    left: 15vw;
+    height: 10vh;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.retry:hover {
+    color: #dadada;
+    background-color: #34aa57;
 }
