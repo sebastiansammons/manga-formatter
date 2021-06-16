@@ -5,6 +5,5 @@ docker-compose_develop.yml
 tests/__pycache__/
 tests/data/logs/manga.log
 tests/data/container/logs/manga.log
-.error_message.txt
 tests/data/test_SQLite/.fuse*
 tests/data/container/logs/.error_message.txt
