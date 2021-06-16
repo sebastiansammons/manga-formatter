@@ -13,22 +13,6 @@ h2 {
     /* background-color: teal; */
 }
 
-/* Before */
-/* .back {
-    top: 65vh;
-    width: 30vw;
-    left: 35vw;
-    height: 10vh;
-    color: #ca3e47;
-    border-color: #ca3e47;
-}
-
-.back:hover {
-    color: #dadada;
-    background-color: #ca3e47;
-} */
-
-
 .menu {
     top: 65vh;
     width: 30vw;
@@ -42,7 +26,6 @@ h2 {
     color: #dadada;
     background-color: #ca3e47;
 }
-
 
 .retry {
     top: 65vh;
