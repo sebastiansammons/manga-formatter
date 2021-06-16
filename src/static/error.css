@@ -13,7 +13,8 @@ h2 {
     /* background-color: teal; */
 }
 
-.back {
+/* Before */
+/* .back {
     top: 65vh;
     width: 30vw;
     left: 35vw;
@@ -25,4 +26,34 @@ h2 {
 .back:hover {
     color: #dadada;
     background-color: #ca3e47;
+} */
+
+
+.menu {
+    top: 65vh;
+    width: 30vw;
+    left: 55vw;
+    height: 10vh;
+    color: #ca3e47;
+    border-color: #ca3e47;
+}
+
+.menu:hover {
+    color: #dadada;
+    background-color: #ca3e47;
+}
+
+
+.retry {
+    top: 65vh;
+    width: 30vw;
+    left: 15vw;
+    height: 10vh;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.retry:hover {
+    color: #dadada;
+    background-color: #34aa57;
 }
