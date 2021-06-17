@@ -16,7 +16,7 @@
     top: 52.5vh;
     left: 3vw;
     height: 45vh;
-    width: 45vw;
+    width: 94vw;
     color: #c98936;
     border-color: #c98936;
 }
@@ -26,16 +26,3 @@
     background-color: #c98936;
 }
 
-.fullformat {
-    top: 52.5vh;
-    right: 3vw;
-    height: 45vh;
-    width: 45vw;
-    color: #602080;
-    border-color: #602080;
-}
-
-.fullformat:hover {
-    color: #dadada;
-    background-color: #602080;
-}
