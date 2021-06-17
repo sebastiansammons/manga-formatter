@@ -46,9 +46,8 @@ def index():
             return redirect('/auto')
         elif(manga_format == "Manual"):
             return redirect('/manual')
-        elif(manga_format == "Full Manga"):
+        else:
             return redirect('/')
-            # return redirect('/full')
 
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
@@ -206,31 +205,6 @@ def manual_volume():
             return redirect('/preview')
         else:
             session["error"] = "MANUAL VOLUME SELECTION ERROR"
-            return redirect('/error')
-
-@app.route('/full', methods = ['GET', 'POST'])
-def full_format():
-    if(request.method == 'GET'):
-        return render_template('full_manga.html')
-    else:
-        submit = request.form['full_format']
-        if(submit == "Main Menu"):
-            return redirect('/')
-        elif(submit == "Full Manga Format"):
-            manga_title = request.form['manga']
-            if(manga_title == ""):
-                session["error"] = "EMPTY MANGA TITLE"
-                return redirect('/error')
-            else:
-                # check = manga.full_manga(manga_title)
-                check = False
-                if(check == False):
-                    session["error"] = "FULL MANGA NOT AVAILABLE"
-                    # session["error"] =  manga.error_read()
-                    return redirect('/error')
-                return redirect('/')
-        else:
-            session["error"] = "FULL MANGA SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/preview', methods = ['GET', 'POST'])
