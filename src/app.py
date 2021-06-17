@@ -261,27 +261,23 @@ def preview():
         commit = request.form['choice']
         if(commit == "Commit"):
             if(manga_format == "auto_chapter"):
-                result = manga.auto_chapter_format(manga_title, title)
+                manga.auto_chapter_format(manga_title, title)
             elif(manga_format == "auto_volume"):
-                result = manga.auto_volume_format(manga_title, number, title)
+                manga.auto_volume_format(manga_title, number, title)
             elif(manga_format == "manual_single_chapter"):
-                result = manga.manual_single_chapter_format(manga_title, number, title)
+                manga.manual_single_chapter_format(manga_title, number, title)
             elif(manga_format == "manual_multiple_chapter"):
-                result = manga.manual_multiple_chapter_format(manga_title)
+                manga.manual_multiple_chapter_format(manga_title)
             elif(manga_format == "manual_volume"):
-                result = manga.manual_volume_format(manga_title, number, title)
+                manga.manual_volume_format(manga_title, number, title)
             else:
                 session["error"] = "MAJOR ERROR"
         elif(commit =="Abort"):
             return redirect('/')
-        if(result == False):
-            session["error"] =  manga.error_read()
-            return redirect('/error')
         return redirect('/')
 
 @app.route('/error', methods = ['GET', 'POST'])
 def error():
-    # manga.log_debug("error()")
     if(request.method == 'GET'):
         if "error" in session:
             error = session["error"]
@@ -312,6 +308,7 @@ def error():
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
+                session.modified = True
                 session["preview"] = manga.auto_chapter_preview(manga_title, title)
                 return redirect('/preview')
             elif(manga_format == "auto_volume"):
@@ -319,6 +316,7 @@ def error():
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
+                session.modified = True
                 session["preview"] = manga.auto_volume_preview(manga_title, number, title)
                 return redirect('/preview')
             elif(manga_format == "manual_single_chapter"):
@@ -326,6 +324,7 @@ def error():
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
+                session.modified = True
                 session["preview"] = manga.manual_single_chapter_preview(manga_title, number, title)
                 return redirect('/preview')
             elif(manga_format == "manual_multiple_chapter"):
@@ -333,6 +332,7 @@ def error():
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
+                session.modified = True
                 session["preview"] = manga.manual_multiple_chapter_preview(manga_title)
                 return redirect('/preview')
             elif(manga_format == "manual_volume"):
@@ -340,6 +340,7 @@ def error():
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
+                session.modified = True
                 session["preview"] = manga.manual_volume_preview(manga_title, number, title)
                 return redirect('/preview')
         else:
