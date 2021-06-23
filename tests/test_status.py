@@ -12,7 +12,7 @@ import src.manga.manga_status as manga_status
 class TestAutoPreview(unittest.TestCase):
 
     def setUp(self):
-        manga_config.DB_FILE_PATH = "./tests/data/test_preview/db/test_manga.db"
+        manga_config.DB_FILE_PATH = "./tests/data/db/test_manga.db"
 
     def test_active_manga(self):
         expected_active_manga = ["Attack on Titan", "Blue Box", "My Hero Academia", "One Piece"]
