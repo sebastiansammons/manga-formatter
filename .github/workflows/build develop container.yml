@@ -4,9 +4,6 @@ name: Build Develop Container
 
 # Controls when the action will run. 
 on: 
-  push:
-    branches:
-      - 'develop'
   workflow_run:
     workflows: ["Unit Test"]
     types:
