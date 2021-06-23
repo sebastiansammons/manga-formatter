@@ -10,31 +10,20 @@ def get_active_manga():
     query_output = manga_db.execute("SELECT manga FROM manga_details WHERE ACTIVE = 1 ORDER BY manga ASC;")
     if query_output == False:
         return "NOTHING"
-    manga_option = []
-    for i in range(0, len(query_output)):
-        manga_option.append("<option value=" + query_output[i] + ">" + query_output[i] + "</option>")
-    return manga_option
+    return query_output
 
 def get_chapter_status():
     manga_db = SQLite(mc.DB_FILE_PATH)
-    query_output = manga_db.execute("select manga_progress.manga, current_chapter from manga_progress LEFT JOIN manga_details ON  manga_progress.manga = manga_details.manga where ACTIVE = 1 ORDER BY manga_progress.manga ASC;")
-    if query_output == False:
+    query_output_manga = manga_db.execute("select manga_progress.manga from manga_progress LEFT JOIN manga_details ON  manga_progress.manga = manga_details.manga where ACTIVE = 1 ORDER BY manga_progress.manga ASC;")
+    query_output_chapter = manga_db.execute("select current_chapter from manga_progress LEFT JOIN manga_details ON  manga_progress.manga = manga_details.manga where ACTIVE = 1 ORDER BY manga_progress.manga ASC;")
+    if query_output_manga == False or query_output_chapter == False:
         return "NOTHING"
-    chapter_status = []
-    for i in range(0, len(query_output)):
-        print(query_output[i])
-        chapter_status.append("<td class = ""manga_title"">" + query_output[i][0] + "</td><td class = ""manga_number"">" + query_output[i][1] + "</td>")
-        print("<td class = ""manga_title"">" + query_output[i][0] + "</td><td class = ""manga_number"">" + query_output[i][1] + "</td>")
-    return chapter_status
+    return query_output_manga, query_output_chapter
 
 def get_volume_status():
     manga_db = SQLite(mc.DB_FILE_PATH)
-    query_output = manga_db.execute("select manga_progress.manga, current_volume from manga_progress LEFT JOIN manga_details ON  manga_progress.manga = manga_details.manga where ACTIVE = 1 ORDER BY manga_progress.manga ASC;")
-    if query_output == False:
+    query_output_manga = manga_db.execute("select manga_progress.manga from manga_progress LEFT JOIN manga_details ON  manga_progress.manga = manga_details.manga where ACTIVE = 1 ORDER BY manga_progress.manga ASC;")
+    query_output_volume = manga_db.execute("select current_volume from manga_progress LEFT JOIN manga_details ON  manga_progress.manga = manga_details.manga where ACTIVE = 1 ORDER BY manga_progress.manga ASC;")
+    if query_output_manga == False or query_output_volume == False:
         return "NOTHING"
-    volume_status = []
-    for i in range(0, len(query_output)):
-        print(query_output[i])
-        volume_status.append("<td class = ""manga_title"">" + query_output[i][0] + "</td><td class = ""manga_number"">" + query_output[i][1] + "</td>")
-        print("<td class = ""manga_title"">" + query_output[i][0] + "</td><td class = ""manga_number"">" + query_output[i][1] + "</td>")
-    return volume_status
+    return query_output_manga, query_output_volume

@@ -30,7 +30,9 @@
                         <th class = "manga_number">Chapter</th>
                     </tr>
                     {% for i in range(0,len) %}
-                    <tr>{{manga_chapter_status[i]}}</tr>
+                    <tr>
+                        <td class = "manga_title">{{ manga_chapter_status[i] }}</td><td class = "manga_number">{{ manga_chapter_status[i] }}</td>
+                    </tr>
                     {% endfor %}
                 </div>
             </table>
@@ -41,7 +43,9 @@
                         <th class = "manga_number">Volume</th>
                     </tr>
                     {% for i in range(0,len) %}
-                    <tr>{{manga_volume_status[i]}}</tr>
+                    <tr>
+                        <td class = "manga_title">{{ manga_volume_title[i] }}</td><td class = "manga_number">{{ manga_volume_status[i] }}</td>
+                    </tr>
                     {% endfor %}
                 </div>
             </table>  

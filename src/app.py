@@ -52,9 +52,9 @@ def index():
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
     if(request.method == 'GET'):
-        manga_chapter_status = manga.get_chapter_status()
-        manga_volume_status = manga.get_volume_status()
-        return render_template('auto_format.html', manga_chapter_status = manga_chapter_status, manga_volume_status = manga_volume_status, len = len(manga_chapter_status))
+        manga_chapter_title, manga_chapter_status = manga.get_chapter_status()
+        manga_volume_title, manga_volume_status = manga.get_volume_status()
+        return render_template('auto_format.html', manga_chapter_title = manga_chapter_title, manga_chapter_status = manga_chapter_status, manga_volume_title = manga_volume_title, manga_volume_status = manga_volume_status, len = len(manga_chapter_status))
     else:
         format_type = request.form['auto_format']
         if(format_type == "Chapter"):
