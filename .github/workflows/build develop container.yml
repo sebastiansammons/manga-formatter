@@ -6,7 +6,7 @@ name: Build Develop Container
 on: 
   push:
     branches:
-      - 'develop'
+      - develop
   workflow_run:
     workflows: ["Unit Test"]
     types:
