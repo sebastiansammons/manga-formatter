@@ -27,7 +27,6 @@ class TestAutoPreview(unittest.TestCase):
         self.asserEqual(manga_chapter, expected_manga_chapter)
 
     def test_volume_status(self):
-        get_chapter_status():
         expected_active_manga = ["Attack on Titan", "Blue Box", "My Hero Academia", "One Piece"]
         expected_manga_volume = [33, 0, 30, 98]
         active_manga, manga_volume = manga_status.get_volume_status()
