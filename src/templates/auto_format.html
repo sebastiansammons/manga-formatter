@@ -3,7 +3,7 @@
     <head>
         <title>Auto Format - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/auto_format.css">
+        <link rel="stylesheet" href="../static/auto_format_status.css">
     </head>
     <body>
         <div>
@@ -23,6 +23,28 @@
                     <input class="mainmenu" type="submit" name="auto_format" value="Main Menu">
                 </div>
             </form>
+            <table class="chapter_status">
+                <div>
+                    <tr>
+                        <th></th>
+                        <th class = "manga_number">Chapter</th>
+                    </tr>
+                    {% for i in range(0,len) %}
+                    <tr>{{manga_chapter_status[i]}}</tr>
+                    {% endfor %}
+                </div>
+            </table>
+            <table class="volume_status">
+                <div>
+                    <tr>
+                        <th></th>
+                        <th class = "manga_number">Volume</th>
+                    </tr>
+                    {% for i in range(0,len) %}
+                    <tr>{{manga_volume_status[i]}}</tr>
+                    {% endfor %}
+                </div>
+            </table>  
         </div>
     </body>
 </html>

@@ -7,3 +7,4 @@ from .manga_check import *
 from .manga_preview import *
 from .manga_format import *
 from .manga_error import *
+from .manga_status import *

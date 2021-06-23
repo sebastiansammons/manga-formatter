@@ -14,10 +14,9 @@
                 <div>
                     <!--NEED TO FIND WAY TO SELECT BASED ON SQL-->
                     <select class="selectmanga" name="manga">
-                        <option value="Attack on Titan">Attack on Titan</option>
-                        <option value="Blue Box">Blue Box</option>
-                        <option value="My Hero Academia">My Hero Academia</option>
-                        <option value="One Piece">One Piece</option>
+                        {% for i in range(0,len) %}
+                        {{active_manga[i]}}
+                        {% endfor %}
                     </select>
                 </div>
                 <!--Volume Title-->
