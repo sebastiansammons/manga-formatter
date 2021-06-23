@@ -12,7 +12,6 @@
             <form name="aformat" method="POST">
                 <!-- Manga -->
                 <div>
-                    <!--NEED TO FIND WAY TO SELECT BASED ON SQL-->
                     <select class="selectmanga" name="manga">
                         {% for i in range(0,len) %}
                         <option value="{{ active_manga[i] }}">{{ active_manga[i] }}</option>
