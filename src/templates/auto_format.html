@@ -23,6 +23,32 @@
                     <input class="mainmenu" type="submit" name="auto_format" value="Main Menu">
                 </div>
             </form>
+            <table class="chapter_status">
+                <div>
+                    <tr>
+                        <th></th>
+                        <th class = "manga_number">Chapter</th>
+                    </tr>
+                    {% for i in range(0,len) %}
+                    <tr>
+                        <td class = "manga_title">{{ manga_chapter_title[i] }}</td><td class = "manga_number">{{ manga_chapter_status[i] }}</td>
+                    </tr>
+                    {% endfor %}
+                </div>
+            </table>
+            <table class="volume_status">
+                <div>
+                    <tr>
+                        <th></th>
+                        <th class = "manga_number">Volume</th>
+                    </tr>
+                    {% for i in range(0,len) %}
+                    <tr>
+                        <td class = "manga_title">{{ manga_volume_title[i] }}</td><td class = "manga_number">{{ manga_volume_status[i] }}</td>
+                    </tr>
+                    {% endfor %}
+                </div>
+            </table>  
         </div>
     </body>
 </html>

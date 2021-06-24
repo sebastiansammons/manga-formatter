@@ -12,11 +12,10 @@
             <form name="aformat" method="POST">
                 <!-- Manga -->
                 <div>
-                    <!--NEED TO FIND WAY TO SELECT BASED ON SQL-->
                     <select class="selectmanga" name="manga">
-                        <option value="Blue Box">Blue Box</option>
-                        <option value="My Hero Academia">My Hero Academia</option>
-                        <option value="One Piece">One Piece</option>
+                        {% for i in range(0,len) %}
+                        <option value="{{ active_manga[i] }}">{{ active_manga[i] }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <!--Chapter Title-->

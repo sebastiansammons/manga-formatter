@@ -52,7 +52,9 @@ def index():
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
     if(request.method == 'GET'):
-        return render_template('auto_format.html')
+        manga_chapter_title, manga_chapter_status = manga.get_chapter_status()
+        manga_volume_title, manga_volume_status = manga.get_volume_status()
+        return render_template('auto_format.html', manga_chapter_title = manga_chapter_title, manga_chapter_status = manga_chapter_status, manga_volume_title = manga_volume_title, manga_volume_status = manga_volume_status, len = len(manga_chapter_status))
     else:
         format_type = request.form['auto_format']
         if(format_type == "Chapter"):
@@ -68,7 +70,8 @@ def auto_format():
 @app.route('/auto/chapter', methods = ['GET', 'POST'])
 def auto_chapter():
     if(request.method == 'GET'):
-        return render_template('auto_chapter.html')
+        active_manga = manga.get_active_manga()
+        return render_template('auto_chapter.html', active_manga = active_manga, len = len(active_manga))
     else:
         submit = request.form['auto_chapter']
         if(submit == "Main Menu"):
@@ -92,7 +95,8 @@ def auto_chapter():
 @app.route('/auto/volume', methods = ['GET', 'POST'])
 def auto_volume():
     if(request.method == 'GET'):
-        return render_template('auto_volume.html')
+        active_manga = manga.get_active_manga()
+        return render_template('auto_volume.html', active_manga = active_manga, len = len(active_manga))
     else:
         submit = request.form['auto_volume']
         if(submit == "Main Menu"):
