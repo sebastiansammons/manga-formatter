@@ -291,7 +291,6 @@ def epub_manual():
             preview.append("Volume: " + number)
             preview.append("Author: " + author)
             preview.append("Scans: " + scans)
-            preview.append("Bool Value: " + str(build_toc))
             if(build_toc == True):
                 preview.append("Build TOC: YES")
             else:
