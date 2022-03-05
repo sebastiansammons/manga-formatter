@@ -275,7 +275,7 @@ def epub_manual():
             number = request.form['number']
             author = request.form['author']
             scans = request.form['scans']
-            if "Build" in request.form:
+            if "build_toc" in request.form:
                 build_toc = True
             else:
                 build_toc = False
