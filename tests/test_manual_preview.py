@@ -2,16 +2,11 @@
 import shutil
 import os
 import unittest
-# Before
-# import src.manga.manga_config as manga_config
-# import src.manga.manga_preview as manga_preview
 import sys
+
 sys.path.append("..")
-# from src.manga.manga_config import manga_config
-# from src.manga.manga_preview import manga_preview
 from src.manga import manga_config
 from src.manga import manga_preview
-
 
 
 class TestManualPreview(unittest.TestCase):

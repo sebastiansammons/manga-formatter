@@ -1,10 +1,8 @@
 #test_Directory.py
 import unittest
-# Before
-# import src.manga.Directory as Directory
 import sys
+
 sys.path.append("..")
-# from src.manga.Directory import Directory
 from src.manga import Directory
 
 

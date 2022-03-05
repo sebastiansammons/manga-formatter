@@ -1,13 +1,11 @@
 # manga_check.py
 import os
-# import manga_config as mc
-# import manga_error as me
-# import Files
-# import SQLite
+
 from . import manga_config as mc
 from . import manga_error as me
 from . import Files
 from . import SQLite
+
 
 def check_manga_config():
     if(os.path.isdir(mc.MANGA_PATH) == False):

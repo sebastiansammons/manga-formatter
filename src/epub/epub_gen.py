@@ -13,6 +13,7 @@ from . import template_opf
 from . import template_xhtml_page
 from . import template_xhtml_toc
 
+
 def generate_epub(src_path, dest_path, title, author, scans, build_toc_list = True):
     temp_path = dest_path + "/temp/"
     temp_images = temp_path + ec.TEMP_IMAGES_SUBPATH
@@ -276,9 +277,9 @@ def build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, 
         opf = opf + template_opf.nl + opf_spine[page]
     opf = opf + template_opf.bottom
     write_to_file("package.opf", opf, dest_path + "/OEBPS/")
-          
+
 def build_css(max_height, max_width, dest_path):
-    css = template_css.stylesheet 
+    css = template_css.stylesheet
     css = css.replace("[WIDTH]", str(max_width))
     css = css.replace("[HEIGHT]", str(max_height))
     write_to_file("stylesheet.css", css, dest_path + "/OEBPS/css/")
@@ -316,7 +317,7 @@ def build_epub(dest_path, temp_path, title):
         pass
 
 def remove_epub_temp(temp_path):
-    shutil.rmtree(temp_path)    
+    shutil.rmtree(temp_path)
 
 def write_to_file(filename, contents, dest_path):
     file = open(dest_path + filename, "w")

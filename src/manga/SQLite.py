@@ -1,8 +1,9 @@
 # SQLite.py
 import os
 import sqlite3
-# import manga_error as me
+
 from . import manga_error as me
+
 
 class SQLite:
     def __init__(self, path):
@@ -44,9 +45,9 @@ class SQLite:
                 return False
             except sqlite3.ProgrammingError:
                 me.error_write("CAN'T RUN QUERY. CONNECTION IS CLOSED")
-                return False    
+                return False
         return query_output
-                
+
     def commit(self):
         if(self.connection is None or self.cursor is None):
             return False

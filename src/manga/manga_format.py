@@ -1,12 +1,9 @@
 # manga_format.py
-# import manga_config as mc
-# import Directory
-# import Files
-# import SQLite
 from . import manga_config as mc
 from . import Directory
 from . import Files
 from . import SQLite
+
 
 def auto_chapter_format(manga, chapter_title):
     chapter_pages = Files(mc.SOURCE_PATH)

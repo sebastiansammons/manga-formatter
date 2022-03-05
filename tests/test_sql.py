@@ -1,12 +1,8 @@
 # test_status.py
 import unittest
-# Before
-# import src.manga.manga_config as manga_config
-# import src.manga.manga_sql as manga_sql
 import sys
+
 sys.path.append("..")
-# from src.manga.manga_config import manga_config
-# from src.manga.manga_sql import manga_sql
 from src.manga import manga_config
 from src.manga import manga_sql
 

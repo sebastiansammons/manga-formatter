@@ -1,8 +1,9 @@
 # manga_error.py
 import os
 import shutil
-# import manga_config as mc
+
 from . import manga_config as mc
+
 
 def error_read():
     try:

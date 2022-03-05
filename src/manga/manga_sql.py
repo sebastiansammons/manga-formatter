@@ -1,8 +1,7 @@
 # manga_sql.py
-# import manga_config as mc
-# import SQLite
 from . import manga_config as mc
 from . import SQLite
+
 
 def get_active_manga():
     manga_db = SQLite(mc.DB_FILE_PATH)

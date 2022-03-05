@@ -1,11 +1,10 @@
 # manga_preview.py
 import os
-# import manga_config as mc
-# import Files
-# import SQLite
+
 from . import manga_config as mc
 from . import Files
 from . import SQLite
+
 
 def auto_chapter_preview(manga, chapter_title):
     chapter_pages = Files(mc.SOURCE_PATH)
@@ -117,5 +116,5 @@ def manual_volume_preview(manga, volume_number, volume_title):
             preview_changes.append("Rename: " + src_chapters.filenames[chapter] + "/ to " + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + "/")
         elif preview_type == "DETAILED":
             preview_changes.append("Rename: " + src_chapters.path + src_chapters.filenames[chapter] + "/ to " + dest_dir)
-    del src_chapters    
+    del src_chapters
     return preview_changes

@@ -1,5 +1,7 @@
 # epub_config.py
 import os
+
+
 # Directory Paths:
 TEMPLATE_PATH = os.getenv("EPUB_TEMPLATE_PATH", "manga/other/[epub_template]/")
 

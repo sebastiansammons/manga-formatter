@@ -1,13 +1,10 @@
 # app.py
-from msilib.schema import Directory
-from turtle import title
 from flask import Flask, render_template, request, redirect, session
 import os
 
-# import manga
-# import epub
 from . import manga
 from . import epub
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(64)
@@ -60,7 +57,7 @@ def auto_format():
         elif(format_type == "Volume"):
             return redirect('/auto/volume')
         elif(format_type == "Main Menu"):
-            return redirect('/')    
+            return redirect('/')
         else:
             session["error"] = "AUTO FORMAT SELECTION ERROR"
             return redirect('/error')
@@ -115,7 +112,7 @@ def auto_volume():
             return redirect('/preview')
         else:
             session["error"] = "VOLUME SELECTION ERROR"
-            return redirect('/error')    
+            return redirect('/error')
 
 @app.route('/manual', methods = ['GET', 'POST'])
 def manual_format():
@@ -126,7 +123,7 @@ def manual_format():
         if(format_type == "Single Chapter"):
             return redirect('/manual/single')
         if(format_type == "Multi Chapter"):
-            return redirect('/manual/multi') 
+            return redirect('/manual/multi')
         elif(format_type == "Volume"):
             return redirect('/manual/volume')
         elif(format_type == "Main Menu"):
@@ -159,7 +156,7 @@ def manual_single():
             return redirect('/preview')
         else:
             session["error"] = "MANUAL CHAPTER SELECTION ERROR"
-            return redirect('/error')  
+            return redirect('/error')
 
 @app.route('/manual/multi', methods = ['GET', 'POST'])
 def manual_multi():
@@ -223,7 +220,7 @@ def epub_option():
             return redirect('/epub/manual')
         else:
             return redirect('/')
-        
+
 @app.route('/epub/auto', methods = ['GET', 'POST'])
 def epub_auto():
     if(request.method == 'GET'):

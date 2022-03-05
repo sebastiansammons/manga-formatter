@@ -4,14 +4,10 @@ import os
 import shutil
 import sqlite3
 from unittest.mock import patch
-# Before
-# import src.manga.SQLite as SQLite
 import sys
+
 sys.path.append("..")
-# from src.manga.SQLite import SQLite
 from src.manga import SQLite
-
-
 
 
 @patch.dict('os.environ', {'PGID': '1000'})
@@ -38,27 +34,27 @@ class TestSQLite(unittest.TestCase):
         self.assertEqual(dir_db.cursor, None)
         self.assertEqual(fake_db.connection, None)
         self.assertEqual(fake_db.cursor, None)
-        self.assertIsInstance(empty_db.connection, sqlite3.Connection)  
+        self.assertIsInstance(empty_db.connection, sqlite3.Connection)
         self.assertIsInstance(empty_db.cursor, sqlite3.Cursor)
-        self.assertIsInstance(double_db.connection, sqlite3.Connection)  
+        self.assertIsInstance(double_db.connection, sqlite3.Connection)
         self.assertIsInstance(double_db.cursor, sqlite3.Cursor)
         empty_db.close()
         double_db.close()
 
     def test_execute_no_input(self):
-        #no query_input
+        # no query_input
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga='Attack on Titan';") #Single value back
         self.assertEqual(result, [139])
 
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress ORDER BY current_chapter ASC;") #multiple values back
         self.assertEqual(result, [6, 54, 58, 139, 188, 313, 1013])
         result = self.manga_db.execute("SELECT manga FROM manga_progress WHERE manga = 'Shingeki no Kyojin';") #no values back
-        self.assertEqual(result, []) 
-        result = self.manga_db.execute("Select * from fake_table") #invalid execute
+        self.assertEqual(result, [])
+        result = self.manga_db.execute("Select * from fake_table") # invalid execute
         self.assertEqual(result, False)
-        #add query isn't string test?
+        # add query isn't string test?
 
-        #bad db
+        # bad db
         not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.execute("SELECT * FROM FAKETABLE")
         self.assertEqual(result, False)
@@ -67,49 +63,49 @@ class TestSQLite(unittest.TestCase):
         result = dir_db.execute("SELECT * FROM FAKETABLE")
         self.assertEqual(result, False)
 
-        #more to add (maybe make seperate unittests?)
+        # more to add (maybe make seperate unittests?)
 
     def test_execute_with_input(self):
-        #with query_input
-        query_input = ("Attack on Titan", ) #(probably put in exeucte instead)
-        result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = ?", query_input) #Single value back
+        # with query_input
+        query_input = ("Attack on Titan", )
+        result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = ?", query_input) # Single value back
         self.assertEqual(result, [139])
 
         query_input = (60, )
-        result = self.manga_db.execute("SELECT manga FROM manga_progress WHERE current_chapter < ?;", query_input) #multiple values back
+        result = self.manga_db.execute("SELECT manga FROM manga_progress WHERE current_chapter < ?;", query_input) # multiple values back
         self.assertEqual(result, ["Boruto", "Platinum End", "Blue Box"])
 
         query_input = ("Shingeki no Kyojin", )
-        result = self.manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?;", query_input) #no values back
-        self.assertEqual(result, []) 
+        result = self.manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?;", query_input) # no values back
+        self.assertEqual(result, [])
 
-        result = self.manga_db.execute("invalid execute", query_input) #invalid execute/input
+        result = self.manga_db.execute("invalid execute", query_input) # invalid execute/input
         self.assertEqual(result, False)
 
-        query_input = (7, ) #value to insert
+        query_input = (7, ) # value to insert
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
-        #check before
+        # check before
         self.assertEqual(result, [6])
-        result = self.manga_db.execute("UPDATE manga_progress SET current_chapter = ? WHERE manga = 'Blue Box'", query_input) #insert row
+        result = self.manga_db.execute("UPDATE manga_progress SET current_chapter = ? WHERE manga = 'Blue Box'", query_input) # insert row
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [7])
 
-        query_input = (8, "Blue Box") #insert multiple values
+        query_input = (8, "Blue Box") # insert multiple values
         result = self.manga_db.execute("UPDATE manga_progress SET current_chapter = ? WHERE manga = ?", query_input)
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [8])
 
-        #add query with invalid _input
+        # add query with invalid _input
         query_input = ("Shingeki no Kyojin", )
         result = self.manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?;", query_input)
-        self.assertEqual(result, []) 
+        self.assertEqual(result, [])
 
         query_input = "Invalit input"
-        result = self.manga_db.execute("Select * from fake_table") #invalid execute
+        result = self.manga_db.execute("Select * from fake_table") # invalid execute
         self.assertEqual(result, False)
 
     def test_commit(self):
-        #commit
+        # commit
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [6])
         result = self.manga_db.execute("UPDATE manga_progress SET current_chapter = 7 WHERE manga = 'Blue Box';")
@@ -121,7 +117,7 @@ class TestSQLite(unittest.TestCase):
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [7])
 
-        #don't commit
+        # don't commit
         result = self.manga_db.execute("UPDATE manga_progress SET current_chapter = 8 WHERE manga = 'Blue Box';")
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [8])
@@ -130,7 +126,7 @@ class TestSQLite(unittest.TestCase):
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertNotEqual(result, [8])
 
-        #commit bad .db
+        # commit bad .db
         not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.commit()
         self.assertEqual(result, False)
@@ -139,10 +135,10 @@ class TestSQLite(unittest.TestCase):
         self.assertEqual(result, False)
 
     def test_close(self):
-        result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga='Attack on Titan';") #get any data
+        result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga='Attack on Titan';") # get any data
         self.assertEqual(result, [139])
         self.manga_db.close()
-        result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga='Attack on Titan';") #try again after close
+        result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga='Attack on Titan';") # try again after close
         self.assertEqual(result, False)
         self.manga_db = SQLite("path/to/place/sqlite")
 
@@ -150,7 +146,7 @@ class TestSQLite(unittest.TestCase):
         result = self.manga_db.close()
         self.assertEqual(result, False)
 
-        #close bad db
+        # close bad db
         not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.close()
         self.assertEqual(result, False)

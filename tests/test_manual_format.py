@@ -2,19 +2,12 @@
 import shutil
 import os
 import unittest
-# Before
-# import src.manga.Files as Files
-# import src.manga.manga_config as manga_config
-# import src.manga.manga_format as manga_format
 import sys
+
 sys.path.append("..")
-# from src.manga.Files import Files
-# from src.manga.manga_config import manga_config
-# from src.manga.manga_format import manga_format
 from src.manga import Files
 from src.manga import manga_config
 from src.manga import manga_format
-
 
 
 class TestManualFormat(unittest.TestCase):

@@ -1,3 +1,4 @@
+# template_xhtml_toc.py
 top = """<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"  xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:ibooks="http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0" epub:prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0">
 <head>
@@ -8,7 +9,7 @@ top = """<?xml version="1.0" encoding="UTF-8"?>
     <nav epub:type="toc">
         <!-- <h1>TOC</h1> h1 needed? -->
         <ol>"""
-            
+
 
 middle = """
         </ol>

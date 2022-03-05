@@ -1,10 +1,10 @@
 # Files.py
 import os
 import shutil
-# import manga_error as me
-# import Directory
+
 from . import manga_error as me
 from . import Directory
+
 
 class Files(Directory):
     def __init__(self, path):
