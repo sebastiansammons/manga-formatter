@@ -250,9 +250,10 @@ def epub_auto():
             session["format"] = "epub_auto"
             preview = []
             preview.append("Manga: " + manga_title)
-            preview.append("Author: " + author)
-            preview.append("Volume: " + volume_number)
             preview.append("Title: " + manga_title)
+            preview.append("Volume: " + volume_number)
+            preview.append("Author: " + author)
+            preview.append("Scans: " + scans)
             preview.append("EPUB: " + epub_title + ".epub")
             session["preview"] = preview
             return redirect('/preview')
@@ -286,9 +287,11 @@ def epub_manual():
             session["format"] = "epub_manual"
             preview = []
             preview.append("Manga: " + manga_title)
-            preview.append("Author: " + author)
-            preview.append("Volume: " + number)
             preview.append("Title: " + title)
+            preview.append("Volume: " + number)
+            preview.append("Author: " + author)
+            preview.append("Scans: " + scans)
+            preview.append("Build TOC: " + build_toc)
             preview.append("EPUB: " + epub_title + ".epub")
             session["preview"] = preview
             return redirect('/preview')
