@@ -95,7 +95,7 @@ def check_spread(src_path):
                     page_filename = src_images[page]
                     tmp_parse = page_filename.split(" - ")
                     # tmp_parse[1][:-2] + "00" replaces PG## with PG00
-                    blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1] + "_c" + " - " + tmp_parse[2]
+                    blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "_c" + " - " + tmp_parse[2]
                     # create blank page
                     # same dimensions as PG01
                     tmp_image = PIL.Image.open(src_path + page_filename)
