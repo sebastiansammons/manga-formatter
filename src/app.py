@@ -236,7 +236,7 @@ def epub_auto():
             volume_number = request.form['volume_number']
             scans = request.form['scans']
             # volume title
-            volume_title = manga.get_manga_volume(manga_title, volume_number)
+            volume_title = manga.get_volume_title(manga_title, volume_number)
             if(manga_title == "One Piece"):
                 epub_title = manga_title + " Volume " + str(volume_number).zfill(3) + " - " + volume_title
             else:
