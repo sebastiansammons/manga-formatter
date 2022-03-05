@@ -12,7 +12,6 @@ from src.manga import manga_check
 class TestCheck(unittest.TestCase):
 
     def setUp(self):
-        manga_config.LOGS_PATH = "./tests/data/logs/"
         manga_config.DB_FILE_PATH = "./tests/data/test_check/db/test_manga.db"
         manga_config.SOURCE_PATH = "./tests/data/test_check/src/"
         manga_config.DESTINATION_PATH = "./tests/data/test_check/dest/"

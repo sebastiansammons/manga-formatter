@@ -27,7 +27,7 @@ def generate_epub(src_path, dest_path, title, author, scans, build_toc_list = Tr
     build_toc_xhtml(page_id, toc, temp_path)
     build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, temp_path)
     build_css(max_height, max_width, temp_path)
-    build_epub(dest_path, temp_path, title)
+    build_epub(dest_path, title, temp_path)
     remove_epub_temp(temp_path)
 
 def copy_template(template_path, temp_path):
@@ -119,8 +119,8 @@ def build_template(src_path, dest_path, build_toc_list):
     opf_spine = []
     toc = []
     xhtml_pages = []
-    max_width = 0
     max_height = 0
+    max_width = 0
     page_spread = ""
     prev_page_spread = ""
     chapter_title = ""
@@ -154,12 +154,12 @@ def build_template(src_path, dest_path, build_toc_list):
             cover_manifest_image = cover_manifest_image.replace("[img_ext]", get_mediatype(tmp_ext))
             opf_manifest_image.append(cover_manifest_image)
         else:
-            # check for max_width
-            if(width > max_width):
-                max_width = width
             # check for max_height
             if(height > max_height):
                 max_height = height
+            # check for max_width
+            if(width > max_width):
+                max_width = width
             # next page spread
             page_spread = next_page_spread(prev_page_spread)
             prev_page_spread = page_spread
@@ -232,7 +232,7 @@ def build_xhtml_pages(page_id, xhtml_pages, max_height, max_width, dest_path):
         xhtml_page_string = xhtml_page_top + xhtml_pages[page] + template_xhtml_page.bottom
         # xhtml title
         xhtml_page_string = xhtml_page_string.replace("[CH###PG##]", page_id[page])
-        write_to_file(page_id[page] + ".xhtml", xhtml_page_string, dest_path + "/OEBPS/xhtml/")
+        write_to_file(dest_path + "/OEBPS/xhtml/", page_id[page] + ".xhtml", xhtml_page_string)
 
 def build_toc_xhtml(page_id, toc, dest_path):
     toc_xhtml = template_xhtml_toc.top
@@ -251,7 +251,7 @@ def build_toc_xhtml(page_id, toc, dest_path):
         tmp_page_list_src = tmp_page_list_src.replace("[PAGE]", str(page))
         toc_xhtml_middle = toc_xhtml_middle + template_xhtml_toc.nl + tmp_page_list_src
     toc_xhtml = toc_xhtml + toc_xhtml_middle + template_xhtml_toc.bottom
-    write_to_file("toc.xhtml", toc_xhtml, dest_path + "/OEBPS/")
+    write_to_file(dest_path + "/OEBPS/", "toc.xhtml", toc_xhtml)
 
 def build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, dest_path):
     opf = template_opf.top
@@ -276,15 +276,15 @@ def build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, 
     for page in range(0, len(opf_spine)):
         opf = opf + template_opf.nl + opf_spine[page]
     opf = opf + template_opf.bottom
-    write_to_file("package.opf", opf, dest_path + "/OEBPS/")
+    write_to_file(dest_path + "/OEBPS/", "package.opf", opf)
 
 def build_css(max_height, max_width, dest_path):
     css = template_css.stylesheet
-    css = css.replace("[WIDTH]", str(max_width))
     css = css.replace("[HEIGHT]", str(max_height))
-    write_to_file("stylesheet.css", css, dest_path + "/OEBPS/css/")
+    css = css.replace("[WIDTH]", str(max_width))
+    write_to_file(dest_path + "/OEBPS/css/", "stylesheet.css", css)
 
-def build_epub(dest_path, temp_path, title):
+def build_epub(dest_path, title, temp_path):
     epub_filename = dest_path + title + ".epub"
     try:
         zip = ZipFile(epub_filename, "x")
@@ -319,7 +319,7 @@ def build_epub(dest_path, temp_path, title):
 def remove_epub_temp(temp_path):
     shutil.rmtree(temp_path)
 
-def write_to_file(filename, contents, dest_path):
+def write_to_file(dest_path, filename, contents):
     file = open(dest_path + filename, "w")
     file.write(contents)
     file.close()
