@@ -275,10 +275,12 @@ def epub_manual():
             number = request.form['number']
             author = request.form['author']
             scans = request.form['scans']
+            print("BEFORE BUILD CHECK")
             if(request.form['build_toc'] == "Build"):
                 build_toc = True
             else:
                 build_toc = False
+            print("AFTER BUILD CHECK")
             epub_title = manga_title + " Volume " + str(number).zfill(2) + " - " + title
             session["title"] = epub_title
             session["author"] = author
@@ -291,10 +293,12 @@ def epub_manual():
             preview.append("Volume: " + number)
             preview.append("Author: " + author)
             preview.append("Scans: " + scans)
+            print("BEFORE BUILD PREVIEW")
             if(build_toc == True):
                 preview.append("Build TOC: YES")
             else:
                 preview.append("Build TOC: NO")
+            print("AFTER BUILD PREVIEW")
             preview.append("EPUB: " + epub_title + ".epub")
             session["preview"] = preview
             return redirect('/preview')
