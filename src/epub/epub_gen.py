@@ -17,7 +17,7 @@ from . import template_xhtml_toc
 def generate_epub(src_path, dest_path, title, author, scans, build_toc_list = True):
     temp_path = dest_path + "/temp/"
     temp_images = temp_path + ec.TEMP_IMAGES_SUBPATH
-    copy_template(ec.TEMPLATE_PATH, temp_path)
+    copy_template(ec.EPUB_TEMPLATE_PATH, temp_path)
     split_images(src_path, temp_images)
     # Scans or Digital Source
     if (scans == "Scans"):
