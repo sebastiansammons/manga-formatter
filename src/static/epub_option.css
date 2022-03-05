@@ -1,0 +1,27 @@
+.auto {
+    top: 6vh;
+    left: 3vw;
+    height: 91.5vh;
+    width: 45vw;
+    color: #34aa57;
+    border-color: #34aa57;
+}
+
+.auto:hover {
+    color: #dadada;
+    background-color: #34aa57;
+}
+
+.manual {
+    top: 6vh;
+    right: 3vw;
+    height: 91.5vh;
+    width: 45vw;
+    color: #3492aa;
+    border-color: #3492aa;
+}
+
+.manual:hover {
+    color: #dadada;
+    background-color: #3492aa;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Manual EPUB- Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/epub_manual.css">
+    </head>
+    <body>
+        <div>
+            <h1>MANUAL EPUB</h1>
+            <!--Manual Volume Form-->
+            <form name = "msingle" method = "POST">
+                <!-- Manga -->
+                <div>
+                    <input class="inputmanga" type="text" name="manga" placeholder="Manga" onfocus="this.placeholder = ''" onblur="this.placeholder='Manga'" autocomplete="off">
+                </div>
+                <!-- Volume Title -->
+                <div>
+                    <input class="inputtitle" type="text" name="title" placeholder="Volume Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Title'" autocomplete="off">
+                </div>
+                <!-- Volume Number -->
+                <div>
+                    <input class="inputnumber" type="text" name="number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
+                </div>
+                <!-- Author -->
+                <div>
+                    <input class="author" type="text" name="author" placeholder="Author" onfocus="this.placeholder = ''" onblur="this.placeholder='Author'" autocomplete="off">
+                </div>
+                <div>
+                    <!-- Scans or Digital -->
+                    <label class="box">
+                        <input type="radio" name="scans" value="Scans">
+                        <span class="scans">Scans</span>
+                    </label>
+                    <label class="box">
+                        <input type="radio" checked="checked" name="scans" value="Digital">
+                        <span class="digital">Digital</span>
+                    </label>
+                </div>
+                <div>
+                    <!-- Build TOC -->
+                    <label class="box">
+                        <input type="checkbox" checked="checked" name="build_toc" value="Build">
+                        <span class="buildtoc">Build TOC</span>
+                    </label>
+                </div>
+                <!--Manual Format-->
+                <div>
+                    <input class="epubmanual" type="submit" name="epub_manual" value="EPUB Manual">
+                </div>
+                <!-- Main Menu -->
+                <div>
+                    <input class="mainmenu" type="submit" name="epub_manual" value="Main Menu">
+                </div>
+            </form>    
+        </div>  
+    </body>
+</html>

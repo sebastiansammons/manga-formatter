@@ -3,7 +3,10 @@
 name: Unit Test
 
 # Controls when the action will run. 
-on: [push]
+on: 
+  push:
+      branches:
+        - '*'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -15,17 +18,21 @@ jobs:
       PUID: 1001
       PGID: 1001
       MANGA_PATH: "./tests/data/container/manga/"
-      SOURCE_PATH: "./tests/data/container/source/"
-      DESTINATION_PATH: "./tests/data/container/destination/"
-      LOGS_PATH: "./tests/data/container/logs/"
+      SOURCE_PATH: "./tests/data/container/[source]/"
+      DESTINATION_PATH: "./tests/data/container/[destination]/"
+      ERROR_PATH: "./tests/data/container/error_msg/"
       DB_FILE_PATH: "./tests/data/container/db/test_manga.db"
+
+      TEMPLATE_PATH: "./tests/data/container/[epub_template]/"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+      - uses: BSFishy/pip-action@v1
         with:
           python-version: 3.8.4
+          requirements: requirements.txt
       - run: python3 -m unittest discover
           
 

@@ -1,18 +1,17 @@
 # test_check.py
 import shutil
 import unittest
-# from ..src.manga import SQLite
-# from ..src.manga import manga_config
-# from ..src.manga import manga_check
-import src.manga.SQLite as SQLite
-import src.manga.manga_config as manga_config
-import src.manga.manga_check as manga_check
+import sys
+
+sys.path.append("..")
+from src.manga import SQLite
+from src.manga import manga_config
+from src.manga import manga_check
 
 
 class TestCheck(unittest.TestCase):
 
     def setUp(self):
-        manga_config.LOGS_PATH = "./tests/data/logs/"
         manga_config.DB_FILE_PATH = "./tests/data/test_check/db/test_manga.db"
         manga_config.SOURCE_PATH = "./tests/data/test_check/src/"
         manga_config.DESTINATION_PATH = "./tests/data/test_check/dest/"
@@ -50,7 +49,7 @@ class TestCheck(unittest.TestCase):
         shutil.copytree("./tests/data/test_check/auto_chapter/Working src/src/", manga_config.SOURCE_PATH)
         self.assertEqual(manga_check.check_auto_chapter("One Piece", "Working Volume"), True)
         shutil.rmtree(manga_config.SOURCE_PATH)
-        #DB Checks
+        # DB Checks
         self.assertEqual(manga_check.check_auto_chapter("Test", "Not in Progress"), False)
         manga_db = SQLite(manga_config.DB_FILE_PATH)
         manga_db.execute("INSERT INTO manga_progress (manga, current_chapter, current_volume, first_chapter_of_new_volume) VALUES(""Test"", 0, 0, 0)")
@@ -81,9 +80,9 @@ class TestCheck(unittest.TestCase):
         shutil.copytree("./tests/data/test_check/auto_volume/Working src/src/", manga_config.SOURCE_PATH)
         self.assertEqual(manga_check.check_auto_volume("Attack on Titan", 139,  "Working Chapter"), True)
         shutil.rmtree(manga_config.SOURCE_PATH)
-        #DB Checks
+        # DB Checks
         self.assertEqual(manga_check.check_auto_volume("Test", 8, "Not in Progress"), False)
-        #gets passed above case
+        # gets passed above case
         manga_db = SQLite(manga_config.DB_FILE_PATH)
         manga_db.execute("INSERT INTO manga_progress (manga, current_chapter, current_volume, first_chapter_of_new_volume) VALUES(""Test"", 0, 0, 0)")
         manga_db.commit()
@@ -107,7 +106,7 @@ class TestCheck(unittest.TestCase):
         self.assertEqual(manga_check.check_manual_single_chapter("Blue Box", 9,  "Not all files Chapter"), False)
         shutil.rmtree(manga_config.SOURCE_PATH)
 
-        #Dest
+        # Dest
         shutil.copytree("./tests/data/test_check/manual_single_chapter/Non empty dest/dest/", manga_config.DESTINATION_PATH)
         self.assertEqual(manga_check.check_manual_single_chapter("Blue Box", 9,  "Non empty dest"), False)
         shutil.rmtree(manga_config.DESTINATION_PATH)
@@ -141,7 +140,7 @@ class TestCheck(unittest.TestCase):
         self.assertEqual(manga_check.check_manual_multiple_chapter("Blue Box"), False)
         shutil.rmtree(manga_config.SOURCE_PATH)
 
-        #Dest
+        # Dest
         shutil.copytree("./tests/data/test_check/manual_multi_chapter/Non empty dest/dest/", manga_config.DESTINATION_PATH)
         self.assertEqual(manga_check.check_manual_multiple_chapter("Blue Box"), False)
         shutil.rmtree(manga_config.DESTINATION_PATH)
@@ -159,4 +158,3 @@ class TestCheck(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

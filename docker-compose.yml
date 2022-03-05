@@ -14,6 +14,30 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      # Preview options
       - PREVIEW_TYPE=SIMPLE
-      # Other Preview type
       # - PREVIEW_TYPE=DETAILIED
+      # Optional Environment Variables. (I recommend the default's in _config.py)
+      
+      # DirectoryPaths
+      # manga_config.py
+      - MANGA_PATH=<path to MANGA_PATH>
+      - SOURCE_PATH=<path to SOURCE_PATH>
+      - DESTINATION_PATH=<path to DESTINATION_PATH>
+      - NEW_MANGA_PATH=<path to NEW_MANGA_PATH>
+      - ERROR_PATH=<path to ERROR_PATH>
+      - DB_FILE_PATH=<path to DB_FILE_PATH>
+      # epub_config.py
+      - TEMPLATE_PATH=<path to TEMPLATE_PATH>
+      - BLANK_PAGE_PATH=<path to BLANK_PAGE_PATH>
+      
+      # SubDirectoryPaths
+      # Note: These are the subdirectories for the title's directory. 
+      #       I recommend using the default in _config.py
+      # manga_config.py
+      - NEW_CHAPTERS_SUBPATH = <path to NEW_CHAPTERS_SUBPATH>
+      - VOLUMES_SUBPATH = <path to VOLUMES_SUBPATH>
+      - OP_COVER_SUBPATH = <path to OP_COVER_SUBPATH>
+      # epub_config.py
+      - TEMP_IMAGES_SUBPATH=<path to TEMP_IMAGES_SUBPATH>
+      - EPUB_VOLUMES_SUBPATH=<path to EPUB_VOLUMES_SUBPATH>
