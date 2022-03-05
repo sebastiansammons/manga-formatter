@@ -1,0 +1,148 @@
+.inputmanga {
+    top: 10vh;
+    left: 3vw;
+    height: 6vh;
+    width: 50vw;
+    font-family: 'Times New Roman';
+    font-size: 5vh;
+    color: #dadada;
+    cursor: text;
+}
+
+.inputmanga:hover {
+    cursor: text;
+}
+
+.inputtitle {
+    top: 18vh;
+    left: 3vw;
+    height: 6vh;
+    width: 70vw;
+    font-family: 'Times New Roman';
+    font-size: 5vh;
+    color: #dadada;
+    cursor: text;
+}
+
+.inputtitle:hover {
+    cursor: text;
+}
+
+.inputnumber {
+    top: 26vh;
+    left: 3vw;
+    height: 6vh;
+    width: 37vw;
+    font-family: 'Times New Roman';
+    font-size: 5vh;
+    color: #dadada;
+    cursor: text;
+}
+
+.inputnumber:hover {
+    cursor: text;
+}
+
+.author {
+    top: 34vh;
+    left: 3vw;
+    height: 6vh;
+    width: 55vw;
+    font-family: 'Times New Roman';
+    font-size: 5vh;
+    color: #dadada;
+    cursor: text;
+}
+
+.author:hover {
+    cursor: text;
+}
+
+
+.box {
+    user-select: none;
+}
+
+.box input{
+    position: fixed;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.scans {
+    position: fixed;
+    top: 42vh;
+    left: 3vw;
+    height: 6vh;
+    width: 15vw;
+    color: #dadada;
+    border-color: #4634aa;
+}
+
+.box:hover input ~ .scans{
+    /* color: #dadada; */
+    background-color: #5c4fa8;
+    border-color: #5c4fa8;
+}
+
+.box input:checked ~ .scans{
+    /* color: #dadada; */
+    border-color: #4634aa;
+    background-color: #4634aa;
+}
+
+.digital {
+    position: fixed;
+    top: 42vh;
+    left: 20vw;
+    height: 6vh;
+    width: 16vw;
+    color: #dadada;
+    border-color: #4634aa;
+}
+
+.box:hover input ~ .digital{
+    color: #dadada;
+    background-color: #5c4fa8;
+    border-color: #5c4fa8;
+}
+
+.box input:checked ~ .digital{
+    border-color: #4634aa;
+    background-color: #4634aa;
+}
+
+.buildtoc {
+    position: fixed;
+    top: 42vh;
+    left: 45vw;
+    height: 6vh;
+    width: 22vw;
+    color: #dadada;
+    border-color: #20a748;
+}
+
+.box:hover input ~ .buildtoc{
+    color: #dadada;
+    background-color: #42ad62;
+    border-color: #42ad62;
+}
+
+.box input:checked ~ .buildtoc{
+    border-color: #20a748;
+    background-color: #20a748;
+}
+
+.epubmanual {
+    top: 50vh;
+    left: 3vw;
+    height: 7vh;
+    width: 29vw;
+    color: #3492aa;
+    border-color: #3492aa;
+}
+
+.epubmanual:hover {
+    color: #dadada;
+    background-color: #3492aa;
+}

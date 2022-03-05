@@ -92,3 +92,21 @@ select {
     transition-duration: 0.35s;
     cursor: pointer;
 }
+
+span {
+    position: fixed;
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+    margin-left: 0vw;
+    margin-right: 0vw;
+    font-family: 'Impact';
+    font-size: 5vh;
+    cursor: pointer;
+    background-color: #272a30;
+    border: solid;
+    border-color: #dadada;
+    color: #dadada;
+    border-width: 4px;
+    border-radius: 8px;
+    text-align: center;
+}

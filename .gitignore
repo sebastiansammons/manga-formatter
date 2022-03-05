@@ -1,9 +1,8 @@
 #.gitignore
 __pycache__/
 manga/__pycache__/
-docker-compose-develop.yml
+epub/__pycache__/
 tests/__pycache__/
-tests/data/logs/manga.log
-tests/data/container/logs/manga.log
-tests/data/test_SQLite/.fuse*
-tests/data/container/logs/.error_message.txt
+docker-compose-test.yml
+.error_message.txt
+tests/data/container/error_msg/.error_message.txt
