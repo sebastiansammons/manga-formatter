@@ -254,6 +254,7 @@ def epub_auto():
             preview.append("Volume: " + volume_number)
             preview.append("Title: " + manga_title)
             preview.append("EPUB: " + epub_title + ".epub")
+            session["preview"] = preview
             return redirect('/preview')
         else:
             session["error"] = "CHAPTER SELECTION ERROR"
@@ -281,7 +282,7 @@ def epub_manual():
             session["title"] = epub_title
             session["author"] = author
             session["scans"] = scans
-            session["buid_toc"] = build_toc
+            session["build_toc"] = build_toc
             session["format"] = "epub_manual"
             preview = []
             preview.append("Manga: " + manga_title)
@@ -289,6 +290,7 @@ def epub_manual():
             preview.append("Volume: " + number)
             preview.append("Title: " + title)
             preview.append("EPUB: " + epub_title + ".epub")
+            session["preview"] = preview
             return redirect('/preview')
 
 @app.route('/preview', methods = ['GET', 'POST'])
@@ -319,7 +321,7 @@ def preview():
             author = session["author"]
         if "scans" in session:
             scans = session["scans"]
-        if "buid_toc" in session:
+        if "build_toc" in session:
             build_toc = session["build_toc"]
         commit = request.form['choice']
         if(commit == "Commit"):
