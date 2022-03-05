@@ -2,14 +2,19 @@
 import shutil
 import os
 import unittest
-# from ..src.manga import manga_config
-# from ..src.manga import manga_preview
-import src.manga.manga_config as manga_config
-import src.manga.manga_preview as manga_preview
+# Before
+# import src.manga.manga_config as manga_config
+# import src.manga.manga_preview as manga_preview
+import sys
+sys.path.append("..")
+# from src.manga.manga_config import manga_config
+# from src.manga.manga_preview import manga_preview
+from src.manga import manga_config
+from src.manga import manga_preview
 
 
 
-class TestManualFormat(unittest.TestCase):
+class TestManualPreview(unittest.TestCase):
 
     def setUp(self):
         manga_config.SOURCE_PATH = "./tests/data/test_preview/src/"
@@ -35,7 +40,6 @@ class TestManualFormat(unittest.TestCase):
         expected_result = ['Rename: Attack on Titan - CH138PG01 - A Long Dream.jpg to Naruto - CH138PG01 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG02 - A Long Dream.jpg to Naruto - CH138PG02 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG03 - A Long Dream.jpg to Naruto - CH138PG03 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG04 - A Long Dream.jpg to Naruto - CH138PG04 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG05 - A Long Dream.jpg to Naruto - CH138PG05 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG06 - A Long Dream.jpg to Naruto - CH138PG06 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG07 - A Long Dream.jpg to Naruto - CH138PG07 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG08 - A Long Dream.jpg to Naruto - CH138PG08 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG09 - A Long Dream.jpg to Naruto - CH138PG09 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG10 - A Long Dream.jpg to Naruto - CH138PG10 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG11 - A Long Dream.jpg to Naruto - CH138PG11 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG12 - A Long Dream.jpg to Naruto - CH138PG12 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG13 - A Long Dream.jpg to Naruto - CH138PG13 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG14 - A Long Dream.jpg to Naruto - CH138PG14 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG15 - A Long Dream.jpg to Naruto - CH138PG15 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG16 - A Long Dream.jpg to Naruto - CH138PG16 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG17 - A Long Dream.jpg to Naruto - CH138PG17 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG18 - A Long Dream.jpg to Naruto - CH138PG18 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG19 - A Long Dream.jpg to Naruto - CH138PG19 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG20 - A Long Dream.jpg to Naruto - CH138PG20 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG21 - A Long Dream.jpg to Naruto - CH138PG21 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG22 - A Long Dream.jpg to Naruto - CH138PG22 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG23 - A Long Dream.jpg to Naruto - CH138PG23 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG24 - A Long Dream.jpg to Naruto - CH138PG24 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG25 - A Long Dream.jpg to Naruto - CH138PG25 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG26 - A Long Dream.jpg to Naruto - CH138PG26 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG27 - A Long Dream.jpg to Naruto - CH138PG27 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG28 - A Long Dream.jpg to Naruto - CH138PG28 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG29 - A Long Dream.jpg to Naruto - CH138PG29 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG30 - A Long Dream.jpg to Naruto - CH138PG30 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG31 - A Long Dream.jpg to Naruto - CH138PG31 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG32 - A Long Dream.jpg to Naruto - CH138PG32 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG33 - A Long Dream.jpg to Naruto - CH138PG33 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG34 - A Long Dream.jpg to Naruto - CH138PG34 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG35 - A Long Dream.jpg to Naruto - CH138PG35 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG36 - A Long Dream.jpg to Naruto - CH138PG36 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG37 - A Long Dream.jpg to Naruto - CH138PG37 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG38 - A Long Dream.jpg to Naruto - CH138PG38 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG39 - A Long Dream.jpg to Naruto - CH138PG39 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG40 - A Long Dream.jpg to Naruto - CH138PG40 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG41 - A Long Dream.jpg to Naruto - CH138PG41 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG42 - A Long Dream.jpg to Naruto - CH138PG42 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG43 - A Long Dream.jpg to Naruto - CH138PG43 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG44 - A Long Dream.jpg to Naruto - CH138PG44 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG45 - A Long Dream.jpg to Naruto - CH138PG45 - Single Chapter.jpg', 'Rename: Attack on Titan - CH138PG46 - A Long Dream.jpg to Naruto - CH138PG46 - Single Chapter.jpg']
         self.assertEqual(result, expected_result)
 
-
     def test_multi_chapter(self):
         shutil.copytree("./tests/data/test_preview/manual_multi_chapter/src/", manga_config.SOURCE_PATH)
         result = manga_preview.manual_multiple_chapter_preview("Bleach")
@@ -49,9 +53,5 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
 
-
 if __name__ == '__main__':
     unittest.main()
-
-
-

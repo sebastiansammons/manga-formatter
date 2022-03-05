@@ -15,10 +15,12 @@ jobs:
       PUID: 1001
       PGID: 1001
       MANGA_PATH: "./tests/data/container/manga/"
-      SOURCE_PATH: "./tests/data/container/source/"
-      DESTINATION_PATH: "./tests/data/container/destination/"
-      LOGS_PATH: "./tests/data/container/logs/"
+      SOURCE_PATH: "./tests/data/container/[source]/"
+      DESTINATION_PATH: "./tests/data/container/[destination]/"
+      ERROR_PATH: "./tests/data/container/error_msg/"
       DB_FILE_PATH: "./tests/data/container/db/test_manga.db"
+
+      TEMPLATE_PATH: "./tests/data/container/[epub_template]/"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it

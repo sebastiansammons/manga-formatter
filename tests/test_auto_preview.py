@@ -1,11 +1,15 @@
 # test_auto_preview.py
 import shutil
 import unittest
-import logging
-# from ..src.manga import manga_config
-# from ..src.manga import manga_preview
-import src.manga.manga_config as manga_config
-import src.manga.manga_preview as manga_preview
+# Before
+# import src.manga.manga_config as manga_config
+# import src.manga.manga_preview as manga_preview
+import sys
+sys.path.append("..")
+# from src.manga.manga_config import manga_config
+# from src.manga.manga_preview import manga_preview
+from src.manga import manga_config
+from src.manga import manga_preview
 
 
 
@@ -40,8 +44,6 @@ class TestAutoPreview(unittest.TestCase):
         self.assertEqual(result, expected_result)
         shutil.rmtree(manga_config.SOURCE_PATH)
 
-
-
     def test_auto_volume_preview(self):
         shutil.copytree("./tests/data/test_preview/auto_volume/Not One Piece/src/", manga_config.SOURCE_PATH)
         result = manga_preview.auto_volume_preview("Attack on Titan", 139, "Last Volume")
@@ -58,4 +60,3 @@ class TestAutoPreview(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

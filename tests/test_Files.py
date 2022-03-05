@@ -2,10 +2,12 @@
 import unittest
 import shutil
 import os
-# from ..src.manga import Files
-# from ..src.manga import manga_config
-import src.manga.Files as Files
-import src.manga.manga_config as manga_config
+# Before
+# import src.manga.Files as Files
+import sys
+sys.path.append("..")
+# from src.manga.Files import Files
+from src.manga import Files
 
 
 class TestFiles(unittest.TestCase):
@@ -83,7 +85,6 @@ class TestFiles(unittest.TestCase):
         self.assertEqual(test01.list_dir(), after_list01)
         self.assertEqual(test02.list_dir(), after_list02)
         self.assertEqual(test03.list_dir(), after_list03)
-
         try:
             shutil.rmtree(dest01)
             shutil.rmtree(dest02)
@@ -94,28 +95,34 @@ class TestFiles(unittest.TestCase):
 
     def test_copyfile(self):
         working_src = "./tests/data/test_Files/copyfile/src/working/" #Working copy
-        fileexist_src = "./tests/data/test_Files/copyfile/src/fileexist/" #File Existst already
-        destpath_src = "./tests/data/test_Files/copyfile/src/destpath/" #Dest filename is a path
+        working_index_src = "./tests/data/test_Files/copyfile/src/working_index" # Working Index copy
+        file_exist_src = "./tests/data/test_Files/copyfile/src/file_exist/" #File Existst already
+        dest_path_src = "./tests/data/test_Files/copyfile/src/dest_path/" #Dest filename is a path
         working_dest = "./tests/data/test_Files/copyfile/dest/working/" #Working copy
-        fileexist_dest = "./tests/data/test_Files/copyfile/dest/fileexist/" #File Existst already
-        destpath = "./tests/data/test_Files/copyfile/dest/destpath/"
-        destnotfound = "./tests/data/test_Files/copyfile/dest/test04/" #dest path not found
+        working_index_dest = "./tests/data/test_Files/copyfile/dest/working_index/" #Working copy
+        file_exist_dest = "./tests/data/test_Files/copyfile/dest/file_exist/" #File Existst already
+        dest_path = "./tests/data/test_Files/copyfile/dest/dest_path/"
+        dest_not_found = "./tests/data/test_Files/copyfile/dest/test04/" #dest path not found
         try:
             os.mkdir(working_dest) #Working copy
-            shutil.copytree(fileexist_src, fileexist_dest)
-            os.mkdir(destpath)
+            os.mkdir(working_index_dest) # Working Index copy
+            shutil.copytree(file_exist_src, file_exist_dest)
+            os.mkdir(dest_path)
         except:
             pass
         working_test = Files(working_src)
-        fileexist_test = Files(fileexist_src)
-        destpath_src = Files(destpath_src)
-        self.assertEqual(working_test.copyfile(working_dest, working_test.filenames[0]), True) #Working copy
-        self.assertEqual(fileexist_test.copyfile(fileexist_dest, fileexist_test.filenames[0]), False) #File Existst already
-        self.assertEqual(destpath_src.copyfile(destpath, destpath_src.filenames), False) # Dest filename is path
-        self.assertEqual(working_test.copyfile(destnotfound, working_test.filenames), False)
+        working_index_test = Files(working_index_src)
+        file_exist_test = Files(file_exist_src)
+        dest_path_src = Files(dest_path_src)
+        self.assertEqual(working_test.copyfile(working_dest, working_test.filenames[0], 0), True) #Working copy
+        self.assertEqual(working_index_test.copyfile(working_index_dest, working_index_test.filenames[2], 2), True)
+        self.assertEqual(file_exist_test.copyfile(file_exist_dest, file_exist_test.filenames[0]), False) #File Existst already
+        self.assertEqual(dest_path_src.copyfile(dest_path, dest_path_src.filenames), False) # Dest filename is a path
+        self.assertEqual(working_test.copyfile(dest_not_found, working_test.filenames), False)
         shutil.rmtree(working_dest)
-        shutil.rmtree(fileexist_dest)
-        shutil.rmtree(destpath)
+        shutil.rmtree(working_index_dest)
+        shutil.rmtree(file_exist_dest)
+        shutil.rmtree(dest_path)
 
     def test_rename(self):
         og01 = "./tests/data/test_Files/rename/original/test01/"
@@ -150,8 +157,7 @@ class TestFiles(unittest.TestCase):
         self.assertEqual(test03.rename(dest03, "01.jpg"), False) #no source
         self.assertEqual(test04.rename(dest04, "02.jpg"), True) #working rename
         #try to rename when it's already gone
-        self.assertEqual(test04.rename(dest04, "02.jpg"), False) #try rename again
-        
+        self.assertEqual(test04.rename(dest04, "02.jpg"), False) #try rename again   
         shutil.rmtree(src01)
         shutil.rmtree(src02)
         shutil.rmtree(src03)
@@ -160,6 +166,7 @@ class TestFiles(unittest.TestCase):
         shutil.rmtree(dest02)
         shutil.rmtree(dest03)
         shutil.rmtree(dest04)
+
 
 if __name__ == '__main__':
     unittest.main()

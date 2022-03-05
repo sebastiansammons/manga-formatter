@@ -1,28 +1,13 @@
-#app.py
+# app.py
+from msilib.schema import Directory
+from turtle import title
 from flask import Flask, render_template, request, redirect, session
-# import manga
-from . import manga
 import os
-import logging
 
-
-#
-#Initialize Logger
-#
-
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s|%(funcName)-30s|%(levelname)-7s|%(message)s')
-file_handler = logging.FileHandler(manga.LOGS_PATH + "manga.log")
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-stream_handler = logging.StreamHandler()
-stream_handler.setFormatter(formatter)
-stream_handler.setLevel(logging.WARNING)
-logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
-
+# import manga
+# import epub
+from . import manga
+from . import epub
 
 app = Flask(__name__)
 app.secret_key = os.urandom(64)
@@ -37,15 +22,28 @@ def index():
         session.pop("manga", None)
         session.pop("number", None)
         session.pop("title", None)
+        session.pop("author", None)
+        session.pop("scans", None)
+        session.pop("build_toc", None)
         session.pop("preview", None)
         session.pop("error", None)
         return render_template('index.html')
     else:
-        manga_format = request.form["manga_format"]
-        if(manga_format == "Auto"):
+        main_menu = request.form["main_menu"]
+        if(main_menu == "Auto"):
             return redirect('/auto')
-        elif(manga_format == "Manual"):
+        elif(main_menu == "Manual"):
             return redirect('/manual')
+        elif(main_menu == "EPUB"):
+            return redirect('/epub')
+        elif(main_menu == "New"):
+            # TODO: New Manga Feature
+            return redirect('/')
+        elif(main_menu =="Main Menu"):
+            return redirect('/')
+            # TODO: Settings options
+        elif(main_menu =="Settings"):
+            return redirect('/')
         else:
             return redirect('/')
 
@@ -211,31 +209,121 @@ def manual_volume():
             session["error"] = "MANUAL VOLUME SELECTION ERROR"
             return redirect('/error')
 
+@app.route('/epub', methods = ['GET', 'POST'])
+def epub_option():
+    if(request.method == 'GET'):
+        return render_template('epub_option.html')
+    else:
+        submit = request.form['epub']
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "Auto"):
+            return redirect('/epub/auto')
+        elif(submit == "Manual"):
+            return redirect('/epub/manual')
+        else:
+            return redirect('/')
+        
+@app.route('/epub/auto', methods = ['GET', 'POST'])
+def epub_auto():
+    if(request.method == 'GET'):
+        # GET MANGA LIST
+        manga_list = manga.get_manga()
+        return render_template('epub_auto.html', manga_list = manga_list, len = len(manga_list))
+    else:
+        submit = request.form['epub_auto']
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "EPUB Auto"):
+            manga_title = request.form['manga']
+            volume_number = request.form['volume_number']
+            scans = request.form['scans']
+            # volume title
+            volume_title = manga.get_manga_volume(manga_title, volume_number)
+            if(manga_title == "One Piece"):
+                epub_title = manga_title + " Volume " + str(volume_number).zfill(3) + " - " + volume_title
+            else:
+                epub_title = manga_title + " Volume " + str(volume_number).zfill(2) + " - " + volume_title
+            # author
+            author = manga.get_manga_author(manga_title)
+            session["manga"] = manga_title
+            session["title"] = epub_title
+            session["author"] = author
+            session["scans"] = scans
+            session["format"] = "epub_auto"
+            preview = []
+            preview.append("Manga: " + manga_title)
+            preview.append("Author: " + author)
+            preview.append("Volume: " + volume_number)
+            preview.append("Title: " + manga_title)
+            preview.append("EPUB: " + epub_title + ".epub")
+            return redirect('/preview')
+        else:
+            session["error"] = "CHAPTER SELECTION ERROR"
+            return redirect('/error')
+
+@app.route('/epub/manual', methods = ['GET', 'POST'])
+def epub_manual():
+    if(request.method == 'GET'):
+        return render_template('epub_manual.html')
+    else:
+        submit = request.form['epub_manual']
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "EPUB Manual"):
+            manga_title = request.form['manga']
+            title = request.form['title']
+            number = request.form['number']
+            author = request.form['author']
+            scans = request.form['scans']
+            if(request.form['build_toc'] == "Build"):
+                build_toc = True
+            else:
+                build_toc = False
+            epub_title = manga_title + " Volume " + str(number).zfill(2) + " - " + title
+            session["title"] = epub_title
+            session["author"] = author
+            session["scans"] = scans
+            session["buid_toc"] = build_toc
+            session["format"] = "epub_manual"
+            preview = []
+            preview.append("Manga: " + manga_title)
+            preview.append("Author: " + author)
+            preview.append("Volume: " + number)
+            preview.append("Title: " + title)
+            preview.append("EPUB: " + epub_title + ".epub")
+            return redirect('/preview')
+
 @app.route('/preview', methods = ['GET', 'POST'])
 def preview():
     if(request.method == 'GET'):
         if "preview" in session:
             preview = session["preview"]
         else:
-            preview = "NO PREVIEW"
+            preview = ["NO PREVIEW"]
         return render_template('preview.html', preview = preview, len = len(preview))
     else:
+        manga_format = ""
+        manga_title = ""
+        number = ""
+        title = ""
+        author = ""
+        scans = ""
+        build_toc = ""
         if "format" in session:
             manga_format = session["format"]
-        else:
-            manga_format = ""
         if "manga" in session:
             manga_title = session["manga"]
-        else:
-            manga_title = ""
         if "number" in session:
             number = session["number"]
-        else:
-            number = ""
         if "title" in session:
             title = session["title"]
-        else:
-            title = ""
+        if "author" in session:
+            author = session["author"]
+        if "scans" in session:
+            scans = session["scans"]
+        if "buid_toc" in session:
+            build_toc = session["build_toc"]
         commit = request.form['choice']
         if(commit == "Commit"):
             if(manga_format == "auto_chapter"):
@@ -248,6 +336,12 @@ def preview():
                 manga.manual_multiple_chapter_format(manga_title)
             elif(manga_format == "manual_volume"):
                 manga.manual_volume_format(manga_title, number, title)
+            elif(manga_format == "epub_auto"):
+                epub_auto_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
+                epub_auto_dest = manga.MANGA_PATH + manga_title + epub.EPUB_VOLUMES_SUBPATH
+                epub.generate_epub(epub_auto_src, epub_auto_dest, title, author, scans)
+            elif(manga_format == "epub_manual"):
+                epub.generate_epub(manga.SOURCE_PATH, manga.DESTINATION_PATH, title, author, scans, build_toc)
             else:
                 session["error"] = "MAJOR ERROR"
         elif(commit =="Abort"):

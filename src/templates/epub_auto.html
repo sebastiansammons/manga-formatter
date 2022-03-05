@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Auto EPUB - Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+        <link rel="stylesheet" href="../static/epub_auto.css">
+    </head>
+    <body>
+        <div>
+            <h1>AUTO EPUB</h1>
+            <!--Auto Chapter Form-->
+            <form name="aepub" method="POST">
+                <!-- Manga -->
+                <div>
+                    <select class="selectmanga" name="manga">
+                        {% for i in range(0,len) %}
+                        <option value="{{ manga_list[i] }}">{{ manga_list[i] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!--Volume Number-->
+                <div>
+                    <input class="volumenumber" type="text" name="volume_number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
+                </div>
+                <div>
+                    <!-- Scans or Digital -->
+                    <label class="box">
+                        <input type="radio" name="scans" value="Scans">
+                        <span class="scans">Scans</span>
+                    </label>
+                    <label class="box">
+                        <input type="radio" checked="checked" name="scans" value="Digital">
+                        <span class="digital">Digital</span>
+                    </label>
+                </div>
+                <!--EPUB Auto-->
+                <div>
+                    <input class="epubauto" type="submit" name="epub_auto" value="EPUB Auto">
+                </div>
+                <!-- Main Menu -->
+                <div>
+                    <input class="mainmenu" type="submit" name="epub_auto" value="Main Menu">
+                </div>
+            </form>    
+        </div>
+    </body>
+</html>

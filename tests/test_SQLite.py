@@ -4,8 +4,15 @@ import os
 import shutil
 import sqlite3
 from unittest.mock import patch
-import src.manga.SQLite as SQLite
-import src.manga.manga_config as manga_config
+# Before
+# import src.manga.SQLite as SQLite
+import sys
+sys.path.append("..")
+# from src.manga.SQLite import SQLite
+from src.manga import SQLite
+
+
+
 
 @patch.dict('os.environ', {'PGID': '1000'})
 @patch.dict('os.environ', {'PUID': '1000'})
@@ -114,7 +121,6 @@ class TestSQLite(unittest.TestCase):
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
         self.assertEqual(result, [7])
 
-
         #don't commit
         result = self.manga_db.execute("UPDATE manga_progress SET current_chapter = 8 WHERE manga = 'Blue Box';")
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = 'Blue Box';")
@@ -151,7 +157,6 @@ class TestSQLite(unittest.TestCase):
         dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.close()
         self.assertEqual(result, False)
-
 
 
 if __name__=='__main__':

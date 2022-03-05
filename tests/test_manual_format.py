@@ -2,12 +2,19 @@
 import shutil
 import os
 import unittest
-# from ..src.manga import Files
-# from ..src.manga import manga_config
-# from ..src.manga import manga_format
-import src.manga.Files as Files
-import src.manga.manga_config as manga_config
-import src.manga.manga_format as manga_format
+# Before
+# import src.manga.Files as Files
+# import src.manga.manga_config as manga_config
+# import src.manga.manga_format as manga_format
+import sys
+sys.path.append("..")
+# from src.manga.Files import Files
+# from src.manga.manga_config import manga_config
+# from src.manga.manga_format import manga_format
+from src.manga import Files
+from src.manga import manga_config
+from src.manga import manga_format
+
 
 
 class TestManualFormat(unittest.TestCase):
@@ -40,7 +47,6 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(new_chapter.filenames[45], "Naruto - CH138PG46 - Single Chapter.jpg")
         self.assertEqual(new_chapter.count, 46)
 
-
     def test_multi_chapter(self):
         shutil.copytree("./tests/data/test_format/manual_multi_chapter/src/", manga_config.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format("Bleach")
@@ -69,7 +75,5 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(new_volume.count, 103)
 
 
-
 if __name__ == '__main__':
     unittest.main()
-

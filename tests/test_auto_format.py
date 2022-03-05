@@ -1,14 +1,21 @@
 # test_auto_format.py
 import shutil
 import unittest
-# from ..src.manga import SQLite
-# from ..src.manga import Files
-# from ..src.manga import manga_config
-# from ..src.manga import manga_format
-import src.manga.SQLite as SQLite
-import src.manga.Files as Files
-import src.manga.manga_config as manga_config
-import src.manga.manga_format as manga_format
+# Before
+# import src.manga.SQLite as SQLite
+# import src.manga.Files as Files
+# import src.manga.manga_config as manga_config
+# import src.manga.manga_format as manga_format
+import sys
+sys.path.append("..")
+# from src.manga.SQLite import SQLite
+# from src.manga.Files import Files
+# from src.manga.manga_config import manga_config
+# from src.manga.manga_format import manga_format
+from src.manga import SQLite
+from src.manga import Files
+from src.manga import manga_config
+from src.manga import manga_format
 
 
 
@@ -67,8 +74,6 @@ class TestAutoFormat(unittest.TestCase):
         self.assertEqual(OP_cover.filenames[13], "CH1014 Cover.jpeg")
         shutil.rmtree(manga_config.SOURCE_PATH)
 
-
-
     def test_auto_volume(self):
         shutil.copytree("./tests/data/test_format/auto_volume/Not One Piece/src/", manga_config.SOURCE_PATH)
         manga_db = SQLite(manga_config.DB_FILE_PATH)
@@ -107,10 +112,5 @@ class TestAutoFormat(unittest.TestCase):
         shutil.rmtree(manga_config.SOURCE_PATH)
 
 
-
-
-
-
 if __name__ == '__main__':
     unittest.main()
-

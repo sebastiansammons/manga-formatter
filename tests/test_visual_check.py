@@ -3,10 +3,15 @@ import unittest
 import shutil
 import os
 from unittest.case import SkipTest
-# from ..src.manga import manga_config
-# from ..src.manga import manga_format
-import src.manga.manga_config as manga_config
-import src.manga.manga_format as manga_format
+# Before
+# import src.manga.manga_config as manga_config
+# import src.manga.manga_format as manga_format
+import sys
+sys.path.append("..")
+# from src.manga.manga_config import manga_config
+# from src.manga.manga_format import manga_format
+from src.manga import manga_config
+from src.manga import manga_format
 
 
 @SkipTest
@@ -39,8 +44,6 @@ class TestVisualCheck(unittest.TestCase):
         manga_format.auto_chapter_format("One Piece", "Great Stuff")
         shutil.rmtree(manga_config.SOURCE_PATH)
 
-
-
     def test_auto_volume(self):
         shutil.copytree("./tests/data/test_visual_check/auto_volume/Not One Piece/src/", manga_config.SOURCE_PATH)
         manga_format.auto_volume_format("Attack on Titan", 139, "Last Volume")
@@ -49,7 +52,6 @@ class TestVisualCheck(unittest.TestCase):
         shutil.copytree("./tests/data/test_visual_check/auto_volume/One Piece/src/", manga_config.SOURCE_PATH)
         manga_format.auto_volume_format("One Piece", 1004, "Straw Hat Luffy")
         shutil.rmtree(manga_config.SOURCE_PATH)
-
 
     def test_single_chapter(self):
         try:
@@ -66,8 +68,6 @@ class TestVisualCheck(unittest.TestCase):
         os.mkdir(manga_config.DESTINATION_PATH)
         shutil.copytree("./tests/data/test_visual_check/manual_single_chapter/src - multi/", manga_config.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format("Naruto")
-        
-
 
     def test_multi_chapter(self):
         try:
@@ -78,7 +78,6 @@ class TestVisualCheck(unittest.TestCase):
         os.mkdir(manga_config.DESTINATION_PATH)
         shutil.copytree("./tests/data/test_visual_check/manual_multi_chapter/src/", manga_config.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format("Bleach")
-        
 
     def test_manual_volume(self):
         try:
@@ -93,4 +92,3 @@ class TestVisualCheck(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

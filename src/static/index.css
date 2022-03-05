@@ -2,7 +2,7 @@
     top: 6vh;
     left: 3vw;
     height: 42.5vh;
-    width: 94vw;
+    width: 45vw;
     color: #34aa57;
     border-color: #34aa57;
 }
@@ -16,7 +16,7 @@
     top: 52.5vh;
     left: 3vw;
     height: 45vh;
-    width: 94vw;
+    width: 45vw;
     color: #c98936;
     border-color: #c98936;
 }
@@ -26,3 +26,52 @@
     background-color: #c98936;
 }
 
+.buildepub {
+    top: 6vh;
+    right: 3vw;
+    height: 42.5vh;
+    width: 45vw;
+    color: #cb55a8;
+    border-color: #cb55a8;
+}
+
+.buildepub:hover {
+    color: #dadada;
+    background-color: #cb55a8;
+}
+
+.newmanga {
+    top: 52.5vh;
+    right: 3vw;
+    height: 45vh;
+    width: 45vw;
+    color: #3676c9;
+    border-color: #3676c9;
+}
+
+.newmanga:hover {
+    color: #dadada;
+    background-color: #3676c9;
+}
+
+.settings {
+    top: 1.5vh;
+    right: 3vh;
+    font-family: Impact;
+    font-size: 2vh;
+
+    color: #35c1b8;
+    background-color: #272a30;
+    border: solid;
+    border-color: #35c1b8;
+    border-width: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.settings:hover {
+    color: #dadada;
+    background-color: #35c1b8;
+    transition-duration: 0.35s;
+    cursor: pointer;
+}

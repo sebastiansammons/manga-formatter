@@ -1,9 +1,12 @@
 #test_Directory.py
 import unittest
-# from ..src.manga import Directory
-# from ..src.manga import manga_config
-import src.manga.Directory as Directory
-import src.manga.manga_config as manga_config
+# Before
+# import src.manga.Directory as Directory
+import sys
+sys.path.append("..")
+# from src.manga.Directory import Directory
+from src.manga import Directory
+
 
 class TestDirectory(unittest.TestCase):
 
@@ -70,6 +73,6 @@ class TestDirectory(unittest.TestCase):
         self.assertEqual(dir_6.mk_dir(), True)
         dir_6.rm_dir()
 
+
 if __name__ == '__main__':
     unittest.main()
-

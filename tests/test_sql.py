@@ -1,15 +1,17 @@
 # test_status.py
-import shutil
 import unittest
-import logging
-# from ..src.manga import manga_config
-# from ..src.manga import manga_status
-import src.manga.manga_config as manga_config
-import src.manga.manga_status as manga_status
+# Before
+# import src.manga.manga_config as manga_config
+# import src.manga.manga_status as manga_status
+import sys
+sys.path.append("..")
+# from src.manga.manga_config import manga_config
+# from src.manga.manga_status import manga_status
+from src.manga import manga_config
+from src.manga import manga_status
 
 
-
-class TestAutoPreview(unittest.TestCase):
+class TestStatus(unittest.TestCase):
 
     def setUp(self):
         manga_config.DB_FILE_PATH = "./tests/data/db/test_manga.db"
@@ -33,6 +35,6 @@ class TestAutoPreview(unittest.TestCase):
         self.assertEqual(active_manga, expected_active_manga)
         self.assertEqual(manga_volume, expected_manga_volume)
 
+
 if __name__ == '__main__':
     unittest.main()
-
