@@ -8,7 +8,7 @@ sys.path.append("..")
 # from src.manga.manga_config import manga_config
 # from src.manga.manga_status import manga_status
 from src.manga import manga_config
-from src.manga import manga_status
+from src.manga import manga_sql
 
 
 class TestStatus(unittest.TestCase):
