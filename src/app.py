@@ -341,22 +341,30 @@ def preview():
         elif(submit == "Commit"):
             if(manga_format == "auto_chapter"):
                 manga.auto_chapter_format(manga_title, title)
+                return redirect('/auto')
             elif(manga_format == "auto_volume"):
                 manga.auto_volume_format(manga_title, number, title)
+                return redirect('/auto')
             elif(manga_format == "manual_single_chapter"):
                 manga.manual_single_chapter_format(manga_title, number, title)
+                return redirect('/manual')
             elif(manga_format == "manual_multiple_chapter"):
                 manga.manual_multiple_chapter_format(manga_title)
+                return redirect('/manual')
             elif(manga_format == "manual_volume"):
                 manga.manual_volume_format(manga_title, number, title)
+                return redirect('/manual')
             elif(manga_format == "epub_auto"):
                 epub_auto_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
                 epub_auto_dest = manga.MANGA_PATH + manga_title + epub.EPUB_VOLUMES_SUBPATH
                 epub.generate_epub(epub_auto_src, epub_auto_dest, title, author, scans)
+                return redirect('/epub')
             elif(manga_format == "epub_manual"):
                 epub.generate_epub(manga.SOURCE_PATH, manga.DESTINATION_PATH, title, author, scans, build_toc)
+                return redirect('/epub')
             else:
-                session["error"] = "MAJOR ERROR"
+                session["error"] = "NOTHING TO COMMIT"
+                return redirect('/error')
         else:
             session["error"] = "PREVIEW SELECTION ERROR"
             return redirect('/error')
@@ -430,6 +438,9 @@ def error():
                 session.modified = True
                 session["preview"] = manga.manual_volume_preview(manga_title, number, title)
                 return redirect('/preview')
+            else:
+                session["error"] = "TRY AGAIN FAILED"
+                return redirect('/error')
         else:
             session["error"] = "ERROR SELECTION ERROR"
             return redirect('/error')
