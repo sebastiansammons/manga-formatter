@@ -3,17 +3,16 @@
     <head>
         <title>Error - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/error.css">
     </head>
     <body>
         <h1>ERROR</h1>
         <!-- Error -->
-        <h2>{{error}}</h2>
-        <form name="commit" method="POST">
+        <div class="message error">{{error}}</div>
+        <form name="error" method="POST">
             <!-- Main Menu -->
             <div>
-                <input class="menu" type="submit" name="error_action" value="Main Menu">
-                <input class="retry" type="submit" name="error_action" value="Try Again">
+                <input class="go button green" type="submit" name="error_action" value="Try Again">
+                <input class="no_go button red" type="submit" name="error_action" value="Main Menu">
             </div>
         </form>
     </body>

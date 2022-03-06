@@ -26,23 +26,24 @@ def index():
         session.pop("error", None)
         return render_template('index.html')
     else:
-        main_menu = request.form["main_menu"]
-        if(main_menu == "Auto"):
+        submit = request.form["main_menu"]
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "Auto"):
             return redirect('/auto')
-        elif(main_menu == "Manual"):
+        elif(submit == "Manual"):
             return redirect('/manual')
-        elif(main_menu == "EPUB"):
+        elif(submit == "EPUB"):
             return redirect('/epub')
-        elif(main_menu == "New"):
-            # TODO: New Manga Feature
+        # TODO: New Manga Feature
+        elif(submit == "New"):
             return redirect('/')
-        elif(main_menu =="Main Menu"):
-            return redirect('/')
-            # TODO: Settings options
-        elif(main_menu =="Settings"):
+        # TODO: Settings options
+        elif(submit =="Settings"):
             return redirect('/')
         else:
-            return redirect('/')
+            session["error"] = "MAIN MENU SELECTION ERROR"
+            return redirect('/error')
 
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
@@ -51,13 +52,13 @@ def auto_format():
         manga_volume_title, manga_volume_status = manga.get_volume_status()
         return render_template('auto_format.html', manga_chapter_title = manga_chapter_title, manga_chapter_status = manga_chapter_status, manga_volume_title = manga_volume_title, manga_volume_status = manga_volume_status, len = len(manga_chapter_status))
     else:
-        format_type = request.form['auto_format']
-        if(format_type == "Chapter"):
-            return redirect('/auto/chapter')
-        elif(format_type == "Volume"):
-            return redirect('/auto/volume')
-        elif(format_type == "Main Menu"):
+        submit = request.form['auto_format']
+        if(submit == "Main Menu"):
             return redirect('/')
+        elif(submit == "Chapter"):
+            return redirect('/auto/chapter')
+        elif(submit == "Volume"):
+            return redirect('/auto/volume')
         else:
             session["error"] = "AUTO FORMAT SELECTION ERROR"
             return redirect('/error')
@@ -84,7 +85,7 @@ def auto_chapter():
             session["preview"] = manga.auto_chapter_preview(manga_title, title)
             return redirect('/preview')
         else:
-            session["error"] = "CHAPTER SELECTION ERROR"
+            session["error"] = "AUTO CHAPTER SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/auto/volume', methods = ['GET', 'POST'])
@@ -111,7 +112,7 @@ def auto_volume():
             session["preview"] = manga.auto_volume_preview(manga_title, number, title)
             return redirect('/preview')
         else:
-            session["error"] = "VOLUME SELECTION ERROR"
+            session["error"] = "AUTO VOLUME SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/manual', methods = ['GET', 'POST'])
@@ -119,17 +120,17 @@ def manual_format():
     if(request.method == 'GET'):
         return render_template('manual_format.html')
     else:
-        format_type = request.form['manual_format']
-        if(format_type == "Single Chapter"):
-            return redirect('/manual/single')
-        if(format_type == "Multi Chapter"):
-            return redirect('/manual/multi')
-        elif(format_type == "Volume"):
-            return redirect('/manual/volume')
-        elif(format_type == "Main Menu"):
+        submit = request.form['manual_format']
+        if(submit == "Main Menu"):
             return redirect('/')
+        elif(submit == "Single Chapter"):
+            return redirect('/manual/single')
+        elif(submit == "Multi Chapter"):
+            return redirect('/manual/multi')
+        elif(submit == "Volume"):
+            return redirect('/manual/volume')
         else:
-            session["error"] = "AUTO FORMAT SELECTION ERROR"
+            session["error"] = "MANUAL FORMAT SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/manual/single', methods = ['GET', 'POST'])
@@ -155,7 +156,7 @@ def manual_single():
             session["preview"] = manga.manual_single_chapter_preview(manga_title, number, title)
             return redirect('/preview')
         else:
-            session["error"] = "MANUAL CHAPTER SELECTION ERROR"
+            session["error"] = "MANUAL SINGLE CHAPTER SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/manual/multi', methods = ['GET', 'POST'])
@@ -177,7 +178,7 @@ def manual_multi():
             session["preview"] = manga.manual_multiple_chapter_preview(manga_title)
             return redirect('/preview')
         else:
-            session["error"] = "MANUAL CHAPTER SELECTION ERROR"
+            session["error"] = "MANUAL MULTI CHAPTER SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/manual/volume', methods = ['GET', 'POST'])
@@ -188,7 +189,7 @@ def manual_volume():
         submit = request.form['manual_volume']
         if(submit == "Main Menu"):
             return redirect('/')
-        elif(submit == "Volume"):
+        elif(submit == "Manual Volume"):
             manga_title = request.form['manga']
             number = request.form['number']
             title = request.form['title']
@@ -207,11 +208,11 @@ def manual_volume():
             return redirect('/error')
 
 @app.route('/epub', methods = ['GET', 'POST'])
-def epub_option():
+def epub_format():
     if(request.method == 'GET'):
-        return render_template('epub_option.html')
+        return render_template('epub_format.html')
     else:
-        submit = request.form['epub']
+        submit = request.form['epub_format']
         if(submit == "Main Menu"):
             return redirect('/')
         elif(submit == "Auto"):
@@ -219,12 +220,14 @@ def epub_option():
         elif(submit == "Manual"):
             return redirect('/epub/manual')
         else:
-            return redirect('/')
+            session["error"] = "EPUB FORMAT SELECTION ERROR"
+            return redirect('/error')
 
 @app.route('/epub/auto', methods = ['GET', 'POST'])
 def epub_auto():
     if(request.method == 'GET'):
         # GET MANGA LIST
+        # TODO: Work on fridge.db for better list (might have to remake .db) Also work on get_manga()?
         manga_list = manga.get_manga()
         return render_template('epub_auto.html', manga_list = manga_list, len = len(manga_list))
     else:
@@ -258,7 +261,7 @@ def epub_auto():
             session["preview"] = preview
             return redirect('/preview')
         else:
-            session["error"] = "CHAPTER SELECTION ERROR"
+            session["error"] = "EPUB AUTO SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/epub/manual', methods = ['GET', 'POST'])
@@ -298,6 +301,9 @@ def epub_manual():
             preview.append("EPUB: " + epub_title + ".epub")
             session["preview"] = preview
             return redirect('/preview')
+        else:
+            session["error"] = "EPUB MANUAL SELECTION ERROR"
+            return redirect('/error')
 
 @app.route('/preview', methods = ['GET', 'POST'])
 def preview():
@@ -329,8 +335,10 @@ def preview():
             scans = session["scans"]
         if "build_toc" in session:
             build_toc = session["build_toc"]
-        commit = request.form['choice']
-        if(commit == "Commit"):
+        submit = request.form['commit']
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "Commit"):
             if(manga_format == "auto_chapter"):
                 manga.auto_chapter_format(manga_title, title)
             elif(manga_format == "auto_volume"):
@@ -349,9 +357,9 @@ def preview():
                 epub.generate_epub(manga.SOURCE_PATH, manga.DESTINATION_PATH, title, author, scans, build_toc)
             else:
                 session["error"] = "MAJOR ERROR"
-        elif(commit =="Abort"):
-            return redirect('/')
-        return redirect('/')
+        else:
+            session["error"] = "PREVIEW SELECTION ERROR"
+            return redirect('/error')
 
 @app.route('/error', methods = ['GET', 'POST'])
 def error():
@@ -363,7 +371,9 @@ def error():
         return render_template('error.html', error = error)
     else:
         submit = request.form['error_action']
-        if(submit == "Try Again"):
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "Try Again"):
             if "format" in session:
                 manga_format = session["format"]
             else:
@@ -421,4 +431,5 @@ def error():
                 session["preview"] = manga.manual_volume_preview(manga_title, number, title)
                 return redirect('/preview')
         else:
-            return redirect('/')
+            session["error"] = "ERROR SELECTION ERROR"
+            return redirect('/error')
