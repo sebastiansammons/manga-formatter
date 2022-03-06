@@ -367,7 +367,7 @@ def error():
         if "error" in session:
             error = session["error"]
         else:
-            error = "UNKNOWN"
+            error = "NO KNOWN ERROR"
         return render_template('error.html', error = error)
     else:
         submit = request.form['error_action']
