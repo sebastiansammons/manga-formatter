@@ -3,24 +3,23 @@
     <head>
         <title>EPUB Format - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/epub_option.css">
     </head>
     <body>
         <div>
             <h1>EPUB FORMAT</h1>
-            <!-- Auto Format Form -->
-            <form name="autoformat" method="POST">
+            <!-- Auto EPUB Form -->
+            <form name="EPUBformat" method="POST">
                 <!-- Auto EPUB -->
                 <div>
-                    <input class="auto" type="submit" name="epub" value="Auto">
+                    <input class="left button green" type="submit" name="epub_format" value="Auto">
                 </div>
                 <!-- Manual EPUB -->
                 <div>
-                    <input class="manual" type="submit" name="epub" value="Manual">
+                    <input class="right button orange" type="submit" name="epub_format" value="Manual">
                 </div>
                 <!-- Main Menu -->
                 <div>
-                    <input class="mainmenu" type="submit" name="epub" value="Main Menu">
+                    <input class="menu_item main button red" type="submit" name="epub_format" value="Main Menu">
                 </div>
             </form> 
         </div>

@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Auto EPUB - Manga Formatter</title>
+        <title>EPUB Auto - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/epub_auto.css">
     </head>
     <body>
         <div>
-            <h1>AUTO EPUB</h1>
-            <!--Auto Chapter Form-->
-            <form name="aepub" method="POST">
+            <h1>EPUB AUTO</h1>
+            <!--EPUB Auto Form-->
+            <form name="EPUBa" method="POST">
                 <!-- Manga -->
                 <div>
-                    <select class="selectmanga" name="manga">
+                    <select class="row_1" name="manga">
                         {% for i in range(0,len) %}
                         <option value="{{ manga_list[i] }}">{{ manga_list[i] }}</option>
                         {% endfor %}
@@ -20,26 +19,26 @@
                 </div>
                 <!--Volume Number-->
                 <div>
-                    <input class="volumenumber" type="text" name="volume_number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
+                    <input class="row_2 wide_number text" type="text" name="volume_number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
                 </div>
                 <div>
                     <!-- Scans or Digital -->
-                    <label class="box">
+                    <label class="radiobutton">
                         <input type="radio" name="scans" value="Scans">
-                        <span class="scans">Scans</span>
+                        <span class="row_3 scans radiobutton_color">Scans</span>
                     </label>
-                    <label class="box">
+                    <label class="radiobutton">
                         <input type="radio" checked="checked" name="scans" value="Digital">
-                        <span class="digital">Digital</span>
+                        <span class="row_3 digital radiobutton_color">Digital</span>
                     </label>
                 </div>
                 <!--EPUB Auto-->
                 <div>
-                    <input class="epubauto" type="submit" name="epub_auto" value="EPUB Auto">
+                    <input class="row_4 submit_button green" type="submit" name="epub_auto" value="EPUB Auto">
                 </div>
                 <!-- Main Menu -->
                 <div>
-                    <input class="mainmenu" type="submit" name="epub_auto" value="Main Menu">
+                    <input class="menu_item main submit_button red" type="submit" name="epub_auto" value="Main Menu">
                 </div>
             </form>    
         </div>

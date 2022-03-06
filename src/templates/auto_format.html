@@ -3,7 +3,6 @@
     <head>
         <title>Auto Format - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/auto_format.css">
     </head>
     <body>
         <div>
@@ -12,39 +11,43 @@
             <form name="autoformat" method="POST">
                 <!-- Auto Chapter -->
                 <div>
-                    <input class="chapter" type="submit" name="auto_format" value="Chapter">
+                    <input class="top_left button dark_pastel_blue" type="submit" name="auto_format" value="Chapter">
                 </div>
                 <!-- Auto Volume -->
                 <div>
-                    <input class="volume" type="submit" name="auto_format" value="Volume">
+                    <input class="top_right button brown" type="submit" name="auto_format" value="Volume">
                 </div>
                 <!-- Main Menu -->
                 <div>
-                    <input class="mainmenu" type="submit" name="auto_format" value="Main Menu">
+                    <input class="menu_item main button red" type="submit" name="auto_format" value="Main Menu">
                 </div>
             </form>
-            <table class="chapter_status">
+            <!-- Chapter Table -->
+            <table class="bottom_left table_color_dark_pastel_blue">
                 <div>
                     <tr>
                         <th></th>
-                        <th class = "manga_number">Last Chapter</th>
+                        <th class = "td_right">Latest Chapter</th>
                     </tr>
                     {% for i in range(0,len) %}
                     <tr>
-                        <td class = "manga_title">{{ manga_chapter_title[i] }}</td><td class = "manga_number">{{ manga_chapter_status[i] }}</td>
+                        <td class = "td_left">{{ manga_chapter_title[i] }}</td>
+                        <td class = "td_right">{{ manga_chapter_status[i] }}</td>
                     </tr>
                     {% endfor %}
                 </div>
             </table>
-            <table class="volume_status">
+            <!-- Volume Table -->
+            <table class="bottom_right table_color_brown">
                 <div>
                     <tr>
                         <th></th>
-                        <th class = "manga_number">Last Volume</th>
+                        <th class = "td_right">Latest Volume</th>
                     </tr>
                     {% for i in range(0,len) %}
                     <tr>
-                        <td class = "manga_title">{{ manga_volume_title[i] }}</td><td class = "manga_number">{{ manga_volume_status[i] }}</td>
+                        <td class = "td_left">{{ manga_volume_title[i] }}</td>
+                        <td class = "td_right">{{ manga_volume_status[i] }}</td>
                     </tr>
                     {% endfor %}
                 </div>

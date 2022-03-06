@@ -3,16 +3,15 @@
     <head>
         <title>Auto Chapter - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/auto_chapter.css">
     </head>
     <body>
         <div>
             <h1>AUTO CHAPTER</h1>
             <!--Auto Chapter Form-->
-            <form name="aformat" method="POST">
+            <form name="achapter" method="POST">
                 <!-- Manga -->
                 <div>
-                    <select class="selectmanga" name="manga">
+                    <select class="row_1" name="manga">
                         {% for i in range(0,len) %}
                         <option value="{{ active_manga[i] }}">{{ active_manga[i] }}</option>
                         {% endfor %}
@@ -20,15 +19,15 @@
                 </div>
                 <!--Chapter Title-->
                 <div>
-                    <input class="inputtitle" type="text" name="title" placeholder="Chapter Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Chapter Title'" autocomplete="off">
+                    <input class="row_2 wide_title text" type="text" name="title" placeholder="Chapter Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Chapter Title'" autocomplete="off">
                 </div>
                 <!--Auto Chapter-->
                 <div>
-                    <input class="autochapter" type="submit" name="auto_chapter" value="Auto Chapter">
+                    <input class="row_3 submit_button dark_pastel_blue" type="submit" name="auto_chapter" value="Auto Chapter">
                 </div>
                 <!-- Main Menu -->
                 <div>
-                    <input class="mainmenu" type="submit" name="auto_chapter" value="Main Menu">
+                    <input class="menu_item main button red" type="submit" name="auto_chapter" value="Main Menu">
                 </div>
             </form>    
         </div>

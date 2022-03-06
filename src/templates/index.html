@@ -3,34 +3,35 @@
     <head>
         <title>Main Menu - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/index.css">
     </head>
     <body>
         <div>
             <h1>MAIN MENU</h1>
             <!-- Main Menu Form -->
-            <form name="format" method="POST">
+            <form name="mainmenu" method="POST">
                 <!-- Auto Format -->
                 <div>
-                    <input class="autoformat" type="submit" name="main_menu" value="Auto">
+                    <input class="top_left button green" type="submit" name="main_menu" value="Auto">
                 </div>
                 <!-- Manual Format -->
                 <div>
-                    <input class="manualformat" type="submit" name="main_menu" value="Manual">
+                    <input class="bottom_left button orange" type="submit" name="main_menu" value="Manual">
                 </div>
                 <!-- Build epub -->
                 <div>
-                    <input class="buildepub" type="submit" name="main_menu" value="EPUB">
+                    <input class="top_right button pink" type="submit" name="main_menu" value="EPUB">
                 </div>
                 <!-- New Manga -->
                 <div>
-                    <input class="newmanga" type="submit" name="main_menu" value="New">
+                    <input class="bottom_right button blue" type="submit" name="main_menu" value="New">
                 </div>
+                <!-- Main Menue -->
                 <div>
-                    <input class="mainmenu" type="submit" name="main_menu" value="Main Menu">
+                    <input class="menu_item main button red" type="submit" name="main_menu" value="Main Menu">
                 </div>
+                <!-- Settings -->
                 <div>
-                    <input class="settings" type="submit" name="main_menu" value="Settings">
+                    <input class="menu_item settings button teal" type="submit" name="main_menu" value="Settings">
                 </div>
             </form>
         </div>
