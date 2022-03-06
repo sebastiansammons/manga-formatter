@@ -3,26 +3,23 @@
     <head>
         <title>Preview - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/preview.css">
     </head>
     <body>
         <div>
             <h1>PREVIEW CHANGE</h1>
             <!-- Preview -->
-            <h5>
+            <div class="message preview">
                 {% for i in range(0,len) %}
                 <div>{{preview[i]}}</div>
                 {% endfor %}
-            </h5>
+            </div>
             <!-- Commit Form -->
             <form name="commit" method="POST">
                 <!-- Commit -->
                 <div>
-                    <input class="commit" type="submit" name="choice" value="Commit">
-                </div>
-                <!-- Abort -->
-                <div>
-                    <input class="abort" type="submit" name="choice" value="Abort">
+                    <input class="go button green" type="submit" name="commit" value="Commit">   
+                    <!-- Abort -->
+                    <input class="no_go button red" type="submit" name="commit" value="Main Menu">
                 </div>
             </form>
         </div>

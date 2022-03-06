@@ -1,56 +1,55 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Manual EPUB- Manga Formatter</title>
+        <title>EPUB Manual - Manga Formatter</title>
         <link rel="stylesheet" href="../static/base.css">
-        <link rel="stylesheet" href="../static/epub_manual.css">
     </head>
     <body>
         <div>
-            <h1>MANUAL EPUB</h1>
-            <!--Manual Volume Form-->
-            <form name = "msingle" method = "POST">
+            <h1>EPUB MANUAL</h1>
+            <!--EPUB Manual Form-->
+            <form name = "EPUBm" method = "POST">
                 <!-- Manga -->
                 <div>
-                    <input class="inputmanga" type="text" name="manga" placeholder="Manga" onfocus="this.placeholder = ''" onblur="this.placeholder='Manga'" autocomplete="off">
+                    <input class="row_1 wide_manga text" type="text" name="manga" placeholder="Manga" onfocus="this.placeholder = ''" onblur="this.placeholder='Manga'" autocomplete="off">
                 </div>
                 <!-- Volume Title -->
                 <div>
-                    <input class="inputtitle" type="text" name="title" placeholder="Volume Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Title'" autocomplete="off">
+                    <input class="row_2 wide_title text" type="text" name="title" placeholder="Volume Title" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Title'" autocomplete="off">
                 </div>
                 <!-- Volume Number -->
                 <div>
-                    <input class="inputnumber" type="text" name="number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
+                    <input class="row_3 wide_number text" type="text" name="number" placeholder="Volume Number" onfocus="this.placeholder = ''" onblur="this.placeholder='Volume Number'" autocomplete="off">
                 </div>
                 <!-- Author -->
                 <div>
-                    <input class="author" type="text" name="author" placeholder="Author" onfocus="this.placeholder = ''" onblur="this.placeholder='Author'" autocomplete="off">
+                    <input class="row_4 wide_author text" type="text" name="author" placeholder="Author" onfocus="this.placeholder = ''" onblur="this.placeholder='Author'" autocomplete="off">
                 </div>
                 <div>
                     <!-- Scans or Digital -->
-                    <label class="box">
+                    <label class="radiobutton">
                         <input type="radio" name="scans" value="Scans">
-                        <span class="scans">Scans</span>
+                        <span class="row_5 scans radiobutton_color">Scans</span>
                     </label>
-                    <label class="box">
+                    <label class="radiobutton">
                         <input type="radio" checked="checked" name="scans" value="Digital">
-                        <span class="digital">Digital</span>
+                        <span class="row_5 digital radiobutton_color">Digital</span>
                     </label>
                 </div>
                 <div>
                     <!-- Build TOC -->
-                    <label class="box">
+                    <label class="checkbox">
                         <input type="checkbox" checked="checked" name="build_toc" value="Build">
-                        <span class="buildtoc">Build TOC</span>
+                        <span class="row_5 buildtoc checkbox_color">Build TOC</span>
                     </label>
                 </div>
-                <!--Manual Format-->
+                <!--EPUB Manual-->
                 <div>
-                    <input class="epubmanual" type="submit" name="epub_manual" value="EPUB Manual">
+                    <input class="row_6 submit_button orange" type="submit" name="epub_manual" value="EPUB Manual">
                 </div>
                 <!-- Main Menu -->
                 <div>
-                    <input class="mainmenu" type="submit" name="epub_manual" value="Main Menu">
+                    <input class="menu_item main submit_button red" type="submit" name="epub_manual" value="Main Menu">
                 </div>
             </form>    
         </div>  
