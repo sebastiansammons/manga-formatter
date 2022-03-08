@@ -2,20 +2,14 @@
 import os
 
 from . import manga_config as mc
+from . import manga_sql as msql
 from . import Files
-from . import SQLite
 
 
 def auto_chapter_preview(manga, chapter_title):
     chapter_pages = Files(mc.SOURCE_PATH)
     chapter_pages.pad_zero("Preview")
-    # Connect to SQLite and get appropriate data
-    manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    query_output = manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = ?", query_input)
-    new_chapter_number = query_output[0] + 1
-    manga_db.close()
-    del manga_db
+    new_chapter_number = msql.get_new_chapter_number(manga)
     # Directory path for the new chapter
     if(manga == "One Piece"):
         new_chapter_path = mc.MANGA_PATH + manga + mc.NEW_CHAPTERS_SUBPATH + str(new_chapter_number).zfill(4) + "/"
@@ -40,16 +34,7 @@ def auto_chapter_preview(manga, chapter_title):
     return preview_changes
 
 def auto_volume_preview(manga, last_chapter_of_new_volume, volume_title):
-    manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    # Get current volume number from SQLite and increment
-    query_output = manga_db.execute("SELECT current_volume FROM manga_progress WHERE manga = ?", query_input)
-    new_volume_number = query_output[0] + 1
-    # Get the first chapter in the new volume
-    query_output = manga_db.execute("SELECT first_chapter_of_new_volume FROM manga_progress WHERE manga = ?", query_input)
-    first_chapter_in_volume = query_output[0]
-    manga_db.close()
-    del manga_db
+    new_volume_number, first_chapter_in_volume = msql.get_new_volume_number(manga)
     # Preview new volume directory
     if(manga == "One Piece"):
         new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
