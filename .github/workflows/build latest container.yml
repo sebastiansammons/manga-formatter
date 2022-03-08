@@ -6,12 +6,10 @@ name: Build Latest Container
 on:
   push:
       branches:
-        - 'master'
-  workflow_run:
-    workflows:
-      - "Unit Test"
-    types:
-      - completed
+        - master
+  pull_request:
+      branches:
+        - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
