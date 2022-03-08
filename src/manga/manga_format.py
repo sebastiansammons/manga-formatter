@@ -1,18 +1,15 @@
 # manga_format.py
 from . import manga_config as mc
+from . import manga_sql as msql
 from . import Directory
 from . import Files
-from . import SQLite
 
 
 def auto_chapter_format(manga, chapter_title):
     chapter_pages = Files(mc.SOURCE_PATH)
     chapter_pages.pad_zero()
     # Connect to SQLite and get appropriate data
-    manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    query_output = manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga = ?", query_input)
-    new_chapter_number = query_output[0] + 1
+    new_chapter_number = msql.get_new_chapter_number(manga)
     # Make copy of the chapter cover for One Piece
     if(manga == "One Piece"):
         op_cover_filename = "CH" + str(new_chapter_number).zfill(4) + " Cover" + chapter_pages.ext()
@@ -39,22 +36,11 @@ def auto_chapter_format(manga, chapter_title):
             chapter_pages.rename(dest_path.path, manga + " - CH" + str(new_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page), page)
     del chapter_pages, dest_path
     # Update appropriate tables
-    manga_db.execute("UPDATE manga_progress SET current_chapter = ? WHERE manga = ?", (new_chapter_number, manga))
-    manga_db.execute("INSERT INTO " + manga.replace(' ', '_') + "_chapter (manga, ch, title) VALUES(?, ?, ?)", (manga, new_chapter_number, chapter_title))
-    manga_db.commit()
-    manga_db.close()
-    del manga_db
+    msql.update_new_chapter(manga, new_chapter_number, chapter_title)
 
 def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     # Connect to SQLite and get appropriate data
-    manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    # Get current volume number from SQLite and increment
-    query_output = manga_db.execute("SELECT current_volume FROM manga_progress WHERE manga = ?", query_input)
-    new_volume_number = query_output[0] + 1
-    # Get the first chapter in the new volume
-    query_output = manga_db.execute("SELECT first_chapter_of_new_volume FROM manga_progress WHERE manga = ?", query_input)
-    first_chapter_in_volume = query_output[0]
+    new_volume_number, first_chapter_in_volume = msql.get_new_volume_number(manga)
     # Create new volume directory
     if(manga == "One Piece"):
         new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
@@ -79,11 +65,7 @@ def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
         current_chapter_pages.rm_dir()
     del dest_path, released_chapters, current_chapter_pages
     # Update appropriate tables
-    manga_db.execute("UPDATE manga_progress SET current_volume = ?, first_chapter_of_new_volume = ? WHERE manga = ?", (new_volume_number, int(last_chapter_of_new_volume) + 1, manga))
-    manga_db.execute("INSERT INTO " + manga.replace(' ', '_') + "_volume (manga, volume, title) VALUES(?, ?, ?)", (manga, new_volume_number, volume_title))
-    manga_db.commit()
-    manga_db.close()
-    del manga_db
+    msql.update_new_volume(manga, new_volume_number, last_chapter_of_new_volume, volume_title)
 
 def manual_single_chapter_format(manga, chapter_number, chapter_title):
     chapter_pages = Files(mc.SOURCE_PATH)

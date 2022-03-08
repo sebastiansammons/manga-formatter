@@ -3,8 +3,8 @@ import os
 
 from . import manga_config as mc
 from . import manga_error as me
+from . import manga_sql as msql
 from . import Files
-from . import SQLite
 
 
 def check_manga_config():
@@ -45,15 +45,7 @@ def check_auto_chapter(manga, chapter_title):
             me.error_write("INVALID SOURCE: FILE HAS NO EXTENSION")
             return False
     # Check db
-    manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    query_output = manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?", query_input)
-    if(query_output == False):
-        me.error_write("INVALID DB: " + manga + " ISN'T IN THE manga_progress TABLE")
-        return False
-    query_output = manga_db.execute("SELECT manga FROM " + manga.replace(' ', '_') + "_chapter;")
-    if(query_output == False):
-        me.error_write("INVALID DB: " + manga.replace(' ', '_') + "_chapter TABLE DOESN'T EXIST")
+    if(msql.check_auto_chapter_sql(manga) == False):
         return False
     return True
 
@@ -73,19 +65,7 @@ def check_auto_volume(manga, last_chapter_of_new_volume, volume_title):
         me.error_write("INVALID SOURCE: FILE HAS NO EXTENSION")
         return False
     # Check db
-    manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    query_output = manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?", query_input)
-    if(query_output == False):
-        me.error_write("INVALID DB: " + manga + " ISN'T IN THE manga_progress TABLE")
-        return False
-    query_output = manga_db.execute("SELECT manga FROM " + manga.replace(' ', '_') + "_volume;")
-    if(query_output == False):
-        me.error_write("INVALID DB: " + manga.replace(' ', '_') + "_volume TABLE DOESN'T EXIST")
-        return False
-    query_output = manga_db.execute("SELECT first_chapter_of_new_volume FROM manga_progress WHERE manga = ?", query_input)
-    if(query_output[0] >= int(last_chapter_of_new_volume)):
-        me.error_write("INVALID DB: LAST CHAPTER OF NEW VOLUME IS NOT GREATER THAN NEXT CHAPTER IN NEW VOLUME")
+    if(msql.check_auto_volume_sql(manga, last_chapter_of_new_volume) == False):
         return False
     return True
 

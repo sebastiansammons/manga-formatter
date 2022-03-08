@@ -207,11 +207,15 @@ def generate_toc(page_id, chapter_title):
     tmp_title = chapter_title[:chapter_title.rfind('.')]
     # toc for new chapters
     if(str(page_id).find("PG01") != -1):
-        toc = toc.replace("[CH###PG##]", str(page_id))
-        # chapter number + remove leading 0s
-        chapter_num = page_id[2:page_id.rfind("PG")]
-        toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0") + ": " + tmp_title)
-        return toc
+        # ignore rest of double spread if chapter starts with double spread
+        if(str(page_id).find("PG01_b") != -1 or str(page_id).find("PG01_c") != -1):
+            pass
+        else:
+            toc = toc.replace("[CH###PG##]", str(page_id))
+            # chapter number + remove leading 0s
+            chapter_num = page_id[2:page_id.rfind("PG")]
+            toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0") + ": " + tmp_title)
+            return toc
     else:
         return ""
 
