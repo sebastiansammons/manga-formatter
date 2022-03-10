@@ -153,7 +153,7 @@ def manual_single():
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = manga.manual_single_chapter_preview(manga_title, number, title)
+            session["preview"] = manga.manual_single_chapter_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
             return redirect('/preview')
         else:
             session["error"] = "MANUAL SINGLE CHAPTER SELECTION ERROR"
@@ -175,7 +175,7 @@ def manual_multi():
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = manga.manual_multiple_chapter_preview(manga_title)
+            session["preview"] = manga.manual_multiple_chapter_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title)
             return redirect('/preview')
         else:
             session["error"] = "MANUAL MULTI CHAPTER SELECTION ERROR"
@@ -201,7 +201,7 @@ def manual_volume():
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
-            session["preview"] = manga.manual_volume_preview(manga_title, number, title)
+            session["preview"] = manga.manual_volume_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
             return redirect('/preview')
         else:
             session["error"] = "MANUAL VOLUME SELECTION ERROR"
@@ -346,13 +346,13 @@ def preview():
                 manga.auto_volume_format(manga_title, number, title)
                 return redirect('/auto')
             elif(manga_format == "manual_single_chapter"):
-                manga.manual_single_chapter_format(manga_title, number, title)
+                manga.manual_single_chapter_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/manual')
             elif(manga_format == "manual_multiple_chapter"):
-                manga.manual_multiple_chapter_format(manga_title)
+                manga.manual_multiple_chapter_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title)
                 return redirect('/manual')
             elif(manga_format == "manual_volume"):
-                manga.manual_volume_format(manga_title, number, title)
+                manga.manual_volume_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/manual')
             elif(manga_format == "epub_auto"):
                 epub_auto_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
@@ -420,7 +420,7 @@ def error():
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
                 session.modified = True
-                session["preview"] = manga.manual_single_chapter_preview(manga_title, number, title)
+                session["preview"] = manga.manual_single_chapter_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/preview')
             elif(manga_format == "manual_multiple_chapter"):
                 check = manga.check_manual_multiple_chapter(manga_title)
@@ -428,7 +428,7 @@ def error():
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
                 session.modified = True
-                session["preview"] = manga.manual_multiple_chapter_preview(manga_title)
+                session["preview"] = manga.manual_multiple_chapter_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title)
                 return redirect('/preview')
             elif(manga_format == "manual_volume"):
                 check = manga.check_manual_volume(manga_title, number, title)
@@ -436,7 +436,7 @@ def error():
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
                 session.modified = True
-                session["preview"] = manga.manual_volume_preview(manga_title, number, title)
+                session["preview"] = manga.manual_volume_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/preview')
             else:
                 session["error"] = "TRY AGAIN FAILED"

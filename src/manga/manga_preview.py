@@ -53,10 +53,10 @@ def auto_volume_preview(manga, last_chapter_of_new_volume, volume_title):
     del released_chapters
     return preview_changes
 
-def manual_single_chapter_preview(manga, chapter_number, chapter_title):
-    chapter_pages = Files(mc.SOURCE_PATH)
+def manual_single_chapter_preview(src_path, dest_path, manga, chapter_number, chapter_title):
+    chapter_pages = Files(src_path)
     chapter_pages.pad_zero("Preview")
-    dest_path = mc.DESTINATION_PATH + str(chapter_number).zfill(3) + "/"
+    chapter_path = dest_path + str(chapter_number).zfill(3) + "/"
     # Preview Rename
     preview_type = os.getenv("PREVIEW_TYPE", "SIMPLE")
     preview_changes = []
@@ -64,42 +64,58 @@ def manual_single_chapter_preview(manga, chapter_number, chapter_title):
         if preview_type == "SIMPLE":
             preview_changes.append("Rename: " + chapter_pages.filenames[page] + " to " + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page))
         elif preview_type == "DETAILED":
-            preview_changes.append("Rename: " + chapter_pages.path + chapter_pages.filenames[page] + " to " + dest_path + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page))
+            preview_changes.append("Rename: " + chapter_pages.path + chapter_pages.filenames[page] + " to " + chapter_path + manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page))
     del chapter_pages
     return preview_changes
 
-def manual_multiple_chapter_preview(manga):
+def manual_multiple_chapter_preview(src_path, dest_path, manga):
     # Chapter directory must be formatted like
-    # /NUMBER - TITLE/
-    src_chapters = Files(mc.SOURCE_PATH)
+    # /NUMBER - TITLE/ or /NUMBER/
+    src_chapters = Files(src_path)
     # Preview Rename
     preview_type = os.getenv("PREVIEW_TYPE", "SIMPLE")
     preview_changes = []
     for chapter in range(0, src_chapters.count):
-        current_src_chapter = Files(src_chapters.path + src_chapters.filenames[chapter] + "/")
-        current_src_chapter.pad_zero("Preview")
-        number_title = src_chapters.filenames[chapter].split(" - ")
-        current_chapter_number = number_title[0]
-        current_chapter_title = number_title[1]
-        dest_path = mc.DESTINATION_PATH + str(current_chapter_number).zfill(3) + "/"
-        for page in range(0, current_src_chapter.count):
-            if preview_type == "SIMPLE":
-                preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
-            elif preview_type == "DETAILED":
-                preview_changes.append("Rename: " + current_src_chapter.path + current_src_chapter.filenames[page] + " to " + dest_path + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
+        if(src_chapters.isfile(chapter)):
+            pass
+        else:
+            current_src_chapter = Files(src_chapters.path + src_chapters.filenames[chapter] + "/")
+            current_src_chapter.pad_zero("Preview")
+            number_title = src_chapters.filenames[chapter].split(" - ")
+            current_chapter_number = number_title[0]
+            chapter_path = dest_path + str(current_chapter_number).zfill(3) + "/"
+            if(len(number_title) == 1):
+                for page in range(0, current_src_chapter.count):
+                    if preview_type == "SIMPLE":
+                        preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + current_src_chapter.ext(page))
+                    elif preview_type == "DETAILED":
+                        preview_changes.append("Rename: " + current_src_chapter.path + current_src_chapter.filenames[page] + " to " + chapter_path + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + current_src_chapter.ext(page))
+            else:
+                current_chapter_title = number_title[1]
+                for page in range(0, current_src_chapter.count):
+                    if preview_type == "SIMPLE":
+                        preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
+                    elif preview_type == "DETAILED":
+                        preview_changes.append("Rename: " + current_src_chapter.path + current_src_chapter.filenames[page] + " to " + chapter_path + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
     del src_chapters, current_src_chapter
     return preview_changes
 
-def manual_volume_preview(manga, volume_number, volume_title):
-    src_chapters = Files(mc.SOURCE_PATH)
-    dest_dir = mc.DESTINATION_PATH + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + "/"
+def manual_volume_preview(src_path, dest_path, manga, volume_number, volume_title):
+    src_chapters = Files(src_path)
     # Preview Rename
     preview_type = os.getenv("PREVIEW_TYPE", "SIMPLE")
     preview_changes = []
+    if(volume_title == ""):
+        volume_path = dest_path + manga + " Volume " + str(volume_number).zfill(2) + "/"
+    else:
+        volume_path = dest_path + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + "/"
     for chapter in range (0, src_chapters.count):
         if preview_type == "SIMPLE":
-            preview_changes.append("Rename: " + src_chapters.filenames[chapter] + "/ to " + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + "/")
+            if(volume_title == ""):
+                preview_changes.append("Rename: /" + src_chapters.filenames[chapter] + " to " + manga + " Volume " + str(volume_number).zfill(2) + "/")
+            else:
+                preview_changes.append("Rename: /" + src_chapters.filenames[chapter] + " to " + manga + " Volume " + str(volume_number).zfill(2) + " - " + volume_title + "/")
         elif preview_type == "DETAILED":
-            preview_changes.append("Rename: " + src_chapters.path + src_chapters.filenames[chapter] + "/ to " + dest_dir)
+            preview_changes.append("Rename: " + src_chapters.path + src_chapters.filenames[chapter] + "/ to " + volume_path)
     del src_chapters
     return preview_changes

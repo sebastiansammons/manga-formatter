@@ -20,6 +20,7 @@ class TestSQLite(unittest.TestCase):
 
     def tearDown(self):
         self.manga_db.close()
+        del self.manga_db
         os.remove("./tests/data/test_SQLite/test_manga.db")
 
     def test_sqlite(self):

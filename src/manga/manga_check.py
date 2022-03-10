@@ -69,12 +69,12 @@ def check_auto_volume(manga, last_chapter_of_new_volume, volume_title):
         return False
     return True
 
-def check_manual_single_chapter(manga, chapter_numer, chapter_title):
-    if(manga == "" or chapter_numer == "" or chapter_title == ""):
+def check_manual_single_chapter(src_path, dest_path, manga, chapter_number, chapter_title):
+    if(manga == "" or chapter_number == "" or chapter_title == ""):
         me.error_write("BAD MANUAL SINGLE CHAPTER ENTRY")
         return False
     # Check Source
-    source = Files(mc.SOURCE_PATH)
+    source = Files(src_path)
     if(source.count == 0):
         me.error_write("INVALID SOURCE: SOURCE IS EMPTY")
         return False
@@ -86,54 +86,67 @@ def check_manual_single_chapter(manga, chapter_numer, chapter_title):
             me.error_write("INVALID SOURCE: FILE HAS NO EXTENSION")
             return False
     # Check Destination
-    dest_path = Files(mc.DESTINATION_PATH)
-    if(dest_path.count != 0):
+    chapter_path = Files(dest_path)
+    if(chapter_path.count != 0):
         me.error_write("INVALID DESTINATION: DESTINATION IS NOT EMPTY")
         return False
     return True
 
-def check_manual_multiple_chapter(manga):
+def check_manual_multiple_chapter(src_path, dest_path, manga):
     if(manga == ""):
         me.error_write("BAD MANUAL MULTIPLE CHAPTER ENTRY")
         return False
     # Check Source
-    source = Files(mc.SOURCE_PATH)
+    source = Files(src_path)
     if(source.count == 0):
         me.error_write("INVALID SOURCE: SOURCE IS EMPTY")
         return False
     for chapter in range(0, source.count):
-        number_title = source.filenames[chapter].split(" - ")
-        if(len(number_title) != 2):
-            me.error_write("INVALID SOURCE: CHAPTER AND TITLE NOT PROVIDED CORRECTLY")
-            return False
-        source_chapter = Files(source.path + source.filenames[chapter] + "/")
-        # Check too make sure it's a directory
-        if not (source_chapter.isdir()):
-            me.error_write("INVALID SOURCE: SOURCE IS NOT ALL DIRECTORIES")
-            return False
-        # Make Sure it's not empty
-        if(source_chapter.count == 0):
-            me.error_write("INVALID SOURCE: ONE CHAPTER IS EMPTY")
-            return False
-        # Check to make sure all files inside
-        for page in range(0, source_chapter.count):
-            if not (source_chapter.isfile(page)):
-                me.error_write("INVALID SOURCE: ONE CHAPTER IS INVALID")
+        if(source.isfile(chapter)):
+            pass
+        else:
+            # Make sure chapter has either "number - title" or "number"
+            number_title = source.filenames[chapter].split(" - ")
+            if(len(number_title) > 2):
+                me.error_write("INVALID SOURCE: CHAPTER/TITLE NOT PROVIDED CORRECTLY")
                 return False
-            if(source_chapter.ext(page) == -1):
-                me.error_write("INVALID SOURCE: ONE CHAPTER IS MISSING AN EXTENSION")
+            # Make sure directories aren't empty
+            source_chapter = Files(source.path + source.filenames[chapter] + "/")
+            if(source_chapter.count == 0):
+                me.error_write("INVALID SOURCE: ONE CHAPTER IS EMPTY")
                 return False
+            # Check to make sure all files inside
+            for page in range(0, source_chapter.count):
+                if not (source_chapter.isfile(page)):
+                    me.error_write("INVALID SOURCE: ONE CHAPTER IS INVALID")
+                    return False
+                if(source_chapter.ext(page) == -1):
+                    me.error_write("INVALID SOURCE: ONE CHAPTER IS MISSING AN EXTENSION")
+                    return False
     # Check Destination
-    dest_path = Files(mc.DESTINATION_PATH)
-    if(dest_path.count != 0):
+    chapter_path = Files(dest_path)
+    if(chapter_path.count != 0):
         me.error_write("INVALID DESTINATION: DESTINATION IS NOT EMPTY")
         return False
     return True
 
-def check_manual_volume(manga, volume_number, volume_title):
-    if(volume_number == "" or volume_title == ""):
+def check_manual_volume(src_path, dest_path, manga, volume_number):    
+    if(volume_number == ""):
         me.error_write("BAD MANUAL VOLUME ENTRY")
         return False
-    if(check_manual_multiple_chapter(manga) == False):
+    if(check_manual_multiple_chapter(src_path, dest_path, manga) == False):
+        return False
+    # Make sure there's no more than 1 file in source (should be volume cover)
+    source = Files(src_path)
+    file_count = 0
+    for item in range(0, source.count):
+        if(source.isfile(item)):
+            file_count += 1
+        if(file_count > 1):
+            me.error_write("TOO MANY FILES IN SOURCE")
+            return False
+    volume_path = Files(dest_path)
+    if(volume_path.count != 0):
+        me.error_write("INVALID DESTINATION: DESTINATION IS NOT EMPTY")
         return False
     return True
