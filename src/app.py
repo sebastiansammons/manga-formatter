@@ -197,7 +197,7 @@ def manual_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "manual_volume"
-            check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
+            check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number)
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
@@ -431,7 +431,7 @@ def error():
                 session["preview"] = manga.manual_multiple_chapter_preview(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title)
                 return redirect('/preview')
             elif(manga_format == "manual_volume"):
-                check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
+                check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number)
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
