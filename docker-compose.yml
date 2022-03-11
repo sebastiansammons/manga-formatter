@@ -12,11 +12,8 @@ services:
       - <path to /manga>:/manga
       - <path to /appdata>:/appdata
     environment:
-      - PUID=1000
-      - PGID=1000
-      # Preview options
-      - PREVIEW_TYPE=SIMPLE
-      # - PREVIEW_TYPE=DETAILIED
+      - PUID=<PUID>
+      - PGID=<PGID>
       # Optional Environment Variables. (I recommend the default's in _config.py)
       
       # DirectoryPaths

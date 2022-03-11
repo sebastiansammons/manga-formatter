@@ -91,13 +91,6 @@ def update_new_volume(manga, new_volume_number, last_chapter_of_new_volume, volu
 
 def check_auto_chapter_sql(manga):
     manga_db = SQLite(mc.DB_FILE_PATH)
-    query_input = (manga, )
-    query_output = manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?", query_input)
-    if(query_output == False):
-        me.error_write("INVALID DB: " + manga + " ISN'T IN THE manga_progress TABLE")
-        manga_db.close()
-        del manga_db
-        return False
     query_output = manga_db.execute("SELECT manga FROM " + manga.replace(' ', '_') + "_chapter;")
     if(query_output == False):
         me.error_write("INVALID DB: " + manga.replace(' ', '_') + "_chapter TABLE DOESN'T EXIST")
@@ -109,12 +102,6 @@ def check_auto_chapter_sql(manga):
 def check_auto_volume_sql(manga, last_chapter_of_new_volume):
     manga_db = SQLite(mc.DB_FILE_PATH)
     query_input = (manga, )
-    query_output = manga_db.execute("SELECT manga FROM manga_progress WHERE manga = ?", query_input)
-    if(query_output == False):
-        me.error_write("INVALID DB: " + manga + " ISN'T IN THE manga_progress TABLE")
-        manga_db.close()
-        del manga_db
-        return False
     query_output = manga_db.execute("SELECT manga FROM " + manga.replace(' ', '_') + "_volume;")
     if(query_output == False):
         me.error_write("INVALID DB: " + manga.replace(' ', '_') + "_volume TABLE DOESN'T EXIST")
