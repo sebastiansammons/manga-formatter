@@ -73,7 +73,10 @@ def manual_single_chapter_format(src_path, dest_path, manga, chapter_number, cha
     chapter_path = Directory(dest_path + str(chapter_number).zfill(3) + "/")
     chapter_path.mk_dir()
     for page in range(0, chapter_pages.count):
-        chapter_pages.rename(chapter_path.path, manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page), page)
+        if(chapter_title == ""):
+            chapter_pages.rename(chapter_path.path, manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + chapter_pages.ext(page), page)
+        else:
+            chapter_pages.rename(chapter_path.path, manga + " - CH" + str(chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page), page)
     del chapter_pages, chapter_path
 
 def manual_multiple_chapter_format(src_path, dest_path, manga):

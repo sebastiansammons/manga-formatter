@@ -25,6 +25,7 @@ class TestManualFormat(unittest.TestCase):
             pass
 
     def test_single_chapter(self):
+        # Working with title
         shutil.copytree("./tests/data/test_format/manual_single_chapter/src/", mc.SOURCE_PATH)
         manga_format.manual_single_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Blue Box", 6, "Good Manga")
         new_chapter = Files(mc.DESTINATION_PATH + "006/")
@@ -33,7 +34,16 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(new_chapter.count, 17)
         shutil.rmtree(mc.SOURCE_PATH)
 
-        #Single "Multi Chapter" format with a title
+        # Working without title
+        shutil.copytree("./tests/data/test_format/manual_single_chapter/src - no_title/", mc.SOURCE_PATH)
+        manga_format.manual_single_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Blue Box", 6, "Good Manga")
+        new_chapter = Files(mc.DESTINATION_PATH + "006/")
+        self.assertEqual(new_chapter.filenames[0], "Blue Box - CH006PG01 - Good Manga.jpg")
+        self.assertEqual(new_chapter.filenames[16], "Blue Box - CH006PG17 - Good Manga.jpg")
+        self.assertEqual(new_chapter.count, 17)
+        shutil.rmtree(mc.SOURCE_PATH)
+
+        # Single "Multi Chapter" format with a title
         shutil.copytree("./tests/data/test_format/manual_single_chapter/src - multi - title/", mc.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Naruto")
         new_chapter = Files(mc.DESTINATION_PATH + "138/")
@@ -42,7 +52,7 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(new_chapter.count, 46)
         shutil.rmtree(mc.SOURCE_PATH)
 
-        #Single "Multi Chapter" format with no title
+        # Single "Multi Chapter" format with no title
         shutil.copytree("./tests/data/test_format/manual_single_chapter/src - multi - no_title/", mc.SOURCE_PATH)
         manga_format.manual_multiple_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Naruto")
         new_chapter = Files(mc.DESTINATION_PATH + "139/")
