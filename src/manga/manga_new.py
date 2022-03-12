@@ -13,7 +13,7 @@ def add_new_manga(manga, writer, illustrator, completed):
     new_manga_directory = mc.MANGA_PATH + str(manga) + "/"
     template_manga_directory.copy_tree(new_manga_directory)
     new_manga = Directory(mc.MANGA_PATH + manga + "/")
-    temp_dest = Directory(new_manga.path + mc.VOLUMES_TEMP_SUBPATH)
+    temp_dest = Directory(mc.DESTINATION_PATH)
     volume_dest = Directory(new_manga.path + mc.VOLUMES_SUBPATH)
     new_manga_sql_entry(manga, writer, illustrator, completed)
     manga_src = Files(mc.SOURCE_PATH)
@@ -31,7 +31,6 @@ def add_new_manga(manga, writer, illustrator, completed):
     if(completed == True):
         manga_chapters_pages = Directory(new_manga.path + mc.NEW_CHAPTERS_SUBPATH)
         manga_chapters_pages.rm_dir()
-    temp_dest.rm_dir()
 
 def new_manga_check(manga, writer, illustrator):
     if(manga == "" or writer == "" or illustrator == ""):
@@ -42,7 +41,7 @@ def new_manga_check(manga, writer, illustrator):
         volume_dir = mc.SOURCE_PATH + manga_src.filenames[volume] + "/"
         volume_info = manga_src.filenames[volume].split(" - ")
         current_volume_number = int(volume_info[0])
-        result = manga_check.check_manual_volume(volume_dir, manga, current_volume_number)
+        result = manga_check.check_manual_volume(volume_dir, mc.DESTINATION_PATH, manga, current_volume_number)
         if(result == False):
             return False
     return True

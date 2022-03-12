@@ -120,7 +120,7 @@ def check_manual_multiple_chapter(src_path, manga):
                     return False
     return True
 
-def check_manual_volume(src_path, manga, volume_number):    
+def check_manual_volume(src_path, dest_path, manga, volume_number):    
     if(volume_number == ""):
         me.error_write("BAD MANUAL VOLUME ENTRY")
         return False
@@ -135,4 +135,9 @@ def check_manual_volume(src_path, manga, volume_number):
         if(file_count > 1):
             me.error_write("TOO MANY FILES IN SOURCE")
             return False
+    # Check Destination
+    destination = Files(dest_path)
+    if(destination.count != 0):
+        me.error_write("INVALID DESTINATION: DESTINATION IS NOT EMPTY")
+        return False
     return True

@@ -11,7 +11,7 @@ def auto_chapter_format(manga, chapter_title):
     # Connect to SQLite and get appropriate data
     new_chapter_number = msql.get_new_chapter_number(manga)
     # Make copy of the chapter cover for One Piece
-    if(manga == "One Piece"):
+    if(manga.find("One Piece") != -1):
         op_cover_filename = "CH" + str(new_chapter_number).zfill(4) + " Cover" + chapter_pages.ext()
         if(new_chapter_number < 501):
             op_cover_path = mc.MANGA_PATH + manga + mc.OP_COVER_SUBPATH + "1-500/"
@@ -21,7 +21,7 @@ def auto_chapter_format(manga, chapter_title):
             op_cover_path = mc.MANGA_PATH + manga + mc.OP_COVER_SUBPATH + "1001-End/"
         chapter_pages.copyfile(op_cover_path, op_cover_filename, 0)
     # Create directory path for the new chapter
-    if(manga == "One Piece"):
+    if(manga.find("One Piece") != -1):
         new_chapter_path = mc.MANGA_PATH + manga + mc.NEW_CHAPTERS_SUBPATH + str(new_chapter_number).zfill(4) + "/"
     else:
         new_chapter_path = mc.MANGA_PATH + manga + mc.NEW_CHAPTERS_SUBPATH + str(new_chapter_number).zfill(3) + "/"
@@ -30,7 +30,7 @@ def auto_chapter_format(manga, chapter_title):
     dest_path.mk_dir()
     # Rename
     for page in range(0, chapter_pages.count):
-        if(manga == "One Piece"):
+        if(manga.find("One Piece") != -1):
             chapter_pages.rename(dest_path.path, manga + " - CH" + str(new_chapter_number).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page), page)
         else:
             chapter_pages.rename(dest_path.path, manga + " - CH" + str(new_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + chapter_title + chapter_pages.ext(page), page)
@@ -42,7 +42,7 @@ def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     # Connect to SQLite and get appropriate data
     new_volume_number, first_chapter_in_volume = msql.get_new_volume_number(manga)
     # Create new volume directory
-    if(manga == "One Piece"):
+    if(manga.find("One Piece") != -1):
         new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
     else:
         new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/"
@@ -50,7 +50,7 @@ def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     dest_path.mk_dir()
     # Rename volume cover
     volume_cover_page = Files(mc.SOURCE_PATH)
-    if(manga == "One Piece"):
+    if(manga.find("One Piece") != -1):
         volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(3) + " - " + volume_title + volume_cover_page.ext())
     else:
         volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(2) + " - " + volume_title + volume_cover_page.ext())

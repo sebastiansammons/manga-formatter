@@ -28,6 +28,14 @@ def get_manga_illustrator(manga_title):
         return "NOTHING"
     return query_output[0]
 
+def get_volume_title(manga_title, volume):
+    manga_db = SQLite(mc.DB_FILE_PATH)
+    query_output = manga_db.execute("SELECT title FROM " + manga_title.replace(' ', '_') + "_volume WHERE volume = ?", (volume, ))
+    manga_db.close()
+    if query_output == False:
+        return "NOTHING"
+    return query_output[0]    
+
 def get_active_manga():
     manga_db = SQLite(mc.DB_FILE_PATH)
     query_output = manga_db.execute("SELECT manga FROM manga_details WHERE ACTIVE = 1 ORDER BY manga ASC;")

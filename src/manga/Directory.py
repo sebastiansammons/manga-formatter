@@ -56,6 +56,10 @@ class Directory:
         except FileExistsError:
             me.error_write("[" + self.path + "] ALREADY EXISTS")
             return False
+        try:
+            shutil.chown(dest_path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+        except PermissionError:
+            pass
         return True
 
     def move_tree(self, dest_path):
@@ -64,5 +68,9 @@ class Directory:
         except FileExistsError:
             me.error_write("[" + self.path + "] ALREADY EXISTS")
             return False
+        try:
+            shutil.chown(dest_path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+        except PermissionError:
+            pass
         return True    
 

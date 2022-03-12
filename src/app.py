@@ -198,7 +198,7 @@ def manual_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "manual_volume"
-            check = manga.check_manual_volume(manga.SOURCE_PATH, manga_title, number)
+            check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number)
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
@@ -409,7 +409,7 @@ def preview():
                 epub.generate_epub(manga.SOURCE_PATH, manga.DESTINATION_PATH, title, author, scans, build_toc)
                 return redirect('/epub')
             elif(manga_format == "new_manga"):
-                manga.manga_new(manga_title, author, illustrator, completed)
+                manga.add_new_manga(manga_title, author, illustrator, completed)
                 return redirect('/')
             else:
                 session["error"] = "NOTHING TO COMMIT"
@@ -492,7 +492,7 @@ def error():
                 session["preview"] = manga.manual_multiple_chapter_preview(manga.SOURCE_PATH, manga_title)
                 return redirect('/preview')
             elif(manga_format == "manual_volume"):
-                check = manga.check_manual_volume(manga.SOURCE_PATH, manga_title, number)
+                check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number)
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
@@ -502,8 +502,9 @@ def error():
             elif(manga_format == "new_manga"):
                 check = manga.new_manga_check(manga_title, author, illustrator)
                 if(check == False):
-                    session["error"] =  manga.error_read()
+                    error =  manga.error_read()
                     return render_template('error.html', error = error)
+                session.modified = True
                 preview = []
                 preview.append("Manga: " + manga_title)
                 preview.append("Author: " + author)
