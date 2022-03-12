@@ -39,8 +39,12 @@ class TestSQLite(unittest.TestCase):
         self.assertIsInstance(empty_db.cursor, sqlite3.Cursor)
         self.assertIsInstance(double_db.connection, sqlite3.Connection)
         self.assertIsInstance(double_db.cursor, sqlite3.Cursor)
+        not_a_db.close()
+        dir_db.close()
+        fake_db.close()
         empty_db.close()
         double_db.close()
+        del not_a_db, dir_db, fake_db, empty_db, double_db
 
     def test_execute_no_input(self):
         # no query_input
@@ -59,10 +63,13 @@ class TestSQLite(unittest.TestCase):
         not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.execute("SELECT * FROM FAKETABLE")
         self.assertEqual(result, False)
+        not_a_db.close()
 
         dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.execute("SELECT * FROM FAKETABLE")
         self.assertEqual(result, False)
+        dir_db.close()
+        del not_a_db, dir_db
 
         # more to add (maybe make seperate unittests?)
 
@@ -131,9 +138,12 @@ class TestSQLite(unittest.TestCase):
         not_a_db = SQLite("./tests/data/test_SQLite/notadb.txt")
         result = not_a_db.commit()
         self.assertEqual(result, False)
+        not_a_db.close()
         dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.commit()
         self.assertEqual(result, False)
+        dir_db.close()
+        del not_a_db, dir_db
 
     def test_close(self):
         result = self.manga_db.execute("SELECT current_chapter FROM manga_progress WHERE manga='Attack on Titan';") # get any data
@@ -154,6 +164,7 @@ class TestSQLite(unittest.TestCase):
         dir_db = SQLite("./tests/data/test_SQLite/")
         result = dir_db.close()
         self.assertEqual(result, False)
+        del not_a_db, dir_db
 
 
 if __name__=='__main__':

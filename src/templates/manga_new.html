@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New Manga - Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+    </head>
+    <body>
+        <div>
+            <h1>NEW MANGA</h1>
+            <!--New Manga Form-->
+            <form name = "newmanga" method = "POST">
+                <!-- Manga -->
+                <div>
+                    <input class="row_1 wide_manga text" type="text" name="manga" placeholder="Manga" onfocus="this.placeholder = ''" onblur="this.placeholder='Manga'" autocomplete="off">
+                </div>
+                <!-- Author -->
+                <div>
+                    <input class="row_2 wide_author text" type="text" name="author" placeholder="Author" onfocus="this.placeholder = ''" onblur="this.placeholder='Author'" autocomplete="off">
+                </div>
+                <!-- Illustrator -->
+                <div>
+                    <input class="row_3 wide_title text" type="text" name="illustrator" placeholder="Illustrator" onfocus="this.placeholder = ''" onblur="this.placeholder='Illustrator'" autocomplete="off">
+                </div>
+                <div>
+                    <!-- Build TOC -->
+                    <label class="checkbox">
+                        <input type="checkbox" checked="checked" name="completed" value="Build">
+                        <span class="row_4 completed checkbox_color">Completed</span>
+                    </label>
+                </div>
+                <!--New Manga-->
+                <div>
+                    <input class="row_5 submit_button blue" type="submit" name="new_manga" value="New Manga">
+                </div>
+                <!-- Main Menu -->
+                <div>
+                    <input class="menu_item main submit_button red" type="submit" name="new_manga" value="Main Menu">
+                </div>
+            </form>    
+        </div>  
+    </body>
+</html>

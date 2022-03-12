@@ -49,3 +49,20 @@ class Directory:
             return False
         else:
             return True
+
+    def copy_tree(self, dest_path):
+        try:
+            shutil.copytree(self.path, dest_path)
+        except FileExistsError:
+            me.error_write("[" + self.path + "] ALREADY EXISTS")
+            return False
+        return True
+
+    def move_tree(self, dest_path):
+        try: 
+            shutil.move(self.path, dest_path)
+        except FileExistsError:
+            me.error_write("[" + self.path + "] ALREADY EXISTS")
+            return False
+        return True    
+

@@ -12,6 +12,22 @@ def get_manga():
         return "NOTHING"
     return query_output
 
+def get_manga_author(manga_title):
+    manga_db = SQLite(mc.DB_FILE_PATH)
+    query_output = manga_db.execute("SELECT writer FROM manga_details WHERE manga = ?", (manga_title, ))
+    manga_db.close()
+    if query_output == False:
+        return "NOTHING"
+    return query_output[0]
+
+def get_manga_illustrator(manga_title):
+    manga_db = SQLite(mc.DB_FILE_PATH)
+    query_output = manga_db.execute("SELECT illustrator FROM manga_details WHERE manga = ?", (manga_title, ))
+    manga_db.close()
+    if query_output == False:
+        return "NOTHING"
+    return query_output[0]
+
 def get_active_manga():
     manga_db = SQLite(mc.DB_FILE_PATH)
     query_output = manga_db.execute("SELECT manga FROM manga_details WHERE ACTIVE = 1 ORDER BY manga ASC;")
@@ -62,8 +78,8 @@ def get_new_chapter_number(manga):
 
 def update_new_chapter(manga, new_chapter_number, chapter_title):
     manga_db = SQLite(mc.DB_FILE_PATH)
-    manga_db.execute("UPDATE manga_progress SET current_chapter = ? WHERE manga = ?", (new_chapter_number, manga))
-    manga_db.execute("INSERT INTO " + manga.replace(' ', '_') + "_chapter (manga, ch, title) VALUES(?, ?, ?)", (manga, new_chapter_number, chapter_title))
+    manga_db.execute("UPDATE manga_progress SET current_chapter = ? WHERE manga = ?", (int(new_chapter_number), manga))
+    manga_db.execute("INSERT INTO " + manga.replace(' ', '_') + "_chapter (manga, ch, title) VALUES(?, ?, ?)", (manga, int(new_chapter_number), chapter_title))
     manga_db.commit()
     manga_db.close()
     del manga_db
@@ -83,8 +99,8 @@ def get_new_volume_number(manga):
 
 def update_new_volume(manga, new_volume_number, last_chapter_of_new_volume, volume_title):
     manga_db = SQLite(mc.DB_FILE_PATH)
-    manga_db.execute("UPDATE manga_progress SET current_volume = ?, first_chapter_of_new_volume = ? WHERE manga = ?", (new_volume_number, int(last_chapter_of_new_volume) + 1, manga))
-    manga_db.execute("INSERT INTO " + manga.replace(' ', '_') + "_volume (manga, volume, title) VALUES(?, ?, ?)", (manga, new_volume_number, volume_title))
+    manga_db.execute("UPDATE manga_progress SET current_volume = ?, first_chapter_of_new_volume = ? WHERE manga = ?", (int(new_volume_number), int(last_chapter_of_new_volume) + 1, manga))
+    manga_db.execute("INSERT INTO " + manga.replace(' ', '_') + "_volume (manga, volume, title) VALUES(?, ?, ?)", (manga, int(new_volume_number), volume_title))
     manga_db.commit()
     manga_db.close()
     del manga_db
@@ -115,3 +131,16 @@ def check_auto_volume_sql(manga, last_chapter_of_new_volume):
         del manga_db
         return False
     return True
+
+def new_manga(manga, writer, illustrator, completed = False):
+    manga_db = SQLite(mc.DB_FILE_PATH)
+    manga_db.execute("CREATE TABLE " + manga.replace(' ', '_') + "_chapter(manga TEXT, ch INT, title TEXT);")
+    manga_db.execute("CREATE TABLE " + manga.replace(' ', '_') + "_volume(manga TEXT, volume INT, title TEXT);")
+    if(completed == False):
+        manga_db.execute("INSERT INTO manga_details (manga, writer, illustrator, ACTIVE) VALUES (?, ?, ?, 1);", (manga, writer, illustrator))
+    else:
+        manga_db.execute("INSERT INTO manga_details (manga, writer, illustrator, ACTIVE) VALUES (?, ?, ?, 0);", (manga, writer, illustrator))
+    manga_db.execute("INSERT INTO manga_progress (manga, current_chapter, current_volume, first_chapter_of_new_volume) VALUES (?, 0, 0, 1);", (manga, ))
+    manga_db.commit()
+    manga_db.close()
+    del manga_db
