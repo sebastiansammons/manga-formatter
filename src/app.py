@@ -322,7 +322,7 @@ def new_manga():
                 completed = True
             else:
                 completed = False
-            session["title"] = manga_title
+            session["manga"] = manga_title
             session["author"] = author
             session["illustrator"] = illustrator
             session["completed"] = completed

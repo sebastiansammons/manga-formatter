@@ -10,11 +10,10 @@ from . import Files
 
 def add_new_manga(manga, writer, illustrator, completed):
     template_manga_directory = Directory(mc.NEW_MANGA_TEMPLATE_PATH)
-    new_manga_directory = mc.MANGA_PATH + str(manga) + "/"
+    new_manga_directory = mc.MANGA_PATH + manga + "/"
     template_manga_directory.copy_tree(new_manga_directory)
-    new_manga = Directory(mc.MANGA_PATH + manga + "/")
     temp_dest = Directory(mc.DESTINATION_PATH)
-    volume_dest = Directory(new_manga.path + mc.VOLUMES_SUBPATH)
+    volume_dest = Directory(new_manga_directory + mc.VOLUMES_SUBPATH)
     new_manga_sql_entry(manga, writer, illustrator, completed)
     manga_src = Files(mc.SOURCE_PATH)
     for volume in range(0, manga_src.count):
@@ -29,7 +28,7 @@ def add_new_manga(manga, writer, illustrator, completed):
         move_temp_to_volume(temp_dest.path, volume_dest.path)
         volume_src.rm_dir()
     if(completed == True):
-        manga_chapters_pages = Directory(new_manga.path + mc.NEW_CHAPTERS_SUBPATH)
+        manga_chapters_pages = Directory(new_manga_directory + mc.NEW_CHAPTERS_SUBPATH)
         manga_chapters_pages.rm_dir()
 
 def new_manga_check(manga, writer, illustrator):
