@@ -9,13 +9,14 @@ from . import Files
 
 
 def add_new_manga(manga, writer, illustrator, completed):
+    new_manga_sql_entry(manga, writer, illustrator, completed)
     template_manga_directory = Directory(mc.NEW_MANGA_TEMPLATE_PATH)
     new_manga_directory = mc.MANGA_PATH + manga + "/"
     template_manga_directory.copy_tree(new_manga_directory)
-    temp_dest = Directory(mc.DESTINATION_PATH)
-    volume_dest = Directory(new_manga_directory + mc.VOLUMES_SUBPATH)
-    new_manga_sql_entry(manga, writer, illustrator, completed)
+    new_manga_volume_directory = new_manga_directory + mc.VOLUMES_SUBPATH
+    print("NEW MANGA VOLUME DIR: " + new_manga_volume_directory)
     manga_src = Files(mc.SOURCE_PATH)
+    print(manga_src)
     for volume in range(0, manga_src.count):
         volume_info = manga_src.filenames[volume].split(" - ")
         current_volume_number = int(volume_info[0])
@@ -24,8 +25,8 @@ def add_new_manga(manga, writer, illustrator, completed):
         else:
             current_volume_title = ""
         volume_src = Directory(mc.SOURCE_PATH + manga_src.filenames[volume] + "/")
-        manga_format.manual_volume_format(volume_src.path, temp_dest.path, manga, current_volume_number, current_volume_title)
-        move_temp_to_volume(temp_dest.path, volume_dest.path)
+        manga_format.manual_volume_format(volume_src.path, mc.DESTINATION_PATH, manga, current_volume_number, current_volume_title)
+        move_temp_to_volume(mc.DESTINATION_PATH, new_manga_volume_directory)
         volume_src.rm_dir()
     if(completed == True):
         manga_chapters_pages = Directory(new_manga_directory + mc.NEW_CHAPTERS_SUBPATH)
@@ -79,7 +80,11 @@ def new_manga_sql_entry(manga, writer, illustrator, completed):
         msql.update_new_volume(manga, current_volume_number, last_chapter_of_volume, current_volume_title)
 
 def move_temp_to_volume(temp_dir, volume_dir):
+    print("TEMP DIR: " + temp_dir)
+    print("VOLUME DIR: " + volume_dir)
     temp = Files(temp_dir)
     temp_volume = Directory(temp.path + temp.filenames[0])
+    print("COPY: " + temp_volume.path + " TO " + volume_dir)
     temp_volume.copy_tree(volume_dir)
+    print("REMOVE: " + temp_volume.path)
     temp_volume.rm_dir()
