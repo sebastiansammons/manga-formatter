@@ -78,14 +78,6 @@ class TestDirectory(unittest.TestCase):
         dir_4 = Directory("./tests/data/test_Directory/dir_4")
         dir_4.rm_dir()
 
-    def test_move_tree(self):
-        dir_1 = Directory("./tests/data/test_Directory/dir_1")
-        dir_2 = Directory("./tests/data/test_Directory/dir_2")
-        dir_4 = Directory("./tests/data/test_Directory/dir_4")
-        self.assertEqual(dir_1.move_tree("./tests/data/test_Directory/dir_3"), False)
-        self.assertEqual(dir_2.move_tree("./tests/data/test_Directory/dir_4"), True)
-        self.assertEqual(dir_4.move_tree("./tests/data/test_Directory/dir_2"), True)
-
 
 if __name__ == '__main__':
     unittest.main()
