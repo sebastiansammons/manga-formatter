@@ -14,9 +14,7 @@ def add_new_manga(manga, writer, illustrator, completed):
     new_manga_directory = mc.MANGA_PATH + manga + "/"
     template_manga_directory.copy_tree(new_manga_directory)
     new_manga_volume_directory = new_manga_directory + mc.VOLUMES_SUBPATH
-    print("NEW MANGA VOLUME DIR: " + new_manga_volume_directory)
     manga_src = Files(mc.SOURCE_PATH)
-    print(manga_src)
     for volume in range(0, manga_src.count):
         volume_info = manga_src.filenames[volume].split(" - ")
         current_volume_number = int(volume_info[0])
@@ -80,11 +78,7 @@ def new_manga_sql_entry(manga, writer, illustrator, completed):
         msql.update_new_volume(manga, current_volume_number, last_chapter_of_volume, current_volume_title)
 
 def move_temp_to_volume(temp_dir, volume_dir):
-    print("TEMP DIR: " + temp_dir)
-    print("VOLUME DIR: " + volume_dir)
     temp = Files(temp_dir)
     temp_volume = Directory(temp.path + temp.filenames[0])
-    print("COPY: " + temp_volume.path + " TO " + volume_dir)
-    temp_volume.copy_tree(volume_dir)
-    print("REMOVE: " + temp_volume.path)
+    temp_volume.copy_tree(volume_dir + temp.filenames[0])
     temp_volume.rm_dir()
