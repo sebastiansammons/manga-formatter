@@ -80,7 +80,7 @@ def new_manga_sql_entry(manga, writer, illustrator, completed):
 def move_temp_to_volume(temp_dir, volume_dir):
     temp = Files(temp_dir)
     temp_volume = Files(temp.path + "/" + temp.filenames[0])
-    volume_dest = Directory(volume_dir)
+    volume_dest = Directory(volume_dir + "/" + temp.filenames[0])
     volume_dest.mk_dir()
     for page in range(0, temp_volume.count):
         temp_volume.rename(volume_dest.path, temp_volume.filenames[page], page)
