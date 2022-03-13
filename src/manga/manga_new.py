@@ -81,4 +81,5 @@ def new_manga_sql_entry(manga, writer, illustrator, completed):
 def move_temp_to_volume(temp_dir, volume_dir):
     temp = Files(temp_dir)
     temp_volume = Directory(temp.path + temp.filenames[0])
-    temp_volume.move_tree(volume_dir)
+    temp_volume.copy_tree(volume_dir)
+    temp_volume.rm_dir()
