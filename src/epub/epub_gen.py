@@ -31,7 +31,11 @@ def generate_epub(src_path, dest_path, title, author, scans, build_toc_list = Tr
     remove_epub_temp(temp_path)
 
 def copy_template(template_path, temp_path):
-    shutil.copytree(template_path, temp_path)
+    try:
+        shutil.copytree(template_path, temp_path)
+        shutil.chown(temp_path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+    except PermissionError:
+        pass
 
 def split_images(src_path, dest_path):
     src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])
@@ -53,7 +57,11 @@ def split_images(src_path, dest_path):
             right_page.close()
             left_page.close()
         else:
-            shutil.copy(src_path + src_images[page], dest_path + src_images[page])
+            try:
+                shutil.copy(src_path + src_images[page], dest_path + src_images[page])
+                shutil.chown(dest_path + src_images[page], user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            except PermissionError:
+                pass
         tmp_image.close()
 
 def check_spread(src_path):
@@ -135,7 +143,12 @@ def build_template(src_path, dest_path, build_toc_list):
         # dest filename (also reduce filename length)
         dest_image = page_id[page] + tmp_ext
         # copy image/page
-        shutil.copy(src_path + src_images[page], dest_path + "/OEBPS/images/" + dest_image)
+        try:
+            shutil.copy(src_path + src_images[page], dest_path + "/OEBPS/images/" + dest_image)
+            shutil.chown(dest_path + "/OEBPS/images/" + dest_image, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+        except PermissionError:
+            pass
+        
         # Get width and height
         tmp_image = PIL.Image.open(src_path + src_images[page])
         width, height = tmp_image.size
@@ -321,7 +334,10 @@ def build_epub(dest_path, title, temp_path):
         pass
 
 def remove_epub_temp(temp_path):
-    shutil.rmtree(temp_path)
+    try:
+        shutil.rmtree(temp_path)
+    except PermissionError:
+        pass
 
 def write_to_file(dest_path, filename, contents):
     file = open(dest_path + filename, "w")

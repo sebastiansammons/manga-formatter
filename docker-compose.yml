@@ -21,7 +21,7 @@ services:
       - MANGA_PATH=<path to MANGA_PATH>
       - SOURCE_PATH=<path to SOURCE_PATH>
       - DESTINATION_PATH=<path to DESTINATION_PATH>
-      - NEW_MANGA_PATH=<path to NEW_MANGA_PATH>
+      - NEW_MANGA_TEMPLATE_PATH=<path to NEW_MANGA_TEMPLATE_PATH>
       - ERROR_PATH=<path to ERROR_PATH>
       - DB_FILE_PATH=<path to DB_FILE_PATH>
       # epub_config.py

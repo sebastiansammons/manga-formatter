@@ -20,8 +20,10 @@ def index():
         session.pop("number", None)
         session.pop("title", None)
         session.pop("author", None)
+        session.pop("illustrator", None)
         session.pop("scans", None)
         session.pop("build_toc", None)
+        session.pop("completed", None)
         session.pop("preview", None)
         session.pop("error", None)
         return render_template('index.html')
@@ -35,9 +37,8 @@ def index():
             return redirect('/manual')
         elif(submit == "EPUB"):
             return redirect('/epub')
-        # TODO: New Manga Feature
         elif(submit == "New"):
-            return redirect('/')
+            return redirect('/new')
         # TODO: Settings options
         elif(submit =="Settings"):
             return redirect('/')
@@ -197,7 +198,7 @@ def manual_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "manual_volume"
-            check = manga.check_manual_volume(manga.SOURCE_PATH, manga_title, number)
+            check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number)
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
@@ -305,6 +306,45 @@ def epub_manual():
             session["error"] = "EPUB MANUAL SELECTION ERROR"
             return redirect('/error')
 
+@app.route('/new', methods = ['GET', 'POST'])
+def new_manga():
+    if(request.method == 'GET'):
+        return render_template('manga_new.html')
+    else:
+        submit = request.form['new_manga']
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "New Manga"):
+            manga_title = request.form['manga']
+            author = request.form['author']
+            illustrator = request.form['illustrator']
+            if "completed" in request.form:
+                completed = True
+            else:
+                completed = False
+            session["manga"] = manga_title
+            session["author"] = author
+            session["illustrator"] = illustrator
+            session["completed"] = completed
+            session["format"] = "new_manga"
+            check = manga.new_manga_check(manga_title, author, illustrator)
+            if(check == False):
+                session["error"] =  manga.error_read()
+                return redirect('/error')
+            preview = []
+            preview.append("Manga: " + manga_title)
+            preview.append("Author: " + author)
+            preview.append("Illustrator: " + illustrator)
+            if(completed == True):
+                preview.append("Completed Manga: YES")
+            else:
+                preview.append("Completed Manga: NO")
+            session["preview"] = preview
+            return redirect('/preview')
+        else:
+            session["error"] = "NEW MANGA SELECTION ERROR"
+            return redirect('/error')
+
 @app.route('/preview', methods = ['GET', 'POST'])
 def preview():
     if(request.method == 'GET'):
@@ -319,8 +359,10 @@ def preview():
         number = ""
         title = ""
         author = ""
+        illustrator = ""
         scans = ""
-        build_toc = ""
+        build_toc = True
+        completed = True
         if "format" in session:
             manga_format = session["format"]
         if "manga" in session:
@@ -331,10 +373,14 @@ def preview():
             title = session["title"]
         if "author" in session:
             author = session["author"]
+        if "illustrator" in session:
+            illustrator = session["illustrator"]    
         if "scans" in session:
             scans = session["scans"]
         if "build_toc" in session:
             build_toc = session["build_toc"]
+        if "completed" in session:
+            completed = session["completed"]    
         submit = request.form['commit']
         if(submit == "Main Menu"):
             return redirect('/')
@@ -362,6 +408,9 @@ def preview():
             elif(manga_format == "epub_manual"):
                 epub.generate_epub(manga.SOURCE_PATH, manga.DESTINATION_PATH, title, author, scans, build_toc)
                 return redirect('/epub')
+            elif(manga_format == "new_manga"):
+                manga.add_new_manga(manga_title, author, illustrator, completed)
+                return redirect('/')
             else:
                 session["error"] = "NOTHING TO COMMIT"
                 return redirect('/error')
@@ -398,6 +447,18 @@ def error():
                 title = session["title"]
             else:
                 title = ""
+            if "author" in session:
+                author = session["author"]
+            else:
+                author = ""
+            if "illustrator" in session:
+                illustrator = session["illustrator"]
+            else:
+                illustrator = ""
+            if "completed" in session:
+                completed = session["completed"]
+            else:
+                completed = ""    
             if(manga_format == "auto_chapter"):
                 check = manga.check_auto_chapter(manga_title, title)
                 if(check == False):
@@ -431,12 +492,28 @@ def error():
                 session["preview"] = manga.manual_multiple_chapter_preview(manga.SOURCE_PATH, manga_title)
                 return redirect('/preview')
             elif(manga_format == "manual_volume"):
-                check = manga.check_manual_volume(manga.SOURCE_PATH, manga_title, number)
+                check = manga.check_manual_volume(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number)
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
                 session.modified = True
                 session["preview"] = manga.manual_volume_preview(manga.SOURCE_PATH, manga_title, number, title)
+                return redirect('/preview')
+            elif(manga_format == "new_manga"):
+                check = manga.new_manga_check(manga_title, author, illustrator)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session.modified = True
+                preview = []
+                preview.append("Manga: " + manga_title)
+                preview.append("Author: " + author)
+                preview.append("Illustrator: " + illustrator)
+                if(completed == True):
+                    preview.append("Completed Manga: YES")
+                else:
+                    preview.append("Completed Manga: NO")
+                session["preview"] = preview
                 return redirect('/preview')
             else:
                 session["error"] = "TRY AGAIN FAILED"

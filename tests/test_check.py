@@ -163,12 +163,19 @@ class TestCheck(unittest.TestCase):
 
     def test_manual_volume(self):
         # Bad number entry
-        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, "Blue Box", ""), False)
+        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Blue Box", ""), False)
         
         # too many files
         shutil.copytree("./tests/data/test_check/manual_volume/too many files/src/", mc.SOURCE_PATH)
         shutil.copytree("./tests/data/test_check/manual_volume/empty dest/dest/", mc.DESTINATION_PATH)
-        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, "Naruto", 15), False)
+        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Naruto", 15), False)
+        shutil.rmtree(mc.SOURCE_PATH)
+        shutil.rmtree(mc.DESTINATION_PATH)
+
+        # non empty dest
+        shutil.copytree("./tests/data/test_check/manual_volume/Working src/src/", mc.SOURCE_PATH)
+        shutil.copytree("./tests/data/test_check/manual_volume/non empty dest/dest/", mc.DESTINATION_PATH)
+        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Naruto", 15), False)
         shutil.rmtree(mc.SOURCE_PATH)
         shutil.rmtree(mc.DESTINATION_PATH)
         
@@ -176,7 +183,7 @@ class TestCheck(unittest.TestCase):
         # working
         shutil.copytree("./tests/data/test_check/manual_volume/Working src/src/", mc.SOURCE_PATH)
         shutil.copytree("./tests/data/test_check/manual_volume/empty dest/dest/", mc.DESTINATION_PATH)
-        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, "Bleach", 30), True)
+        self.assertEqual(manga_check.check_manual_volume(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Bleach", 30), True)
         shutil.rmtree(mc.SOURCE_PATH)
         shutil.rmtree(mc.DESTINATION_PATH)
 
