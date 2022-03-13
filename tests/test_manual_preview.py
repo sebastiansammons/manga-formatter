@@ -52,7 +52,7 @@ class TestManualPreview(unittest.TestCase):
     def test_manual_volume(self):
         shutil.copytree("./tests/data/test_preview/manual_volume/src - title/", mc.SOURCE_PATH)
         result = manga_preview.manual_volume_preview(mc.SOURCE_PATH, "One Piece", 23, "Best Volume Ever!")
-        expected_result = ['Rename: /100 - More Chapters to One Piece Volume 23 - Best Volume Ever!/', 'Rename: /101 - Almost to One Piece Volume 23 - Best Volume Ever!/', 'Rename: /102 - The End to One Piece Volume 23 - Best Volume Ever!/', 'Rename: /96 - New to One Piece Volume 23 - Best Volume Ever!/', 'Rename: /97 - Chapter for to One Piece Volume 23 - Best Volume Ever!/', 'Rename: /98 - The Volume to One Piece Volume 23 - Best Volume Ever!/', 'Rename: /99 - Title Here to One Piece Volume 23 - Best Volume Ever!/']
+        expected_result = ['Rename: /100 - More Chapters to One Piece Volume 023 - Best Volume Ever!/', 'Rename: /101 - Almost to One Piece Volume 023 - Best Volume Ever!/', 'Rename: /102 - The End to One Piece Volume 023 - Best Volume Ever!/', 'Rename: /96 - New to One Piece Volume 023 - Best Volume Ever!/', 'Rename: /97 - Chapter for to One Piece Volume 023 - Best Volume Ever!/', 'Rename: /98 - The Volume to One Piece Volume 023 - Best Volume Ever!/', 'Rename: /99 - Title Here to One Piece Volume 023 - Best Volume Ever!/']
         self.assertEqual(result, expected_result)
 
         shutil.rmtree(mc.SOURCE_PATH)

@@ -7,6 +7,7 @@ from .manga.manga_preview import *
 from .manga.manga_format import *
 from .manga.manga_error import *
 from .manga.manga_sql import *
+from .manga.manga_new import *
 
 from .epub.epub_config import *
 from .epub.epub_gen import *

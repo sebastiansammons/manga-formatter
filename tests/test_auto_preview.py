@@ -42,7 +42,7 @@ class TestAutoPreview(unittest.TestCase):
     def test_auto_volume_preview(self):
         shutil.copytree("./tests/data/test_preview/auto_volume/Not One Piece/src/", manga_config.SOURCE_PATH)
         result = manga_preview.auto_volume_preview("Attack on Titan", 139, "Last Volume")
-        expected_result = ['Rename: 135/ to Attack on Titan Volume 034 - Last Volume/', 'Rename: 136/ to Attack on Titan Volume 034 - Last Volume/', 'Rename: 137/ to Attack on Titan Volume 034 - Last Volume/', 'Rename: 138/ to Attack on Titan Volume 034 - Last Volume/', 'Rename: 139/ to Attack on Titan Volume 034 - Last Volume/']
+        expected_result = ['Rename: 135/ to Attack on Titan Volume 34 - Last Volume/', 'Rename: 136/ to Attack on Titan Volume 34 - Last Volume/', 'Rename: 137/ to Attack on Titan Volume 34 - Last Volume/', 'Rename: 138/ to Attack on Titan Volume 34 - Last Volume/', 'Rename: 139/ to Attack on Titan Volume 34 - Last Volume/']
         self.assertEqual(result, expected_result)
         shutil.rmtree(manga_config.SOURCE_PATH)
 

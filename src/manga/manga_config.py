@@ -6,7 +6,7 @@ import os
 MANGA_PATH = os.getenv("MANGA_PATH", "/manga/")
 SOURCE_PATH = os.getenv("SOURCE_PATH", "/manga/other/[source]/")
 DESTINATION_PATH = os.getenv("DESTINATION_PATH", "/manga/other/[destination]/")
-NEW_MANGA_PATH = os.getenv("NEW_MANGA_PATH", "/manga/other/[new_manga]/")
+NEW_MANGA_TEMPLATE_PATH = os.getenv("NEW_MANGA_TEMPLATE_PATH", "/manga/other/[new_manga]/")
 ERROR_PATH = os.getenv("ERROR_PATH", "/appdata/error_msg/")
 DB_FILE_PATH = os.getenv("DB_FILE_PATH", "/appdata/sqlite/fridge_manga.db")
 

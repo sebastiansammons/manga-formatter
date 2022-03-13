@@ -159,8 +159,13 @@ td {
 }
 
 .buildtoc {
-    width: 13vw;
     left: 35vw;
+    width: 13vw;
+}
+
+.completed {
+    left: 3vw;
+    width: 15vw
 }
 
 /* FIXED POSITIONS */

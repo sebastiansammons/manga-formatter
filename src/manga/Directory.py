@@ -49,3 +49,15 @@ class Directory:
             return False
         else:
             return True
+
+    def copy_tree(self, dest_path):
+        try:
+            shutil.copytree(self.path, dest_path)
+        except FileExistsError:
+            me.error_write("[" + dest_path + "] ALREADY EXISTS")
+            return False
+        try:
+            shutil.chown(dest_path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+        except PermissionError:
+            pass
+        return True

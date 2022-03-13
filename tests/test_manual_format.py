@@ -54,10 +54,10 @@ class TestManualFormat(unittest.TestCase):
 
         # Single "Multi Chapter" format with no title
         shutil.copytree("./tests/data/test_format/manual_single_chapter/src - multi - no_title/", mc.SOURCE_PATH)
-        manga_format.manual_multiple_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "Naruto")
+        manga_format.manual_multiple_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "One Piece")
         new_chapter = Files(mc.DESTINATION_PATH + "139/")
-        self.assertEqual(new_chapter.filenames[0], "Naruto - CH139PG01.jpg")
-        self.assertEqual(new_chapter.filenames[45], "Naruto - CH139PG46.jpg")
+        self.assertEqual(new_chapter.filenames[0], "One Piece - CH0139PG01.jpg")
+        self.assertEqual(new_chapter.filenames[45], "One Piece - CH0139PG46.jpg")
         self.assertEqual(new_chapter.count, 46)
 
     def test_multi_chapter(self):
@@ -78,15 +78,35 @@ class TestManualFormat(unittest.TestCase):
         self.assertEqual(new_chapter.filenames[45], "Bleach - CH133PG46 - Battle of Heaven and Earth.jpg")
         self.assertEqual(new_chapter.count, 46)
         shutil.rmtree(mc.SOURCE_PATH)
+        shutil.rmtree(mc.DESTINATION_PATH)
+
+        shutil.copytree("./tests/data/test_format/manual_multi_chapter/src - OP/", mc.SOURCE_PATH)
+        os.mkdir(mc.DESTINATION_PATH)
+        manga_format.manual_multiple_chapter_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "One Piece")
+        new_chapter = Files(mc.DESTINATION_PATH + "001/")
+        self.assertEqual(new_chapter.filenames[0], "One Piece - CH0001PG01 - New Series.jpeg")
+        self.assertEqual(new_chapter.filenames[43], "One Piece - CH0001PG44 - New Series.jpeg")
+        self.assertEqual(new_chapter.count, 44)
+
+        new_chapter = Files(mc.DESTINATION_PATH + "015/")
+        self.assertEqual(new_chapter.filenames[0], "One Piece - CH0015PG01.jpg")
+        self.assertEqual(new_chapter.filenames[44], "One Piece - CH0015PG45.jpg")
+        self.assertEqual(new_chapter.count, 45)
+
+        new_chapter = Files(mc.DESTINATION_PATH + "133/")
+        self.assertEqual(new_chapter.filenames[0], "One Piece - CH0133PG01 - Battle of Heaven and Earth.jpg")
+        self.assertEqual(new_chapter.filenames[45], "One Piece - CH0133PG46 - Battle of Heaven and Earth.jpg")
+        self.assertEqual(new_chapter.count, 46)
+        shutil.rmtree(mc.SOURCE_PATH)
 
     def test_manual_volume(self):
         shutil.copytree("./tests/data/test_format/manual_volume/src no_cover/", mc.SOURCE_PATH)
         manga_format.manual_volume_format(mc.SOURCE_PATH, mc.DESTINATION_PATH, "One Piece", 23, "Best Volume Ever!")
-        new_volume = Files(mc.DESTINATION_PATH + "One Piece Volume 23 - Best Volume Ever!/")
-        self.assertEqual(new_volume.filenames[0], "One Piece - CH096PG01 - New.jpg")
-        self.assertEqual(new_volume.filenames[102], "One Piece - CH102PG14 - The End.jpeg")
+        new_volume = Files(mc.DESTINATION_PATH + "One Piece Volume 023 - Best Volume Ever!/")
+        self.assertEqual(new_volume.filenames[0], "One Piece - CH0096PG01 - New.jpg")
+        self.assertEqual(new_volume.filenames[102], "One Piece - CH0102PG14 - The End.jpeg")
         self.assertEqual(new_volume.count, 103)
-        shutil.rmtree(mc.DESTINATION_PATH + "One Piece Volume 23 - Best Volume Ever!/")
+        shutil.rmtree(mc.DESTINATION_PATH + "One Piece Volume 023 - Best Volume Ever!/")
         shutil.rmtree(mc.SOURCE_PATH)
 
         shutil.copytree("./tests/data/test_format/manual_volume/src cover/", mc.SOURCE_PATH)
