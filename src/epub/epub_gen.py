@@ -52,9 +52,10 @@ def split_images(src_path, dest_path):
             left_page = tmp_image.crop(left_crop)
             # save new pages/files to dest_path
             tmp_filename = src_images[page].split(" - ")
-            if(len(tmp_filename) > 2):
-                right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a")
-                left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b")            
+            if(len(tmp_filename) < 3):
+                #CH##PG### will include the extension if there is no title, have to insert the _a/b before the extension
+                right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_a" + tmp_filename[1][9:])
+                left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_b" + tmp_filename[1][9:])            
             else:
                 right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a" + " - " + tmp_filename[2])
                 left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b" + " - " + tmp_filename[2])
@@ -86,10 +87,11 @@ def check_spread(src_path):
                     # create blank page named to PG00 so it starts at the beginning
                     page_filename = src_images[page]
                     tmp_parse = page_filename.split(" - ")
-                    # tmp_parse[1][:-2] + "00" replaces PG## with PG00
-                    if(len(tmp_parse) > 2):
-                        blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "00"
+                    if(len(tmp_parse) < 3):
+                        # tmp_parse[1][:6] + "00" + tmp_parse[1][9:] replaces PG## with PG00 while keeping extension
+                        blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:6] + "00" + tmp_parse[1][9:]
                     else:
+                        # tmp_parse[1][:-2] + "00" replaces PG## with PG00
                         blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "00" + " - " + tmp_parse[2]
                     # create blank page
                     # same dimensions as PG01
