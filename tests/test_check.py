@@ -58,37 +58,37 @@ class TestCheck(unittest.TestCase):
         self.assertEqual(manga_check.check_auto_chapter("Test", "No Chapter Table"), False)
 
     def test_auto_volume_check(self):
-        self.assertEqual(manga_check.check_auto_volume("", 78, "Title"), False)
-        self.assertEqual(manga_check.check_auto_volume("manga", "", "Title"), False)
-        self.assertEqual(manga_check.check_auto_volume("manga only", 78, ""), False)
+        self.assertEqual(manga_check.check_auto_volume("", 78), False)
+        self.assertEqual(manga_check.check_auto_volume("manga", ""), False)
+        self.assertEqual(manga_check.check_auto_volume("manga only", 78), False)
         shutil.copytree("./tests/data/test_check/auto_volume/Empty src/src/", mc.SOURCE_PATH)
-        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9,  "Empty Chapter"), False)
+        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9), False)
         shutil.rmtree(mc.SOURCE_PATH)
 
         shutil.copytree("./tests/data/test_check/auto_volume/No ext/src/", mc.SOURCE_PATH)
-        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9,  "Missing .ext Chapter"), False)
+        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9), False)
         shutil.rmtree(mc.SOURCE_PATH)
 
         shutil.copytree("./tests/data/test_check/auto_volume/No file/src/", mc.SOURCE_PATH)
-        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9,  "Not all files Chapter"), False)
+        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9), False)
         shutil.rmtree(mc.SOURCE_PATH)
 
         shutil.copytree("./tests/data/test_check/auto_volume/too many src/src/", mc.SOURCE_PATH)
-        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9,  "Working Chapter"), False)
+        self.assertEqual(manga_check.check_auto_volume("Blue Box", 9), False)
         shutil.rmtree(mc.SOURCE_PATH)
 
         shutil.copytree("./tests/data/test_check/auto_volume/Working src/src/", mc.SOURCE_PATH)
-        self.assertEqual(manga_check.check_auto_volume("Attack on Titan", 139,  "Working Chapter"), True)
+        self.assertEqual(manga_check.check_auto_volume("Attack on Titan", 139), True)
         shutil.rmtree(mc.SOURCE_PATH)
         # DB Checks
-        self.assertEqual(manga_check.check_auto_volume("Test", 8, "Not in Progress"), False)
+        self.assertEqual(manga_check.check_auto_volume("Test", 8), False)
         # gets passed above case
         manga_db = SQLite(mc.DB_FILE_PATH)
         manga_db.execute("INSERT INTO manga_progress (manga, current_chapter, current_volume, first_chapter_of_new_volume) VALUES(""Test"", 0, 0, 0)")
         manga_db.commit()
         manga_db.close()
-        self.assertEqual(manga_check.check_auto_volume("Test", 8, "No Chapter Table"), False)
-        self.assertEqual(manga_check.check_auto_volume("One Piece", 9,  "FCONV invalid"), False)
+        self.assertEqual(manga_check.check_auto_volume("Test", 8), False)
+        self.assertEqual(manga_check.check_auto_volume("One Piece", 9), False)
 
     def test_manual_single_chapter(self):
         # Bad manga title
