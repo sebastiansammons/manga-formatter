@@ -49,8 +49,8 @@ def check_auto_chapter(manga, chapter_title):
         return False
     return True
 
-def check_auto_volume(manga, last_chapter_of_new_volume, volume_title):
-    if(manga == "" or last_chapter_of_new_volume == "" or volume_title == ""):
+def check_auto_volume(manga, last_chapter_of_new_volume):
+    if(manga == "" or last_chapter_of_new_volume == ""):
         me.error_write("BAD AUTO VOLUME ENTRY")
         return False
     # Check Source

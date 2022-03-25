@@ -96,27 +96,8 @@ def check_spread(src_path):
                 # regular right page, move to left
                 page_side = "left"
         else:
-            if(src_images[page].rfind("PG01_b") != -1):
-                    # first page double spread left side, add blank page next so
-                    # chapter starts on the left side like normal
-                    # create blank page named to PG##_c so it starts atfter the double spread cover
-                    page_filename = src_images[page]
-                    tmp_parse = page_filename.split(" - ")
-                    # tmp_parse[1][:-2] + "00" replaces PG## with PG00
-                    blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "_c" + " - " + tmp_parse[2]
-                    # create blank page
-                    # same dimensions as PG01
-                    tmp_image = PIL.Image.open(src_path + page_filename)
-                    width, height = tmp_image.size
-                    tmp_image.close()
-                    blank = PIL.Image.new(mode = "RGB", size = (width, height), color = (255, 255, 255))
-                    blank.save(src_path + blank_page_filename)
-                    blank.close()
-                    # the blank page is now on the right so the next page is left
-                    page_side = "left"
-            else:
-                # regular left page, move to right
-                page_side = "right"
+            # regular left page, move to right
+            page_side = "right"
 
 def build_template(src_path, dest_path, build_toc_list):
     src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])

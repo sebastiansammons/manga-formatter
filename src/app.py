@@ -106,7 +106,7 @@ def auto_volume():
             session["number"] = number
             session["title"] = title
             session["format"] = "auto_volume"
-            check = manga.check_auto_volume(manga_title, number, title)
+            check = manga.check_auto_volume(manga_title, number)
             if(check == False):
                 session["error"] =  manga.error_read()
                 return redirect('/error')
@@ -241,10 +241,13 @@ def epub_auto():
             scans = request.form['scans']
             # volume title
             volume_title = manga.get_volume_title(manga_title, volume_number)
-            if(manga_title == "One Piece"):
-                epub_title = manga_title + " Volume " + str(volume_number).zfill(3) + " - " + volume_title
+            if(volume_title == ""):
+                epub_title = manga_title + " Volume " + str(volume_number).zfill(2)
             else:
-                epub_title = manga_title + " Volume " + str(volume_number).zfill(2) + " - " + volume_title
+                if "One Piece" in manga_title:
+                    epub_title = manga_title + " Volume " + str(volume_number).zfill(3) + " - " + volume_title
+                else:
+                    epub_title = manga_title + " Volume " + str(volume_number).zfill(2) + " - " + volume_title
             # author
             author = manga.get_manga_author(manga_title)
             session["manga"] = manga_title
@@ -283,7 +286,10 @@ def epub_manual():
                 build_toc = True
             else:
                 build_toc = False
-            epub_title = manga_title + " Volume " + str(number).zfill(2) + " - " + title
+            if(title == ""):
+                epub_title = manga_title + " Volume " + str(number).zfill(2)
+            else:
+                epub_title = manga_title + " Volume " + str(number).zfill(2) + " - " + title
             session["title"] = epub_title
             session["author"] = author
             session["scans"] = scans
@@ -401,6 +407,7 @@ def preview():
                 manga.manual_volume_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/manual')
             elif(manga_format == "epub_auto"):
+                #check for "Completed" or not
                 epub_auto_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
                 epub_auto_dest = manga.MANGA_PATH + manga_title + epub.EPUB_VOLUMES_SUBPATH
                 epub.generate_epub(epub_auto_src, epub_auto_dest, title, author, scans)
@@ -468,7 +475,7 @@ def error():
                 session["preview"] = manga.auto_chapter_preview(manga_title, title)
                 return redirect('/preview')
             elif(manga_format == "auto_volume"):
-                check = manga.check_auto_volume(manga_title, number, title)
+                check = manga.check_auto_volume(manga_title, number)
                 if(check == False):
                     error =  manga.error_read()
                     return render_template('error.html', error = error)
