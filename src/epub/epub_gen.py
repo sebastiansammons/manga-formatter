@@ -52,8 +52,13 @@ def split_images(src_path, dest_path):
             left_page = tmp_image.crop(left_crop)
             # save new pages/files to dest_path
             tmp_filename = src_images[page].split(" - ")
-            right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a" + " - " + tmp_filename[2])
-            left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b" + " - " + tmp_filename[2])
+            if(len(tmp_filename) < 3):
+                #CH##PG### will include the extension if there is no title, have to insert the _a/b before the extension
+                right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_a" + tmp_filename[1][9:])
+                left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_b" + tmp_filename[1][9:])            
+            else:
+                right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a" + " - " + tmp_filename[2])
+                left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b" + " - " + tmp_filename[2])
             right_page.close()
             left_page.close()
         else:
@@ -82,8 +87,12 @@ def check_spread(src_path):
                     # create blank page named to PG00 so it starts at the beginning
                     page_filename = src_images[page]
                     tmp_parse = page_filename.split(" - ")
-                    # tmp_parse[1][:-2] + "00" replaces PG## with PG00
-                    blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "00" + " - " + tmp_parse[2]
+                    if(len(tmp_parse) < 3):
+                        # tmp_parse[1][:6] + "00" + tmp_parse[1][9:] replaces PG## with PG00 while keeping extension
+                        blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:6] + "00" + tmp_parse[1][9:]
+                    else:
+                        # tmp_parse[1][:-2] + "00" replaces PG## with PG00
+                        blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "00" + " - " + tmp_parse[2]
                     # create blank page
                     # same dimensions as PG01
                     tmp_image = PIL.Image.open(src_path + page_filename)
@@ -117,10 +126,12 @@ def build_template(src_path, dest_path, build_toc_list):
         tmp_parse = src_images[page].split(" - ")
         tmp_ext = src_images[page][src_images[page].rfind('.'):]
         # Append Array for page_id
-        # CH###PG## or V##PG###
+        # CH###PG##
         page_id.append(tmp_parse[1])
         # chapter_title (with extension)
-        chapter_title = tmp_parse[2]
+        # Some volume cover filenames don't have titles, need to make sure there
+        if(len(tmp_parse) > 2):
+            chapter_title = tmp_parse[2]
         # dest filename (also reduce filename length)
         dest_image = page_id[page] + tmp_ext
         # copy image/page
