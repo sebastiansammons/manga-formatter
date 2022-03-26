@@ -33,7 +33,8 @@ def generate_epub(src_path, dest_path, title, author, scans):
 def copy_template(template_path, temp_path):
     try:
         # remove temp if it already exists
-        shutil.rmtree(temp_path)
+        if(os.path.isdir(temp_path)):
+            shutil.rmtree(temp_path)
         shutil.copytree(template_path, temp_path)
         shutil.chown(temp_path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
     except PermissionError:
