@@ -14,15 +14,15 @@ from . import template_xhtml_page
 from . import template_xhtml_toc
 
 
-def generate_epub(src_path, dest_path, title, author, scans, build_toc_list = True):
+def generate_epub(src_path, dest_path, title, author, scans):
     temp_path = dest_path + "/temp/"
     temp_images = temp_path + ec.TEMP_IMAGES_SUBPATH
     copy_template(ec.EPUB_TEMPLATE_PATH, temp_path)
     split_images(src_path, temp_images)
     # Scans or Digital Source
-    if (scans == "Scans"):
+    if "Scans" in scans:
         check_spread(temp_images)
-    max_height, max_width, page_id, opf_manifest_image, opf_manifest_xhtml, opf_spine, toc, xhtml_pages = build_template(temp_images, temp_path, build_toc_list)
+    max_height, max_width, page_id, opf_manifest_image, opf_manifest_xhtml, opf_spine, toc, xhtml_pages = build_template(temp_images, temp_path)
     build_xhtml_pages(page_id, xhtml_pages, max_height, max_width, temp_path)
     build_toc_xhtml(page_id, toc, temp_path)
     build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, temp_path)
@@ -32,6 +32,8 @@ def generate_epub(src_path, dest_path, title, author, scans, build_toc_list = Tr
 
 def copy_template(template_path, temp_path):
     try:
+        # remove temp if it already exists
+        shutil.rmtree(temp_path)
         shutil.copytree(template_path, temp_path)
         shutil.chown(temp_path, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
     except PermissionError:
@@ -39,9 +41,8 @@ def copy_template(template_path, temp_path):
 
 def split_images(src_path, dest_path):
     src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])
-    image_count = len(src_images)
-    for page in range(0, image_count):
-        tmp_image = PIL.Image.open(src_path + src_images[page])
+    for page in src_images:
+        tmp_image = PIL.Image.open(src_path + page)
         width, height = tmp_image.size
         if(width > height):
             # double spread found
@@ -51,20 +52,27 @@ def split_images(src_path, dest_path):
             right_page = tmp_image.crop(right_crop)
             left_page = tmp_image.crop(left_crop)
             # save new pages/files to dest_path
-            tmp_filename = src_images[page].split(" - ")
+            tmp_filename = page.split(" - ")
             if(len(tmp_filename) < 3):
-                #CH##PG### will include the extension if there is no title, have to insert the _a/b before the extension
-                right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_a" + tmp_filename[1][9:])
-                left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_b" + tmp_filename[1][9:])            
+                # CH##PG### will include the extension if there is no title, have to insert the _a/b before the extension
+                right_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_a" + tmp_filename[1][9:]
+                left_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_b" + tmp_filename[1][9:]
             else:
-                right_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a" + " - " + tmp_filename[2])
-                left_page.save(dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b" + " - " + tmp_filename[2])
+                right_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a" + " - " + tmp_filename[2]
+                left_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b" + " - " + tmp_filename[2]
+            right_page.save(right_page_filename)
+            left_page.save(left_page_filename)
+            try:
+                shutil.chown(right_page_filename, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.chown(left_page_filename, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            except:
+                pass
             right_page.close()
             left_page.close()
         else:
             try:
-                shutil.copy(src_path + src_images[page], dest_path + src_images[page])
-                shutil.chown(dest_path + src_images[page], user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.copy(src_path + page, dest_path + page)
+                shutil.chown(dest_path + page, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
             except PermissionError:
                 pass
         tmp_image.close()
@@ -108,7 +116,7 @@ def check_spread(src_path):
             # regular left page, move to right
             page_side = "right"
 
-def build_template(src_path, dest_path, build_toc_list):
+def build_template(src_path, dest_path):
     src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])
     image_count = len(src_images)
     page_id = []
@@ -127,11 +135,14 @@ def build_template(src_path, dest_path, build_toc_list):
         tmp_ext = src_images[page][src_images[page].rfind('.'):]
         # Append Array for page_id
         # CH###PG##
-        page_id.append(tmp_parse[1])
-        # chapter_title (with extension)
-        # Some volume cover filenames don't have titles, need to make sure there
         if(len(tmp_parse) > 2):
+            page_id.append(tmp_parse[1])
+            # chapter_title (with extension)
             chapter_title = tmp_parse[2]
+            # Some volume cover filenames don't have titles, need to make sure there
+        else:
+            page_id.append(tmp_parse[1][:tmp_parse[1].rfind('.')])
+            chapter_title = ""
         # dest filename (also reduce filename length)
         dest_image = page_id[page] + tmp_ext
         # copy image/page
@@ -140,7 +151,6 @@ def build_template(src_path, dest_path, build_toc_list):
             shutil.chown(dest_path + "/OEBPS/images/" + dest_image, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
         except PermissionError:
             pass
-        
         # Get width and height
         tmp_image = PIL.Image.open(src_path + src_images[page])
         width, height = tmp_image.size
@@ -179,10 +189,9 @@ def build_template(src_path, dest_path, build_toc_list):
             opf_spine.append(generate_spine(page_id[page], page_spread))
 
             # Append Array for toc
-            if(build_toc_list == True):
-                tmp_toc = generate_toc(page_id[page], chapter_title)
-                if(tmp_toc != ""):
-                    toc.append(tmp_toc)
+            tmp_toc = generate_toc(page_id[page], chapter_title)
+            if(tmp_toc != ""):
+                toc.append(tmp_toc)
 
         # Append Array for xhtml_pages
         xhtml_pages.append(generate_xhtml_pages(page_id[page], tmp_ext, page_spread))
@@ -211,15 +220,18 @@ def generate_toc(page_id, chapter_title):
     # remove extension in title
     tmp_title = chapter_title[:chapter_title.rfind('.')]
     # toc for new chapters
-    if(str(page_id).find("PG01") != -1):
+    if "PG01" in page_id:
         # ignore rest of double spread if chapter starts with double spread
-        if(str(page_id).find("PG01_b") != -1 or str(page_id).find("PG01_c") != -1):
-            pass
+        if "PG01_b" in page_id:
+            return ""
         else:
             toc = toc.replace("[CH###PG##]", str(page_id))
             # chapter number + remove leading 0s
             chapter_num = page_id[2:page_id.rfind("PG")]
-            toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0") + ": " + tmp_title)
+            if(chapter_title == ""):
+                toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0"))
+            else:
+                toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0") + ": " + tmp_title)
             return toc
     else:
         return ""
@@ -248,8 +260,8 @@ def build_toc_xhtml(page_id, toc, dest_path):
     toc_xhtml_middle = template_xhtml_toc.middle
     page_list_src = template_xhtml_toc.page_list_src
     # toc
-    for chapter in range(0, len(toc)):
-        toc_xhtml = toc_xhtml + template_xhtml_toc.nl + toc[chapter]
+    for chapter in toc:
+        toc_xhtml = toc_xhtml + template_xhtml_toc.nl + chapter
     # landmarks
     toc_xhtml_middle = toc_xhtml_middle.replace("[VCOVER]", page_id[0])
     toc_xhtml_middle = toc_xhtml_middle.replace("[BODYMATTER]", page_id[1])
