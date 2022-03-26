@@ -10,6 +10,14 @@ body {
     background-color: #1b2129;
 }
 
+p {
+    color: #dadada;
+    font-family: Times New Roman;
+    font-size: 20px;
+    letter-spacing: 1px;
+    user-select: none;
+}
+
 h1 {
     color: #dadada;
     text-align: center;
@@ -156,11 +164,6 @@ td {
 
 .checkbox input{
     opacity: 0;
-}
-
-.buildtoc {
-    left: 35vw;
-    width: 13vw;
 }
 
 .completed {
@@ -440,28 +443,13 @@ td {
 /* RADIO BUTTON COLOR */
 
 .radiobutton_color {
-    border-color: #bf7fbf;
+    border-color: #408040;
 }
 
 .radiobutton:hover input ~ .radiobutton_color{
-    background-color: #bf7fbf;
+    background-color: #408040;
 }
 
 .radiobutton input:checked ~ .radiobutton_color{
-    background-color: #bf7fbf;
-}
-
-/* CHECKBOX COLOR */
-
-.checkbox_color {
-    border-color: #0454d0;
-}
-
-.checkbox:hover input ~ .checkbox_color{
-    background-color: #0454d0;
-}
-
-.checkbox input:checked ~ .checkbox_color{
-    background-color: #0464d0;
-    border-color: #0464d0;
+    background-color: #408040;
 }

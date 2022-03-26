@@ -71,13 +71,6 @@ class TestDirectory(unittest.TestCase):
         self.assertEqual(dir_6.mk_dir(), True)
         dir_6.rm_dir()
 
-    def test_copy_tree(self):
-        dir_2 = Directory("./tests/data/test_Directory/dir_2")
-        self.assertEqual(dir_2.copy_tree("./tests/data/test_Directory/dir_3"), False)
-        self.assertEqual(dir_2.copy_tree("./tests/data/test_Directory/dir_4"), True)
-        dir_4 = Directory("./tests/data/test_Directory/dir_4")
-        dir_4.rm_dir()
-
 
 if __name__ == '__main__':
     unittest.main()

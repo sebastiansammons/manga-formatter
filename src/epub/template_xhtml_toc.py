@@ -7,7 +7,6 @@ top = """<?xml version="1.0" encoding="UTF-8"?>
 
 <body>
     <nav epub:type="toc">
-        <!-- <h1>TOC</h1> h1 needed? -->
         <ol>"""
 
 
@@ -16,7 +15,6 @@ middle = """
     </nav>
 
     <nav epub:type="landmarks">
-        <!-- <h1>Guide</h1> h1 needed? -->
         <ol>
             <li><a epub:type="ibooks:reader-start-page" href="xhtml/[VCOVER].xhtml">Open</a></li>
             <li><a epub:type="cover" href="xhtml/[VCOVER].xhtml">Cover</a></li>

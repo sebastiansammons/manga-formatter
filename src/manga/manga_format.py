@@ -42,18 +42,30 @@ def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     # Connect to SQLite and get appropriate data
     new_volume_number, first_chapter_in_volume = msql.get_new_volume_number(manga)
     # Create new volume directory
-    if "One Piece" in manga:
-        new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
+    if(volume_title == ""):
+        if "One Piece" in manga:
+            new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + "/"
+        else:
+            new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(2) + "/"
     else:
-        new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/"
+        if "One Piece" in manga:
+            new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/"
+        else:
+            new_volume_path = mc.MANGA_PATH + manga + mc.VOLUMES_SUBPATH + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/"
     dest_path = Directory(new_volume_path)
     dest_path.mk_dir()
     # Rename volume cover
     volume_cover_page = Files(mc.SOURCE_PATH)
-    if "One Piece" in manga:
-        volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(3) + " - " + volume_title + volume_cover_page.ext())
+    if(volume_title == ""):
+        if "One Piece" in manga:
+            volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(3) + volume_cover_page.ext())
+        else:
+            volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(2) + volume_cover_page.ext())
     else:
-        volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(2) + " - " + volume_title + volume_cover_page.ext())
+        if "One Piece" in manga:
+            volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(3) + " - " + volume_title + volume_cover_page.ext())
+        else:
+            volume_cover_page.rename(dest_path.path, manga + " - " + str(new_volume_number).zfill(2) + " - " + volume_title + volume_cover_page.ext())
     del volume_cover_page
     # Move chapters
     chapter_count = int(last_chapter_of_new_volume) - first_chapter_in_volume + 1

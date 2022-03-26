@@ -22,7 +22,6 @@ def index():
         session.pop("author", None)
         session.pop("illustrator", None)
         session.pop("scans", None)
-        session.pop("build_toc", None)
         session.pop("completed", None)
         session.pop("preview", None)
         session.pop("error", None)
@@ -209,33 +208,16 @@ def manual_volume():
             return redirect('/error')
 
 @app.route('/epub', methods = ['GET', 'POST'])
-def epub_format():
-    if(request.method == 'GET'):
-        return render_template('epub_format.html')
-    else:
-        submit = request.form['epub_format']
-        if(submit == "Main Menu"):
-            return redirect('/')
-        elif(submit == "Auto"):
-            return redirect('/epub/auto')
-        elif(submit == "Manual"):
-            return redirect('/epub/manual')
-        else:
-            session["error"] = "EPUB FORMAT SELECTION ERROR"
-            return redirect('/error')
-
-@app.route('/epub/auto', methods = ['GET', 'POST'])
-def epub_auto():
+def epub_build():
     if(request.method == 'GET'):
         # GET MANGA LIST
-        # TODO: Work on fridge.db for better list (might have to remake .db) Also work on get_manga()?
         manga_list = manga.get_manga()
-        return render_template('epub_auto.html', manga_list = manga_list, len = len(manga_list))
+        return render_template('epub.html', manga_list = manga_list, len = len(manga_list))
     else:
-        submit = request.form['epub_auto']
+        submit = request.form['epub']
         if(submit == "Main Menu"):
             return redirect('/')
-        elif(submit == "EPUB Auto"):
+        elif(submit == "EPUB"):
             manga_title = request.form['manga']
             volume_number = request.form['volume_number']
             scans = request.form['scans']
@@ -254,7 +236,7 @@ def epub_auto():
             session["title"] = epub_title
             session["author"] = author
             session["scans"] = scans
-            session["format"] = "epub_auto"
+            session["format"] = "epub"
             preview = []
             preview.append("Manga: " + manga_title)
             preview.append("Title: " + volume_title)
@@ -265,51 +247,7 @@ def epub_auto():
             session["preview"] = preview
             return redirect('/preview')
         else:
-            session["error"] = "EPUB AUTO SELECTION ERROR"
-            return redirect('/error')
-
-@app.route('/epub/manual', methods = ['GET', 'POST'])
-def epub_manual():
-    if(request.method == 'GET'):
-        return render_template('epub_manual.html')
-    else:
-        submit = request.form['epub_manual']
-        if(submit == "Main Menu"):
-            return redirect('/')
-        elif(submit == "EPUB Manual"):
-            manga_title = request.form['manga']
-            title = request.form['title']
-            number = request.form['number']
-            author = request.form['author']
-            scans = request.form['scans']
-            if "build_toc" in request.form:
-                build_toc = True
-            else:
-                build_toc = False
-            if(title == ""):
-                epub_title = manga_title + " Volume " + str(number).zfill(2)
-            else:
-                epub_title = manga_title + " Volume " + str(number).zfill(2) + " - " + title
-            session["title"] = epub_title
-            session["author"] = author
-            session["scans"] = scans
-            session["build_toc"] = build_toc
-            session["format"] = "epub_manual"
-            preview = []
-            preview.append("Manga: " + manga_title)
-            preview.append("Title: " + title)
-            preview.append("Volume: " + number)
-            preview.append("Author: " + author)
-            preview.append("Scans: " + scans)
-            if(build_toc == True):
-                preview.append("Build TOC: YES")
-            else:
-                preview.append("Build TOC: NO")
-            preview.append("EPUB: " + epub_title + ".epub")
-            session["preview"] = preview
-            return redirect('/preview')
-        else:
-            session["error"] = "EPUB MANUAL SELECTION ERROR"
+            session["error"] = "EPUB SELECTION ERROR"
             return redirect('/error')
 
 @app.route('/new', methods = ['GET', 'POST'])
@@ -367,7 +305,6 @@ def preview():
         author = ""
         illustrator = ""
         scans = ""
-        build_toc = True
         completed = True
         if "format" in session:
             manga_format = session["format"]
@@ -383,8 +320,6 @@ def preview():
             illustrator = session["illustrator"]    
         if "scans" in session:
             scans = session["scans"]
-        if "build_toc" in session:
-            build_toc = session["build_toc"]
         if "completed" in session:
             completed = session["completed"]    
         submit = request.form['commit']
@@ -406,14 +341,11 @@ def preview():
             elif(manga_format == "manual_volume"):
                 manga.manual_volume_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/manual')
-            elif(manga_format == "epub_auto"):
-                #check for "Completed" or not
-                epub_auto_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
-                epub_auto_dest = manga.MANGA_PATH + manga_title + epub.EPUB_VOLUMES_SUBPATH
-                epub.generate_epub(epub_auto_src, epub_auto_dest, title, author, scans)
-                return redirect('/epub')
-            elif(manga_format == "epub_manual"):
-                epub.generate_epub(manga.SOURCE_PATH, manga.DESTINATION_PATH, title, author, scans, build_toc)
+            elif(manga_format == "epub"):
+                # TODO: check for "Completed" or not
+                epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
+                epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
+                epub.generate_epub(epub_src, epub_dest, title, author, scans)
                 return redirect('/epub')
             elif(manga_format == "new_manga"):
                 manga.add_new_manga(manga_title, author, illustrator, completed)

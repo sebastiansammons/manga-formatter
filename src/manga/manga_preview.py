@@ -27,10 +27,16 @@ def auto_volume_preview(manga, last_chapter_of_new_volume, volume_title):
     released_chapters = Files(mc.MANGA_PATH + manga + mc.NEW_CHAPTERS_SUBPATH)
     preview_changes = []
     for volume_chapter in range(0, chapter_count):
-        if "One Piece" in manga:
-            preview_changes.append("Rename: " + released_chapters.filenames[volume_chapter] + "/ to " + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/")
+        if(volume_title == ""):
+            if "One Piece" in manga:
+                preview_changes.append("Rename: " + released_chapters.filenames[volume_chapter] + "/ to " + manga + " Volume " + str(new_volume_number).zfill(3) + "/")
+            else:
+                preview_changes.append("Rename: " + released_chapters.filenames[volume_chapter] + "/ to " + manga + " Volume " + str(new_volume_number).zfill(2) + "/")
         else:
-            preview_changes.append("Rename: " + released_chapters.filenames[volume_chapter] + "/ to " + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/")
+            if "One Piece" in manga:
+                preview_changes.append("Rename: " + released_chapters.filenames[volume_chapter] + "/ to " + manga + " Volume " + str(new_volume_number).zfill(3) + " - " + volume_title + "/")
+            else:
+                preview_changes.append("Rename: " + released_chapters.filenames[volume_chapter] + "/ to " + manga + " Volume " + str(new_volume_number).zfill(2) + " - " + volume_title + "/")
     del released_chapters
     return preview_changes
 
