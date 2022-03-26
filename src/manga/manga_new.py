@@ -39,7 +39,7 @@ def create_new_manga_directory(new_manga_directory):
     volume_pages_directory = Directory(new_manga_directory + mc.VOLUMES_SUBPATH)
     volume_pages_directory.mk_dir()
     volume_directory = Directory(new_manga_directory + mc.EPUB_VOLUMES_SUBPATH)
-    volume_directory.mk_dir
+    volume_directory.mk_dir()
     del manga_directory, chapter_pages, new_chapters, volume_pages_directory, volume_directory
 
 def new_manga_check(manga, writer, illustrator):
