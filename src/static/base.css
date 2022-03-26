@@ -453,3 +453,18 @@ td {
 .radiobutton input:checked ~ .radiobutton_color{
     background-color: #408040;
 }
+
+/* CHECKBOX COLOR */
+
+.checkbox_color {
+    border-color: #0464d0;
+}
+
+.checkbox:hover input ~ .checkbox_color{
+    background-color: #0454d0;
+}
+
+.checkbox input:checked ~ .checkbox_color{
+    background-color: #0464d0;
+    border-color: #0464d0;
+}
