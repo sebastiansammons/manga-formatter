@@ -40,7 +40,7 @@ def index():
             return redirect('/new')
         # TODO: Settings options
         elif(submit =="Settings"):
-            return redirect('/')
+            return redirect('/settings')
         else:
             session["error"] = "MAIN MENU SELECTION ERROR"
             return redirect('/error')
