@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Settings - Manga Formatter</title>
+        <link rel="stylesheet" href="../static/base.css">
+    </head>
+    <body>
+        <div>
+            <h1>SETTINGS</h1>
+            <!--EPUB Auto Form-->
+            <form name="SETTINGS" method="POST">
+                <!-- ACTIVE TO INACTIVE -->
+                <div>
+                    <select class="row_1" name="active_manga">
+                        {% for i in range(0,len) %}
+                        <option value="{{ active_manga[i] }}">{{ active_manga[i] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <input class="row_2 submit_button orange" type="submit" name="settings" value="INACTIVE">
+                </div>
+                <!-- INACTIVE TO ACTIVE -->
+                <div>
+                    <select class="row_3" name="inactive_manga">
+                        {% for i in range(0,len) %}
+                        <option value="{{ inactive_manga[i] }}">{{ inactive_manga[i] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <input class="row_4 submit_button green" type="submit" name="settings" value="ACTIVE">
+                </div>
+                <!-- Main Menu -->
+                <div>
+                    <input class="menu_item main submit_button red" type="submit" name="settings" value="Main Menu">
+                </div>
+            </form>    
+        </div>
+    </body>
+</html>
+

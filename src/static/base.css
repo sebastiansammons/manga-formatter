@@ -457,14 +457,14 @@ td {
 /* CHECKBOX COLOR */
 
 .checkbox_color {
-    border-color: #0464d0;
+    border-color: #6f4e37;
 }
 
 .checkbox:hover input ~ .checkbox_color{
-    background-color: #0454d0;
+    background-color: #6f4e37;
 }
 
 .checkbox input:checked ~ .checkbox_color{
-    background-color: #0464d0;
-    border-color: #0464d0;
+    background-color: #6f4e37;
+    border-color: #6f4e37;
 }
