@@ -50,7 +50,7 @@ def settings():
     if(request.method == 'GET'):
         active_manga = manga.get_active_manga()
         inactive_manga = manga.get_inactive_manga()
-        return render_template('manga_settings.html', active_manga = active_manga, active_len = len(active_manga) inactive_manga = inactive_manga, inactive_len = len(inactive_manga))
+        return render_template('manga_settings.html', active_manga = active_manga, active_len = len(active_manga), inactive_manga = inactive_manga, inactive_len = len(inactive_manga))
     else:
         submit = request.form['settings']
         if(submit == "Main Menu"):
