@@ -1,3 +1,4 @@
+#__init.py
 from .manga.manga_config import *
 from .manga.Directory import *
 from .manga.Files import *
@@ -8,6 +9,7 @@ from .manga.manga_format import *
 from .manga.manga_error import *
 from .manga.manga_sql import *
 from .manga.manga_new import *
+from .manga.manga_settings import *
 
 from .epub.epub_config import *
 from .epub.epub_gen import *

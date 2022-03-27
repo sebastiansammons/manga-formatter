@@ -45,6 +45,26 @@ def index():
             session["error"] = "MAIN MENU SELECTION ERROR"
             return redirect('/error')
 
+@app.route('/settings', methods = ['GET', 'POST'])
+def settings():
+    if(request.method == 'GET'):
+        active_manga = manga.get_active_manga()
+        inactive_manga = manga.get_inactive_manga()
+        return render_template('manga_settings.html', active_manga = active_manga, inactive_manga = inactive_manga)
+    else:
+        submit = request.form['settings']
+        if(submit == "Main Menu"):
+            return redirect('/')
+        elif(submit == "INACTIVE"):
+            manga_title = request.form['active_manga']
+            manga.active_to_inactive(manga_title)
+            return redirect('/')
+        elif(submit == "ACTIVE"):
+            manga_title = request.form['inactive_manga']
+            manga.inactive_to_active(manga_title)
+            return redirect('/')
+        else:
+            session["error"] = "AUTO FORMAT SELECTION ERROR"
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
     if(request.method == 'GET'):
@@ -342,7 +362,6 @@ def preview():
                 manga.manual_volume_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/manual')
             elif(manga_format == "epub"):
-                # TODO: check for "Completed" or not
                 epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
                 epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
                 epub.generate_epub(epub_src, epub_dest, title, author, scans)

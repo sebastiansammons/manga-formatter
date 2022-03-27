@@ -9,3 +9,4 @@ from .manga_format import *
 from .manga_error import *
 from .manga_sql import *
 from .manga_new import *
+from .manga_settings import *
