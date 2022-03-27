@@ -12,7 +12,7 @@
                 <!-- ACTIVE TO INACTIVE -->
                 <div>
                     <select class="row_1" name="active_manga">
-                        {% for i in range(0,len) %}
+                        {% for i in range(0,active_len) %}
                         <option value="{{ active_manga[i] }}">{{ active_manga[i] }}</option>
                         {% endfor %}
                     </select>
@@ -23,7 +23,7 @@
                 <!-- INACTIVE TO ACTIVE -->
                 <div>
                     <select class="row_3" name="inactive_manga">
-                        {% for i in range(0,len) %}
+                        {% for i in range(0,inactive_len) %}
                         <option value="{{ inactive_manga[i] }}">{{ inactive_manga[i] }}</option>
                         {% endfor %}
                     </select>
