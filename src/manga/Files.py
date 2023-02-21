@@ -1,6 +1,7 @@
 # Files.py
 import os
 import shutil
+from natsort import natsorted
 
 from . import manga_error as me
 from . import Directory
@@ -105,7 +106,7 @@ class Files(Directory):
                                 break
         # Update list
         if(preview == "Preview"):
-            self.filenames = sorted(self.filenames)
+            self.filenames = natsorted(self.filenames)
         else:
             self.filenames = self.list_dir()
         return
