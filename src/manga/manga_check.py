@@ -72,6 +72,7 @@ def check_auto_chapter_batch(manga):
             # Make sure numbers are in correct order and matching
             if(int(chapter_number) != next_chapter_number):
                 me.error_write("INVALID SOURCE: ORDER OF BATCH CHAPTERS IS OFF")
+                return False
             # Increment next chapter check
             next_chapter_number = next_chapter_number + 1
             # Make sure directories aren't empty
