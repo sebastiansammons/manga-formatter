@@ -113,6 +113,7 @@ def auto_chapter():
                 session["error"] =  manga.error_read()
                 return redirect('/error')
             session["preview"] = manga.auto_chapter_batch_preview(manga_title)
+            return redirect('/preview')
         else:
             session["error"] = "AUTO CHAPTER SELECTION ERROR"
             return redirect('/error')
