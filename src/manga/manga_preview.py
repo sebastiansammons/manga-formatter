@@ -37,9 +37,9 @@ def auto_chapter_batch_preview(manga):
             current_chapter_title = number_title[1]
             for page in range(0, current_src_chapter.count):
                 if "One Piece" in manga:
-                    preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
+                    preview_changes.append("Rename: " + src_chapters.filenames[chapter] + "/" + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
                 else:
-                    preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
+                    preview_changes.append("Rename: " + src_chapters.filenames[chapter] + "/" + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
     del src_chapters, current_src_chapter
     return preview_changes
 

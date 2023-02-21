@@ -49,6 +49,8 @@ def auto_chapter_batch_format(manga):
             number_title = src_chapters.filenames[chapter].split(" - ")
             current_chapter_title = number_title[1]
             auto_chapter_format(manga, current_chapter_title, current_src_chapter.path)
+            current_src_chapter.rm_dir()
+    del src_chapters, current_src_chapter
 
 def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     # Connect to SQLite and get appropriate data
@@ -135,7 +137,7 @@ def manual_multiple_chapter_format(src_path, dest_path, manga):
                     else:
                         current_src_chapter.rename(chapter_path.path, manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page), page)
             current_src_chapter.rm_dir()
-    del src_chapters, current_src_chapter, chapter_path
+    del src_chapters, current_src_chapter, chapter_path, number_title
 
 def manual_volume_format(src_path, dest_path, manga, volume_number, volume_title):
     manual_multiple_chapter_format(src_path, dest_path, manga)
