@@ -4,6 +4,7 @@ import shutil
 import uuid
 import datetime
 from zipfile import ZipFile
+from natsort import natsorted
 
 import PIL.Image
 
@@ -41,7 +42,7 @@ def copy_template(template_path, temp_path):
         pass
 
 def split_images(src_path, dest_path):
-    src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])
+    src_images = natsorted([f for f in os.listdir(src_path) if not f.startswith('.')])
     for page in src_images:
         tmp_image = PIL.Image.open(src_path + page)
         width, height = tmp_image.size
@@ -79,7 +80,7 @@ def split_images(src_path, dest_path):
         tmp_image.close()
 
 def check_spread(src_path):
-    src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])
+    src_images = natsorted([f for f in os.listdir(src_path) if not f.startswith('.')])
     image_count = len(src_images)
     # will always start on the left side in apple books (rtl reading)
     page_side = "left"
@@ -118,7 +119,7 @@ def check_spread(src_path):
             page_side = "right"
 
 def build_template(src_path, dest_path):
-    src_images = sorted([f for f in os.listdir(src_path) if not f.startswith('.')])
+    src_images = natsorted([f for f in os.listdir(src_path) if not f.startswith('.')])
     image_count = len(src_images)
     page_id = []
     opf_manifest_image = []
@@ -325,11 +326,11 @@ def build_epub(dest_path, title, temp_path):
     # zip toc.xhtml
     zip.write(temp_path + "OEBPS/toc.xhtml", "OEBPS/toc.xhtml")
     # zip images
-    image_src = sorted([f for f in os.listdir(temp_path + "OEBPS/images/") if not f.startswith('.')])
+    image_src = natsorted([f for f in os.listdir(temp_path + "OEBPS/images/") if not f.startswith('.')])
     for i in range(0,len(image_src)):
         zip.write(temp_path + "OEBPS/images/" + image_src[i], "OEBPS/images/" + image_src[i])
     # zip xhtml
-    xhtml_pages = sorted([f for f in os.listdir(temp_path + "OEBPS/xhtml/") if not f.startswith('.')])
+    xhtml_pages = natsorted([f for f in os.listdir(temp_path + "OEBPS/xhtml/") if not f.startswith('.')])
     for i in range(0,len(xhtml_pages)):
         zip.write(temp_path + "OEBPS/xhtml/" + xhtml_pages[i], "OEBPS/xhtml/" + xhtml_pages[i])
     # chown

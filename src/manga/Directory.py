@@ -1,6 +1,7 @@
 # Directory.py
 import os
 import shutil
+from natsort import natsorted
 
 from . import manga_error as me
 
@@ -14,7 +15,7 @@ class Directory:
 
     def list_dir(self):
         if(self.isdir()):
-            return sorted([f for f in os.listdir(self.path) if not f.startswith('.')])
+            return natsorted([f for f in os.listdir(self.path) if not f.startswith('.')])
         else:
             me.error_write("[" + self.path + "] IS NOT A DIRECTORY.")
             return False

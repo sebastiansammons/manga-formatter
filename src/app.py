@@ -104,6 +104,15 @@ def auto_chapter():
                 return redirect('/error')
             session["preview"] = manga.auto_chapter_preview(manga_title, title)
             return redirect('/preview')
+        elif(submit == "Catch Up"):
+            manga_title = request.form['manga']
+            session["manga"] = manga_title
+            session["format"] = "auto_chapter_batch"
+            check = manga.check_auto_chapter_batch(manga_title)
+            if(check == False):
+                session["error"] =  manga.error_read()
+                return redirect('/error')
+            session["preview"] = manga.auto_chapter_batch_preview(manga_title)
         else:
             session["error"] = "AUTO CHAPTER SELECTION ERROR"
             return redirect('/error')
@@ -349,6 +358,9 @@ def preview():
             if(manga_format == "auto_chapter"):
                 manga.auto_chapter_format(manga_title, title)
                 return redirect('/auto')
+            if(manga_format == "auto_chapter_batch"):
+                manga.auto_chapter_batch_format(manga_title)
+                return redirect('/auto')
             elif(manga_format == "auto_volume"):
                 manga.auto_volume_format(manga_title, number, title)
                 return redirect('/auto')
@@ -424,6 +436,14 @@ def error():
                     return render_template('error.html', error = error)
                 session.modified = True
                 session["preview"] = manga.auto_chapter_preview(manga_title, title)
+                return redirect('/preview')
+            if(manga_format == "auto_chapter_batch"):
+                check = manga.check_auto_chapter_batch(manga_title, title)
+                if(check == False):
+                    error =  manga.error_read()
+                    return render_template('error.html', error = error)
+                session.modified = True
+                session["preview"] = manga.auto_chapter_batch_preview(manga_title, title)
                 return redirect('/preview')
             elif(manga_format == "auto_volume"):
                 check = manga.check_auto_volume(manga_title, number)

@@ -5,8 +5,8 @@ from . import Directory
 from . import Files
 
 
-def auto_chapter_format(manga, chapter_title):
-    chapter_pages = Files(mc.SOURCE_PATH)
+def auto_chapter_format(manga, chapter_title, src_path = mc.SOURCE_PATH):
+    chapter_pages = Files(src_path)
     chapter_pages.pad_zero()
     # Connect to SQLite and get appropriate data
     new_chapter_number = msql.get_new_chapter_number(manga)
@@ -37,6 +37,18 @@ def auto_chapter_format(manga, chapter_title):
     del chapter_pages, dest_path
     # Update appropriate tables
     msql.update_new_chapter(manga, new_chapter_number, chapter_title)
+
+def auto_chapter_batch_format(manga):
+    src_chapters = Files(mc.SOURCE_PATH)
+    for chapter in range(0, src_chapters.count):
+        if(src_chapters.isfile(chapter)):
+            pass
+        else:
+            current_src_chapter = Files(src_chapters.path + src_chapters.filenames[chapter] + "/")
+            current_src_chapter.pad_zero()
+            number_title = src_chapters.filenames[chapter].split(" - ")
+            current_chapter_title = number_title[1]
+            auto_chapter_format(manga, current_chapter_title, current_src_chapter.path)
 
 def auto_volume_format(manga, last_chapter_of_new_volume, volume_title):
     # Connect to SQLite and get appropriate data

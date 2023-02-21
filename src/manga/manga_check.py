@@ -49,6 +49,46 @@ def check_auto_chapter(manga, chapter_title):
         return False
     return True
 
+def check_auto_chapter_batch(manga):
+    if(manga == ""):
+        me.error_write("BAD AUTO CHAPTER ENTRY")
+        return False
+    # Check Source
+    source = Files(mc.SOURCE_PATH)
+    if(source.count == 0):
+        me.error_write("INVALID SOURCE: SOURCE IS EMPTY")
+        return False
+    next_chapter_number = int(msql.get_new_chapter_number(manga))
+    for chapter in range(0, source.count):
+        if(source.isfile(chapter)):
+            pass
+        else:
+            # Make sure chapter has "number - title"
+            number_title = source.filenames[chapter].split(" - ")
+            if(len(number_title) != 2):
+                me.error_write("INVALID SOURCE: CHAPTER/TITLE NOT PROVIDED CORRECTLY")
+                return False
+            chapter_number = number_title[0]
+            # Make sure numbers are in correct order and matching
+            if(int(chapter_number) != next_chapter_number):
+                me.error_write("INVALID SOURCE: ORDER OF BATCH CHAPTERS IS OFF")
+            # Increment next chapter check
+            next_chapter_number = next_chapter_number + 1
+            # Make sure directories aren't empty
+            source_chapter = Files(source.path + source.filenames[chapter] + "/")
+            if(source_chapter.count == 0):
+                me.error_write("INVALID SOURCE: ONE CHAPTER IS EMPTY")
+                return False
+            # Check to make sure all files inside
+            for page in range(0, source_chapter.count):
+                if not (source_chapter.isfile(page)):
+                    me.error_write("INVALID SOURCE: ONE CHAPTER IS INVALID")
+                    return False
+                if(source_chapter.ext(page) == -1):
+                    me.error_write("INVALID SOURCE: ONE CHAPTER IS MISSING AN EXTENSION")
+                    return False
+    return True
+
 def check_auto_volume(manga, last_chapter_of_new_volume):
     if(manga == "" or last_chapter_of_new_volume == ""):
         me.error_write("BAD AUTO VOLUME ENTRY")

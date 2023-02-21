@@ -20,6 +20,30 @@ def auto_chapter_preview(manga, chapter_title):
     del chapter_pages
     return preview_changes
 
+def auto_chapter_batch_preview(manga):
+    # Chapter directory must be formatted like
+    # /NUMBER - TITLE/
+    src_chapters = Files(mc.SOURCE_PATH)
+    # Preview Rename
+    preview_changes = []
+    for chapter in range(0, src_chapters.count):
+        if(src_chapters.isfile(chapter)):
+            pass
+        else:
+            current_src_chapter = Files(src_chapters.path + src_chapters.filenames[chapter] + "/")
+            current_src_chapter.pad_zero("Preview")
+            number_title = src_chapters.filenames[chapter].split(" - ")
+            current_chapter_number = number_title[0]
+            current_chapter_title = number_title[1]
+            for page in range(0, current_src_chapter.count):
+                if "One Piece" in manga:
+                    preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(4) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
+                else:
+                    preview_changes.append("Rename: " + current_src_chapter.filenames[page] + " to " + manga + " - CH" + str(current_chapter_number).zfill(3) + "PG" + str(page + 1).zfill(2) + " - " + current_chapter_title + current_src_chapter.ext(page))
+    del src_chapters, current_src_chapter
+    return preview_changes
+
+
 def auto_volume_preview(manga, last_chapter_of_new_volume, volume_title):
     new_volume_number, first_chapter_in_volume = msql.get_new_volume_number(manga)
     # Preview Rename
