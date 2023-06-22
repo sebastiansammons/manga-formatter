@@ -251,6 +251,10 @@ def epub_build():
             manga_title = request.form['manga']
             volume_number = request.form['volume_number']
             scans = request.form['scans']
+            if "completed" in request.form:
+                kobo = True
+            else:
+                kobo = False
             # volume title
             volume_title = manga.get_volume_title(manga_title, volume_number)
             if(volume_title == ""):
@@ -266,6 +270,7 @@ def epub_build():
             session["title"] = epub_title
             session["author"] = author
             session["scans"] = scans
+            session["completed"] = kobo
             session["format"] = "epub"
             preview = []
             preview.append("Manga: " + manga_title)
@@ -273,6 +278,10 @@ def epub_build():
             preview.append("Volume: " + volume_number)
             preview.append("Author: " + author)
             preview.append("Scans: " + scans)
+            if(kobo == True):
+                preview.append("Kobo EPUB: YES")
+            else:
+                preview.append("Kobo EPUB: NO")
             preview.append("EPUB: " + epub_title + ".epub")
             session["preview"] = preview
             return redirect('/preview')
@@ -377,7 +386,11 @@ def preview():
             elif(manga_format == "epub"):
                 epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
                 epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
-                epub.generate_epub(epub_src, epub_dest, title, author, scans)
+                if(completed == True):
+                    #Kobo Epub
+                    epub.generate_epub_kobo(epub_src, epub_dest, title, author, scans)
+                else:
+                    epub.generate_epub(epub_src, epub_dest, title, author, scans)
                 return redirect('/epub')
             elif(manga_format == "new_manga"):
                 manga.add_new_manga(manga_title, author, illustrator, completed)
