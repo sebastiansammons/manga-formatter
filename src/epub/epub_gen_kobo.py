@@ -31,6 +31,7 @@ def generate_epub_kobo(src_path, dest_path, title, author, scans):
     max_height, max_width, page_id, opf_manifest_image, opf_manifest_xhtml, opf_spine, toc, ncx, xhtml_pages = build_template(temp_images, temp_path)
     build_xhtml_pages(page_id, xhtml_pages, max_height, max_width, temp_path)
     build_toc_xhtml(page_id, toc, temp_path)
+    build_toc_ncx(page_id, ncx, title, author, temp_path)
     build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, temp_path)
     build_css(max_height, max_width, temp_path)
     build_epub(dest_path, title, temp_path)
