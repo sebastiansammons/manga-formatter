@@ -261,7 +261,7 @@ def generate_ncx(page_id, chapter_title, nav_count):
     if "PG01" in page_id:
         # ignore rest of double spread if chapter starts with double spread
         if "PG01_b" in page_id:
-            return ""
+            return "", nav_count
         else:
             nav = nav.replace("[CH###PG##]", str(page_id))
             nav = nav.replace("[COUNT]", str(nav_count))
@@ -273,7 +273,7 @@ def generate_ncx(page_id, chapter_title, nav_count):
                 nav = nav.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0") + ": " + tmp_title)
             return nav, nav_count + 1
     else:
-        return ""
+        return "", nav_count
 
 def generate_xhtml_pages(page_id, ext, page_spread):
     xhtml_pages = template_kobo_xhtml_page.xhtml_pages
