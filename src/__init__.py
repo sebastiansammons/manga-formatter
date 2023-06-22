@@ -17,9 +17,3 @@ from .epub.template_css import *
 from .epub.template_opf import *
 from .epub.template_xhtml_page import *
 from .epub.template_xhtml_toc import *
-from .epub.epub_gen_kobo import *
-from .epub.template_kobo_css import *
-from .epub.template_kobo_opf import *
-from .epub.template_kobo_xhtml_page import *
-from .epub.template_kobo_xhtml_toc import *
-from .epub.template_kobo_toc_ncx import *
