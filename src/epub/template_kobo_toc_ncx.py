@@ -1,6 +1,5 @@
 # template_kobo_toc_ncx.py
-top = '''
-<?xml version="1.0" encoding="UTF-8"?>
+top = '''<?xml version="1.0" encoding="UTF-8"?>
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" xml:lang="en" version="2005-1">
 <head>
     <meta name="dtb:uid" content="[TITLE]"/>
@@ -10,8 +9,7 @@ top = '''
 </head>
 <docTitle><text>[TITLE]</text></docTitle>
 <docAuthor><text>[CREATOR]</text></docAuthor>
-<navMap>
-    '''
+<navMap>'''
 
 bottom = '''
 </navMap>
