@@ -17,27 +17,14 @@ top = """<?xml version="1.0" encoding="UTF-8"?>
         <ol>"""
 
 
-middle = """
+bottom = """
         </ol>
     </nav>
 
     <nav epub:type="landmarks">
         <h2>Guide</h2>
         <ol>
-            <!--
-            <li><a epub:type="ibooks:reader-start-page" href="xhtml/[VCOVER].xhtml">Open</a></li>
-            <li><a epub:type="cover" href="xhtml/[VCOVER].xhtml">Cover</a></li>
-            -->
             <li><a epub:type="bodymatter" href="xhtml/[BODYMATTER].xhtml">Start of Content</a></li>
-        </ol>
-    </nav>
-
-    <nav epub:type="page-list">
-        <ol>
-            <li><a href="xhtml/[VCOVER].xhtml"></a></li>"""
-
-
-bottom = """
         </ol>
     </nav>
 </body>
@@ -47,5 +34,3 @@ nl = """
             """
 
 toc = """<li><a href="xhtml/[CH###PG##].xhtml">[chapter_title]</a></li>"""
-
-page_list_src = """<li><a href="xhtml/[CH###PG##].xhtml">[PAGE]</a></li>"""
