@@ -280,7 +280,6 @@ def epub_build():
                 preview.append("Scans: " + scans)
                 preview.append("All Volumes")
             else:
-                preview.append("Completed Manga: NO")
                 preview.append("Manga: " + manga_title)
                 preview.append("Title: " + volume_title)
                 preview.append("Volume: " + volume_number)
