@@ -14,6 +14,14 @@ from . import template_opf
 from . import template_xhtml_page
 from . import template_xhtml_toc
 
+def mass_generate_epub(src_path, dest_path, author, scans):
+    volume_list = natsorted([f for f in os.listdir(src_path) if not f.startswith('.')])
+    for volume in volume_list:
+        title = volume
+        volume_src = src_path + title + "/"
+        generate_epub(volume_src, dest_path, title, author, scans)
+
+
 
 def generate_epub(src_path, dest_path, title, author, scans):
     temp_path = dest_path + "/temp/"
