@@ -375,9 +375,15 @@ def preview():
                 manga.manual_volume_format(manga.SOURCE_PATH, manga.DESTINATION_PATH, manga_title, number, title)
                 return redirect('/manual')
             elif(manga_format == "epub"):
-                epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
-                epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
-                epub.generate_epub(epub_src, epub_dest, title, author, scans)
+                # all volumes or just a single volume?
+                if(completed == True):
+                    epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH
+                    epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
+                    epub.mass_generate_epub(epub_src, epub_dest, author, scans)
+                else:
+                    epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
+                    epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
+                    epub.generate_epub(epub_src, epub_dest, title, author, scans)
                 return redirect('/epub')
             elif(manga_format == "new_manga"):
                 manga.add_new_manga(manga_title, author, illustrator, completed)
