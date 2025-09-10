@@ -249,10 +249,15 @@ def epub_build():
             return redirect('/')
         elif(submit == "EPUB"):
             manga_title = request.form['manga']
-            volume_number = request.form['volume_number']
+            if "completed" in request.form:
+                completed = True
+                volume_number = 0
+                volume_title = ""
+            else:
+                completed = False
+                volume_number = request.form['volume_number']
+                volume_title = manga.get_volume_title(manga_title, volume_number)
             scans = request.form['scans']
-            # volume title
-            volume_title = manga.get_volume_title(manga_title, volume_number)
             if(volume_title == ""):
                 epub_title = manga_title + " Volume " + str(volume_number).zfill(2)
             else:
@@ -267,13 +272,21 @@ def epub_build():
             session["author"] = author
             session["scans"] = scans
             session["format"] = "epub"
+            session["completed"] = completed
             preview = []
-            preview.append("Manga: " + manga_title)
-            preview.append("Title: " + volume_title)
-            preview.append("Volume: " + volume_number)
-            preview.append("Author: " + author)
-            preview.append("Scans: " + scans)
-            preview.append("EPUB: " + epub_title + ".epub")
+            if(completed == True):
+                preview.append("Manga: " + manga_title)
+                preview.append("Author: " + author)
+                preview.append("Scans: " + scans)
+                preview.append("All Volumes")
+            else:
+                preview.append("Completed Manga: NO")
+                preview.append("Manga: " + manga_title)
+                preview.append("Title: " + volume_title)
+                preview.append("Volume: " + volume_number)
+                preview.append("Author: " + author)
+                preview.append("Scans: " + scans)
+                preview.append("EPUB: " + epub_title + ".epub")
             session["preview"] = preview
             return redirect('/preview')
         else:
@@ -335,7 +348,6 @@ def preview():
         author = ""
         illustrator = ""
         scans = ""
-        completed = True
         if "format" in session:
             manga_format = session["format"]
         if "manga" in session:
@@ -351,7 +363,9 @@ def preview():
         if "scans" in session:
             scans = session["scans"]
         if "completed" in session:
-            completed = session["completed"]    
+            completed = session["completed"]
+        else:
+            completed = False
         submit = request.form['commit']
         if(submit == "Main Menu"):
             return redirect('/')
