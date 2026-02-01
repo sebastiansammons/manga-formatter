@@ -249,13 +249,12 @@ def epub_build():
             return redirect('/')
         elif(submit == "EPUB"):
             manga_title = request.form['manga']
-            if "completed" in request.form:
+            volume_number = request.form['volume_number']
+            if(volume_number == ""):
                 completed = True
-                volume_number = 0
                 volume_title = ""
             else:
                 completed = False
-                volume_number = request.form['volume_number']
                 volume_title = manga.get_volume_title(manga_title, volume_number)
             scans = request.form['scans']
             if(volume_title == ""):
