@@ -14,7 +14,7 @@ class Files(Directory):
         self.count = self.num_files()
 
     def isfile(self, file = 0):
-        return os.path.isfile(self.path + self.filenames[file])
+        return os.path.isfile(os.path.join(self.path,self.filenames[file]))
 
     def ext(self, file = 0):
         if(self.filenames[file].rfind('.') != -1):
@@ -24,10 +24,10 @@ class Files(Directory):
     def rename(self, dest_path, dest_filename, file = 0):
         if(self.num_files() == 0):
             return False
-        src = self.path + "/" + self.filenames[file]
-        dest = dest_path + "/" + dest_filename
+        src = os.path.join(self.path,self.filenames[file])
+        dest = os.path.join(dest_path,dest_filename)
         if(os.path.isfile(dest) == True):
-            me.error_write("[" + dest + "] ALREADY EXISTS")
+            me.error_write(f"[{dest}] ALREADY EXISTS")
             return False
         try:
             shutil.move(src,dest)
@@ -37,10 +37,10 @@ class Files(Directory):
                 pass
         except FileNotFoundError:
             if(os.path.isfile(src) == False):
-                me.error_write("[" + src + "] NOT FOUND")
+                me.error_write(f"[{src}] NOT FOUND")
                 return False
         except PermissionError:
-            me.error_write("[" + src + ", " + dest + "] PERMISSION ERROR")
+            me.error_write(f"[{src}, {dest}] PERMISSION ERROR")
             return False
         return True
 
@@ -50,15 +50,15 @@ class Files(Directory):
             me.error_write("INVALID DEST FILENAME")
             return False
         if not(os.path.isdir(dest_path)):
-            me.error_write("[" + dest_path + "] NOT FOUND")
+            me.error_write(f"[{dest_path}] NOT FOUND")
             return False
-        if(os.path.isfile(dest_path + "/" + dest_filename)):
-            me.error_write("[" + dest_path + "/" + str(self.filenames[file]) + "] ALREADY EXISTS")
+        if(os.path.isfile(os.path.join(dest_path,dest_filename))):
+            me.error_write(f"[{dest_path}/{str(self.filenames[file])}] ALREADY EXISTS")
             return False
         else:
-            shutil.copyfile(self.path + "/" + self.filenames[file], dest_path + "/" + dest_filename)
+            shutil.copyfile(os.path.join(self.path,self.filenames[file]), os.path.join(dest_path,dest_filename))
             try:
-                shutil.chown(dest_path + "/" + dest_filename, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.chown(os.path.join(dest_path,dest_filename), user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
             except PermissionError:
                 pass
             return True
@@ -73,7 +73,7 @@ class Files(Directory):
                             continue
                         else:
                             # Single numeric character at the beginning, add leading zero
-                            dest_filenames = self.filenames[file][:char] + "0" + self.filenames[file][char:]
+                            dest_filenames = f"{self.filenames[file][:char]}0{self.filenames[file][char:]}"
                             if preview == "Preview":
                                 self.filenames[file] = dest_filenames
                             else:
@@ -81,7 +81,7 @@ class Files(Directory):
                             break
                     elif(char + 1 >= len(self.filenames[file])):
                         # Last character
-                        dest_filenames = self.filenames[file][:char] + "0" + self.filenames[file][char:]
+                        dest_filenames = f"{self.filenames[file][:char]}0{self.filenames[file][char:]}"
                         if preview == "Preview":
                             self.filenames[file] = dest_filenames
                         else:
@@ -95,7 +95,7 @@ class Files(Directory):
                             elif(self.filenames[file][char - 1].isnumeric()):
                                 continue
                             else:
-                                dest_filenames = self.filenames[file][:char] + "0" + self.filenames[file][char:]
+                                dest_filenames = f"{self.filenames[file][:char]}0{self.filenames[file][char:]}"
                                 if preview == "Preview":
                                     self.filenames[file] = dest_filenames
                                 else:

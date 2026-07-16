@@ -6,8 +6,9 @@ from . import manga_config as mc
 
 
 def error_read():
+    error_file = os.path.join(mc.ERROR_PATH,".error_message.txt")
     try:
-        with open(mc.ERROR_PATH + ".error_message.txt",'r', encoding = "utf8") as fp:
+        with open(error_file,'r', encoding = "utf8") as fp:
             message = fp.readline()
             fp.close
             return message
@@ -15,12 +16,13 @@ def error_read():
         return ""
 
 def error_write(message):
+    error_file = os.path.join(mc.ERROR_PATH,".error_message.txt")
     try:
-        with open(mc.ERROR_PATH + ".error_message.txt", 'w', encoding = "utf8") as fp:
+        with open(error_file, 'w', encoding = "utf8") as fp:
             fp.write(message)
             fp.close
             try:
-                shutil.chown(mc.ERROR_PATH + ".error_message.txt", user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.chown(error_file, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
             except PermissionError:
                 pass
     except FileNotFoundError:

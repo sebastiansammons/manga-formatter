@@ -1,4 +1,5 @@
 # manga_new.py
+import os
 from . import manga_config as mc
 from . import manga_sql as msql
 from . import manga_error as me
@@ -10,9 +11,9 @@ from . import Files
 
 def add_new_manga(manga, writer, illustrator, completed):
     new_manga_sql_entry(manga, writer, illustrator, completed)
-    new_manga_directory = mc.MANGA_PATH + manga + "/"
+    new_manga_directory = os.path.join(mc.MANGA_PATH,manga)
     create_new_manga_directory(new_manga_directory)
-    new_manga_volume_directory = new_manga_directory + mc.VOLUMES_SUBPATH
+    new_manga_volume_directory = os.path.join(new_manga_directory,mc.VOLUMES_SUBPATH)
     manga_src = Files(mc.SOURCE_PATH)
     for volume in range(0, manga_src.count):
         volume_info = manga_src.filenames[volume].split(" - ")
@@ -21,24 +22,24 @@ def add_new_manga(manga, writer, illustrator, completed):
             current_volume_title = volume_info[1]
         else:
             current_volume_title = ""
-        volume_src = Directory(mc.SOURCE_PATH + manga_src.filenames[volume] + "/")
+        volume_src = Directory(os.path.join(mc.SOURCE_PATH,manga_src.filenames[volume]))
         manga_format.manual_volume_format(volume_src.path, mc.DESTINATION_PATH, manga, current_volume_number, current_volume_title)
         move_temp_to_volume(mc.DESTINATION_PATH, new_manga_volume_directory)
         volume_src.rm_dir()
     if(completed == True):
-        manga_chapters_pages = Directory(new_manga_directory + mc.NEW_CHAPTERS_SUBPATH)
+        manga_chapters_pages = Directory(os.path.join(new_manga_directory,mc.NEW_CHAPTERS_SUBPATH))
         manga_chapters_pages.rm_dir()
 
 def create_new_manga_directory(new_manga_directory):
     manga_directory = Directory(new_manga_directory)
     manga_directory.mk_dir()
-    chapter_pages = Directory(new_manga_directory + "Chapter Pages/")
+    chapter_pages = Directory(os.path.join(new_manga_directory,"Chapter Pages"))
     chapter_pages.mk_dir()
-    new_chapters = Directory(new_manga_directory + mc.NEW_CHAPTERS_SUBPATH)
+    new_chapters = Directory(os.path.join(new_manga_directory,mc.NEW_CHAPTERS_SUBPATH))
     new_chapters.mk_dir()
-    volume_pages_directory = Directory(new_manga_directory + mc.VOLUMES_SUBPATH)
+    volume_pages_directory = Directory(os.path.join(new_manga_directory,mc.VOLUMES_SUBPATH))
     volume_pages_directory.mk_dir()
-    volume_directory = Directory(new_manga_directory + mc.EPUB_VOLUMES_SUBPATH)
+    volume_directory = Directory(os.path.join(new_manga_directory,mc.EPUB_VOLUMES_SUBPATH))
     volume_directory.mk_dir()
     del manga_directory, chapter_pages, new_chapters, volume_pages_directory, volume_directory
 
@@ -48,7 +49,7 @@ def new_manga_check(manga, writer, illustrator):
         return False
     manga_src = Files(mc.SOURCE_PATH)
     for volume in range(0, manga_src.count):
-        volume_dir = mc.SOURCE_PATH + manga_src.filenames[volume] + "/"
+        volume_dir = os.path.join(mc.SOURCE_PATH,manga_src.filenames[volume])
         volume_info = manga_src.filenames[volume].split(" - ")
         current_volume_number = int(volume_info[0])
         result = manga_check.check_manual_volume(volume_dir, mc.DESTINATION_PATH, manga, current_volume_number)
@@ -66,7 +67,7 @@ def new_manga_sql_entry(manga, writer, illustrator, completed):
     manga_src = Files(mc.SOURCE_PATH)
     for volume in range(0, manga_src.count):
         # Go through chapters, update each to sql
-        volume_dir = mc.SOURCE_PATH +  manga_src.filenames[volume] + "/"
+        volume_dir = os.path.join(mc.SOURCE_PATH,manga_src.filenames[volume])
         current_volume = Files(volume_dir)
         for chapter in range(0, current_volume.count):
             if(current_volume.isfile(chapter)):
@@ -91,8 +92,8 @@ def new_manga_sql_entry(manga, writer, illustrator, completed):
 
 def move_temp_to_volume(temp_dir, volume_dir):
     temp = Files(temp_dir)
-    temp_volume = Files(temp.path + "/" + temp.filenames[0])
-    volume_dest = Directory(volume_dir + "/" + temp.filenames[0])
+    temp_volume = Files(os.path.join(temp.path,temp.filenames[0]))
+    volume_dest = Directory(os.path.join(volume_dir,temp.filenames[0]))
     volume_dest.mk_dir()
     for page in range(0, temp_volume.count):
         temp_volume.rename(volume_dest.path, temp_volume.filenames[page], page)

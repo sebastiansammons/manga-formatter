@@ -17,7 +17,7 @@ class Directory:
         if(self.isdir()):
             return natsorted([f for f in os.listdir(self.path) if not f.startswith('.')])
         else:
-            me.error_write("[" + self.path + "] IS NOT A DIRECTORY.")
+            me.error_write(f"[{self.path}] IS NOT A DIRECTORY.")
             return False
 
     def num_files(self):
@@ -30,7 +30,7 @@ class Directory:
             shutil.rmtree(self.path)
             return True
         else:
-            me.error_write("[" + self.path + "] COULD NOT BE REMOVED.")
+            me.error_write(f"[{self.path}] COULD NOT BE REMOVED.")
             return False
 
     def mk_dir(self):
@@ -43,10 +43,10 @@ class Directory:
                     pass
                 return True
             except FileExistsError:
-                me.error_write("[" + self.path + "] ALREADY EXISTS")
+                me.error_write(f"[{self.path}] ALREADY EXISTS")
                 return False
         elif(self.num_files() > 0):
-            me.error_write("[" + self.path + "] ALREADY EXISTS")
+            me.error_write(f"[{self.path}] ALREADY EXISTS")
             return False
         else:
             return True

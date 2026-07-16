@@ -29,7 +29,7 @@ class SQLite:
             try:
                 query_output = [query_data[0] for query_data in self.cursor.execute(query)]
             except sqlite3.OperationalError:
-                me.error_write("[" + query + "] IS NOT A VALID OPERATION")
+                me.error_write(f"[{query}] IS NOT A VALID OPERATION")
                 return False
             except sqlite3.ProgrammingError:
                 me.error_write("CAN'T RUN QUERY. CONNECTION IS CLOSED")
@@ -38,10 +38,10 @@ class SQLite:
             try:
                 query_output = [query_data[0] for query_data in self.cursor.execute(query, query_input)]
             except sqlite3.OperationalError:
-                me.error_write("[" + query + " with data: " + str(query_input) + "] IS NOT A VALID OPERATION")
+                me.error_write(f"[{query} with data: {str(query_input)}] IS NOT A VALID OPERATION")
                 return False
             except sqlite3.IntegrityError:
-                me.error_write("[" + query_input + "] CANNOT BE USED TO INSERT/UPDATE")
+                me.error_write(f"[{query_input}] CANNOT BE USED TO INSERT/UPDATE")
                 return False
             except sqlite3.ProgrammingError:
                 me.error_write("CAN'T RUN QUERY. CONNECTION IS CLOSED")
