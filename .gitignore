@@ -6,3 +6,4 @@ tests/__pycache__/
 docker-compose-test.yml
 .error_message.txt
 tests/data/container/error_msg/.error_message.txt
+env/

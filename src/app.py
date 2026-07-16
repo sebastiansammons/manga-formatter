@@ -38,7 +38,6 @@ def index():
             return redirect('/epub')
         elif(submit == "New"):
             return redirect('/new')
-        # TODO: Settings options
         elif(submit =="Settings"):
             return redirect('/settings')
         else:
@@ -65,6 +64,7 @@ def settings():
             return redirect('/')
         else:
             session["error"] = "AUTO FORMAT SELECTION ERROR"
+
 @app.route('/auto', methods = ['GET', 'POST'])
 def auto_format():
     if(request.method == 'GET'):
@@ -258,12 +258,12 @@ def epub_build():
                 volume_title = manga.get_volume_title(manga_title, volume_number)
             scans = request.form['scans']
             if(volume_title == ""):
-                epub_title = manga_title + " Volume " + str(volume_number).zfill(2)
+                epub_title = f"{manga_title} Volume {str(volume_number).zfill(2)}"
             else:
                 if "One Piece" in manga_title:
-                    epub_title = manga_title + " Volume " + str(volume_number).zfill(3) + " - " + volume_title
+                    epub_title = f"{manga_title} Volume {str(volume_number).zfill(3)} - {volume_title}"
                 else:
-                    epub_title = manga_title + " Volume " + str(volume_number).zfill(2) + " - " + volume_title
+                    epub_title = f"{manga_title} Volume {str(volume_number).zfill(2)} - {volume_title}"
             # author
             author = manga.get_manga_author(manga_title)
             session["manga"] = manga_title
@@ -274,17 +274,17 @@ def epub_build():
             session["completed"] = completed
             preview = []
             if(completed == True):
-                preview.append("Manga: " + manga_title)
-                preview.append("Author: " + author)
-                preview.append("Scans: " + scans)
+                preview.append(f"Manga: {manga_title}")
+                preview.append(f"Author: {author}")
+                preview.append(f"Scans: {scans}")
                 preview.append("All Volumes")
             else:
-                preview.append("Manga: " + manga_title)
-                preview.append("Title: " + volume_title)
-                preview.append("Volume: " + volume_number)
-                preview.append("Author: " + author)
-                preview.append("Scans: " + scans)
-                preview.append("EPUB: " + epub_title + ".epub")
+                preview.append(f"Manga: {manga_title}")
+                preview.append(f"Title: {volume_title}")
+                preview.append(f"Volume: {volume_number}")
+                preview.append(f"Author: {author}")
+                preview.append(f"Scans: {scans}")
+                preview.append(f"EPUB: {epub_title}.epub")
             session["preview"] = preview
             return redirect('/preview')
         else:
@@ -317,9 +317,9 @@ def new_manga():
                 session["error"] =  manga.error_read()
                 return redirect('/error')
             preview = []
-            preview.append("Manga: " + manga_title)
-            preview.append("Author: " + author)
-            preview.append("Illustrator: " + illustrator)
+            preview.append(f"Manga: {manga_title}")
+            preview.append(f"Author: {author}")
+            preview.append(f"Illustrator: {illustrator}")
             if(completed == True):
                 preview.append("Completed Manga: YES")
             else:
@@ -389,12 +389,12 @@ def preview():
             elif(manga_format == "epub"):
                 # all volumes or just a single volume?
                 if(completed == True):
-                    epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH
-                    epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
+                    epub_src = os.path.join(manga.MANGA_PATH,manga_title,manga.VOLUMES_SUBPATH)
+                    epub_dest = os.path.join(manga.MANGA_PATH,manga_title,manga.EPUB_VOLUMES_SUBPATH)
                     epub.mass_generate_epub(epub_src, epub_dest, author, scans)
                 else:
-                    epub_src = manga.MANGA_PATH + manga_title + manga.VOLUMES_SUBPATH + title + "/"
-                    epub_dest = manga.MANGA_PATH + manga_title + manga.EPUB_VOLUMES_SUBPATH
+                    epub_src = os.path.join(manga.MANGA_PATH,manga_title,manga.VOLUMES_SUBPATH,title)
+                    epub_dest = os.path.join(manga.MANGA_PATH,manga_title,manga.EPUB_VOLUMES_SUBPATH)
                     epub.generate_epub(epub_src, epub_dest, title, author, scans)
                 return redirect('/epub')
             elif(manga_format == "new_manga"):
@@ -503,9 +503,9 @@ def error():
                     return render_template('error.html', error = error)
                 session.modified = True
                 preview = []
-                preview.append("Manga: " + manga_title)
-                preview.append("Author: " + author)
-                preview.append("Illustrator: " + illustrator)
+                preview.append(f"Manga: {manga_title}")
+                preview.append(f"Author: {author}")
+                preview.append(f"Illustrator: {illustrator}")
                 if(completed == True):
                     preview.append("Completed Manga: YES")
                 else:

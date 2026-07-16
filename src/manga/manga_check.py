@@ -9,22 +9,22 @@ from . import Files
 
 def check_manga_config():
     if(os.path.isdir(mc.MANGA_PATH) == False):
-        me.error_write("[" + mc.MANGA_PATH + "] NOT FOUND")
+        me.error_write(f"[{mc.MANGA_PATH}] NOT FOUND")
         return False
     if(os.path.isdir(mc.SOURCE_PATH) == False):
-        me.error_write("[" + mc.SOURCE_PATH + "] NOT FOUND")
+        me.error_write(f"[{mc.SOURCE_PATH}] NOT FOUND")
         return False
     if(os.path.isdir(mc.DESTINATION_PATH) == False):
-        me.error_write("[" + mc.DESTINATION_PATH + "] NOT FOUND")
+        me.error_write(f"[{mc.DESTINATION_PATH}] NOT FOUND")
         return False
     if(os.path.isfile(mc.DB_FILE_PATH) == False):
-        me.error_write("[" + mc.DB_FILE_PATH + "] NOT FOUND")
+        me.error_write(f"[{mc.DB_FILE_PATH}] NOT FOUND")
         return False
     if(os.path.isdir(mc.ERROR_PATH) == False):
-        me.error_write("[" + mc.ERROR_PATH + "] NOT FOUND")
+        me.error_write(f"[{mc.ERROR_PATH}] NOT FOUND")
         return False
-    if(os.path.isdir(mc.MANGA_PATH + "One Piece" + mc.OP_COVER_SUBPATH) == False):
-        me.error_write("[" + mc.MANGA_PATH + "One Piece" + mc.OP_COVER_SUBPATH + "] NOT FOUND")
+    if(os.path.isdir(os.path.join(mc.MANGA_PATH,"One Piece",mc.OP_COVER_SUBPATH)) == False):
+        me.error_write(f"[{os.path.join(mc.MANGA_PATH,"One Piece",mc.OP_COVER_SUBPATH)}] NOT FOUND")
         return False
     return True
 
@@ -76,7 +76,7 @@ def check_auto_chapter_batch(manga):
             # Increment next chapter check
             next_chapter_number = next_chapter_number + 1
             # Make sure directories aren't empty
-            source_chapter = Files(source.path + source.filenames[chapter] + "/")
+            source_chapter = Files(os.path.join(source.path,source.filenames[chapter]))
             if(source_chapter.count == 0):
                 me.error_write("INVALID SOURCE: ONE CHAPTER IS EMPTY")
                 return False
@@ -147,7 +147,7 @@ def check_manual_multiple_chapter(src_path, manga):
                 me.error_write("INVALID SOURCE: CHAPTER/TITLE NOT PROVIDED CORRECTLY")
                 return False
             # Make sure directories aren't empty
-            source_chapter = Files(source.path + source.filenames[chapter] + "/")
+            source_chapter = Files(os.path.join(source.path,source.filenames[chapter]))
             if(source_chapter.count == 0):
                 me.error_write("INVALID SOURCE: ONE CHAPTER IS EMPTY")
                 return False

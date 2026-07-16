@@ -18,14 +18,12 @@ def mass_generate_epub(src_path, dest_path, author, scans):
     volume_list = natsorted([f for f in os.listdir(src_path) if not f.startswith('.')])
     for volume in volume_list:
         title = volume
-        volume_src = src_path + title + "/"
+        volume_src = os.path.join(src_path,title)
         generate_epub(volume_src, dest_path, title, author, scans)
 
-
-
 def generate_epub(src_path, dest_path, title, author, scans):
-    temp_path = dest_path + "/temp/"
-    temp_images = temp_path + ec.TEMP_IMAGES_SUBPATH
+    temp_path = os.path.join(dest_path,"temp")
+    temp_images = os.path.join(temp_path,ec.TEMP_IMAGES_SUBPATH)
     copy_template(ec.EPUB_TEMPLATE_PATH, temp_path)
     split_images(src_path, temp_images)
     # Scans or Digital Source
@@ -52,7 +50,7 @@ def copy_template(template_path, temp_path):
 def split_images(src_path, dest_path):
     src_images = natsorted([f for f in os.listdir(src_path) if not f.startswith('.')])
     for page in src_images:
-        tmp_image = PIL.Image.open(src_path + page)
+        tmp_image = PIL.Image.open(os.path.join(src_path,page))
         width, height = tmp_image.size
         if(width > height):
             # double spread found
@@ -65,11 +63,11 @@ def split_images(src_path, dest_path):
             tmp_filename = page.split(" - ")
             if(len(tmp_filename) < 3):
                 # CH##PG### will include the extension if there is no title, have to insert the _a/b before the extension
-                right_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_a" + tmp_filename[1][9:]
-                left_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1][:9] + "_b" + tmp_filename[1][9:]
+                right_page_filename = os.path.join(dest_path, f"{tmp_filename[0]} - {tmp_filename[1][:9]}_a{tmp_filename[1][9:]}")
+                left_page_filename = os.path.join(dest_path, f"{tmp_filename[0]} - {tmp_filename[1][:9]}_b{tmp_filename[1][9:]}")
             else:
-                right_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_a" + " - " + tmp_filename[2]
-                left_page_filename = dest_path + tmp_filename[0] + " - " + tmp_filename[1] + "_b" + " - " + tmp_filename[2]
+                right_page_filename = os.path.join(dest_path, f"{tmp_filename[0]} - {tmp_filename[1]}_a - {tmp_filename[2]}")
+                left_page_filename = os.path.join(dest_path, f"{tmp_filename[0]} - {tmp_filename[1]}_b - {tmp_filename[2]}")
             right_page.save(right_page_filename)
             left_page.save(left_page_filename)
             try:
@@ -81,8 +79,8 @@ def split_images(src_path, dest_path):
             left_page.close()
         else:
             try:
-                shutil.copy(src_path + page, dest_path + page)
-                shutil.chown(dest_path + page, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.copy(os.path.join(src_path,page), os.path.join(dest_path,page))
+                shutil.chown(os.path.join(dest_path,page), user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
             except PermissionError:
                 pass
         tmp_image.close()
@@ -107,17 +105,17 @@ def check_spread(src_path):
                     tmp_parse = page_filename.split(" - ")
                     if(len(tmp_parse) < 3):
                         # tmp_parse[1][:6] + "00" + tmp_parse[1][9:] replaces PG## with PG00 while keeping extension
-                        blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:6] + "00" + tmp_parse[1][9:]
+                        blank_page_filename = f"{tmp_parse[0]} - {tmp_parse[1][:6]}00{tmp_parse[1][9:]}"
                     else:
                         # tmp_parse[1][:-2] + "00" replaces PG## with PG00
-                        blank_page_filename = tmp_parse[0] + " - " + tmp_parse[1][:-2] + "00" + " - " + tmp_parse[2]
+                        blank_page_filename = f"{tmp_parse[0]} - {tmp_parse[1][:-2]}00 - {tmp_parse[2]}"
                     # create blank page
                     # same dimensions as PG01
-                    tmp_image = PIL.Image.open(src_path + page_filename)
+                    tmp_image = PIL.Image.open(os.path.join(src_path,page_filename))
                     width, height = tmp_image.size
                     tmp_image.close()
                     blank = PIL.Image.new(mode = "RGB", size = (width, height), color = (255, 255, 255))
-                    blank.save(src_path + blank_page_filename)
+                    blank.save(os.path.join(src_path,blank_page_filename))
                     blank.close()
             else:
                 # regular right page, move to left
@@ -157,12 +155,12 @@ def build_template(src_path, dest_path):
         dest_image = page_id[page] + tmp_ext
         # copy image/page
         try:
-            shutil.copy(src_path + src_images[page], dest_path + "/OEBPS/images/" + dest_image)
-            shutil.chown(dest_path + "/OEBPS/images/" + dest_image, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+            shutil.copy(os.path.join(src_path,src_images[page]), os.path.join(dest_path,"OEBPS/images",dest_image))
+            shutil.chown(os.path.join(dest_path,"OEBPS/images",dest_image), user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
         except PermissionError:
             pass
         # Get width and height
-        tmp_image = PIL.Image.open(src_path + src_images[page])
+        tmp_image = PIL.Image.open(os.path.join(src_path,src_images[page]))
         width, height = tmp_image.size
         tmp_image.close()
         if(page == 0):
@@ -188,24 +186,19 @@ def build_template(src_path, dest_path):
             # next page spread
             page_spread = next_page_spread(prev_page_spread)
             prev_page_spread = page_spread
-
             # Append Array for opf_manifest_image
             opf_manifest_image.append(generate_manifest_image(page_id[page], dest_image, get_mediatype(tmp_ext)))
-
             # Append Array for opf_manifest_xhtml
             opf_manifest_xhtml.append(generate_manifest_xhtml(page_id[page]))
-
             # Append Array for spine
             opf_spine.append(generate_spine(page_id[page], page_spread))
-
             # Append Array for toc
             tmp_toc = generate_toc(page_id[page], chapter_title)
             if(tmp_toc != ""):
                 toc.append(tmp_toc)
-
         # Append Array for xhtml_pages
         xhtml_pages.append(generate_xhtml_pages(page_id[page], tmp_ext, page_spread))
-    return max_height, max_width,  page_id, opf_manifest_image, opf_manifest_xhtml, opf_spine, toc, xhtml_pages
+    return max_height, max_width, page_id, opf_manifest_image, opf_manifest_xhtml, opf_spine, toc, xhtml_pages
 
 def generate_manifest_image(page_id, image, media_type):
     manifest_image = template_opf.manifest_image
@@ -239,9 +232,9 @@ def generate_toc(page_id, chapter_title):
             # chapter number + remove leading 0s
             chapter_num = page_id[2:page_id.rfind("PG")]
             if(chapter_title == ""):
-                toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0"))
+                toc = toc.replace("[chapter_title]", f"Chapter {str(chapter_num).lstrip("0")}")
             else:
-                toc = toc.replace("[chapter_title]", "Chapter " + str(chapter_num).lstrip("0") + ": " + tmp_title)
+                toc = toc.replace("[chapter_title]", f"Chapter {str(chapter_num).lstrip("0")}: {tmp_title}")
             return toc
     else:
         return ""
@@ -263,7 +256,7 @@ def build_xhtml_pages(page_id, xhtml_pages, max_height, max_width, dest_path):
         xhtml_page_string = xhtml_page_top + xhtml_pages[page] + template_xhtml_page.bottom
         # xhtml title
         xhtml_page_string = xhtml_page_string.replace("[CH###PG##]", page_id[page])
-        write_to_file(dest_path + "/OEBPS/xhtml/", page_id[page] + ".xhtml", xhtml_page_string)
+        write_to_file(os.path.join(dest_path,"OEBPS/xhtml"), f"{page_id[page]}.xhtml", xhtml_page_string)
 
 def build_toc_xhtml(page_id, toc, dest_path):
     toc_xhtml = template_xhtml_toc.top
@@ -282,7 +275,7 @@ def build_toc_xhtml(page_id, toc, dest_path):
         tmp_page_list_src = tmp_page_list_src.replace("[PAGE]", str(page))
         toc_xhtml_middle = toc_xhtml_middle + template_xhtml_toc.nl + tmp_page_list_src
     toc_xhtml = toc_xhtml + toc_xhtml_middle + template_xhtml_toc.bottom
-    write_to_file(dest_path + "/OEBPS/", "toc.xhtml", toc_xhtml)
+    write_to_file(os.path.join(dest_path,"OEBPS"), "toc.xhtml", toc_xhtml)
 
 def build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, dest_path):
     opf = template_opf.top
@@ -307,16 +300,16 @@ def build_opf(opf_manifest_xhtml, opf_manifest_image, opf_spine, title, author, 
     for page in range(0, len(opf_spine)):
         opf = opf + template_opf.nl + opf_spine[page]
     opf = opf + template_opf.bottom
-    write_to_file(dest_path + "/OEBPS/", "package.opf", opf)
+    write_to_file(os.path.join(dest_path,"OEBPS"), "package.opf", opf)
 
 def build_css(max_height, max_width, dest_path):
     css = template_css.stylesheet
     css = css.replace("[HEIGHT]", str(max_height))
     css = css.replace("[WIDTH]", str(max_width))
-    write_to_file(dest_path + "/OEBPS/css/", "stylesheet.css", css)
+    write_to_file(os.path.join(dest_path,"OEBPS/css"), "stylesheet.css", css)
 
 def build_epub(dest_path, title, temp_path):
-    epub_filename = dest_path + title + ".epub"
+    epub_filename = os.path.join(dest_path, f"{title}.epub")
     try:
         zip = ZipFile(epub_filename, "x")
     except FileExistsError:
@@ -324,23 +317,23 @@ def build_epub(dest_path, title, temp_path):
         os.remove(epub_filename)
         zip = ZipFile(epub_filename, "x")
     # zip mimetype
-    zip.write(temp_path + "mimetype", "mimetype")
+    zip.write(os.path.join(temp_path,"mimetype"), "mimetype")
     # zip container.xml
-    zip.write(temp_path + "META-INF/container.xml", "META-INF/container.xml")
+    zip.write(os.path.join(temp_path,"META-INF/container.xml"), "META-INF/container.xml")
     # zip stylesheet.css
-    zip.write(temp_path + "OEBPS/css/stylesheet.css", "OEBPS/css/stylesheet.css")
+    zip.write(os.path.join(temp_path,"OEBPS/css/stylesheet.css"), "OEBPS/css/stylesheet.css")
     # zip package.opf
-    zip.write(temp_path + "OEBPS/package.opf", "OEBPS/package.opf")
+    zip.write(os.path.join(temp_path,"OEBPS/package.opf"), "OEBPS/package.opf")
     # zip toc.xhtml
-    zip.write(temp_path + "OEBPS/toc.xhtml", "OEBPS/toc.xhtml")
+    zip.write(os.path.join(temp_path,"OEBPS/toc.xhtml"), "OEBPS/toc.xhtml")
     # zip images
-    image_src = natsorted([f for f in os.listdir(temp_path + "OEBPS/images/") if not f.startswith('.')])
+    image_src = natsorted([f for f in os.listdir(os.path.join(temp_path,"OEBPS/images")) if not f.startswith('.')])
     for i in range(0,len(image_src)):
-        zip.write(temp_path + "OEBPS/images/" + image_src[i], "OEBPS/images/" + image_src[i])
+        zip.write(os.path.join(temp_path,"OEBPS/images,",image_src[i]), f"OEBPS/images/{image_src[i]}")
     # zip xhtml
-    xhtml_pages = natsorted([f for f in os.listdir(temp_path + "OEBPS/xhtml/") if not f.startswith('.')])
+    xhtml_pages = natsorted([f for f in os.listdir(os.path.join(temp_path,"OEBPS/xhtml")) if not f.startswith('.')])
     for i in range(0,len(xhtml_pages)):
-        zip.write(temp_path + "OEBPS/xhtml/" + xhtml_pages[i], "OEBPS/xhtml/" + xhtml_pages[i])
+        zip.write(os.path.join(temp_path,"OEBPS/xhtml",xhtml_pages[i]), f"OEBPS/xhtml/{xhtml_pages[i]}")
     # chown
     try:
         shutil.chown(epub_filename, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
@@ -354,7 +347,7 @@ def remove_epub_temp(temp_path):
         pass
 
 def write_to_file(dest_path, filename, contents):
-    file = open(dest_path + filename, "w")
+    file = open(os.path.join(dest_path,filename), "w")
     file.write(contents)
     file.close()
 
