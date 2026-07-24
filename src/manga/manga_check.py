@@ -8,8 +8,8 @@ from . import Files
 
 
 def check_manga_config():
-    if(os.path.isdir(mc.MANGA_PATH) == False):
-        me.error_write(f"[{mc.MANGA_PATH}] NOT FOUND")
+    if(os.path.isdir(mc.MANGA_PAGE_PATH) == False):
+        me.error_write(f"[{mc.MANGA_PAGE_PATH}] NOT FOUND")
         return False
     if(os.path.isdir(mc.SOURCE_PATH) == False):
         me.error_write(f"[{mc.SOURCE_PATH}] NOT FOUND")
@@ -23,8 +23,8 @@ def check_manga_config():
     if(os.path.isdir(mc.ERROR_PATH) == False):
         me.error_write(f"[{mc.ERROR_PATH}] NOT FOUND")
         return False
-    if(os.path.isdir(os.path.join(mc.MANGA_PATH,"One Piece",mc.OP_COVER_SUBPATH)) == False):
-        me.error_write(f"[{os.path.join(mc.MANGA_PATH,"One Piece",mc.OP_COVER_SUBPATH)}] NOT FOUND")
+    if(os.path.isdir(os.path.join(mc.MANGA_PAGE_PATH,"One Piece",mc.OP_COVER_SUBPATH)) == False):
+        me.error_write(f"[{os.path.join(mc.MANGA_PAGE_PATH,"One Piece",mc.OP_COVER_SUBPATH)}] NOT FOUND")
         return False
     return True
 

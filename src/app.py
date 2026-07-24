@@ -389,12 +389,12 @@ def preview():
             elif(manga_format == "epub"):
                 # all volumes or just a single volume?
                 if(completed == True):
-                    epub_src = os.path.join(manga.MANGA_PATH,manga_title,manga.VOLUMES_SUBPATH)
-                    epub_dest = os.path.join(manga.MANGA_PATH,manga_title,manga.EPUB_VOLUMES_SUBPATH)
+                    epub_src = os.path.join(manga.MANGA_PAGE_PATH,manga_title,manga.VOLUME_SUBPATH)
+                    epub_dest = os.path.join(epub.MANGA_EPUB_PATH,manga_title)
                     epub.mass_generate_epub(epub_src, epub_dest, author, scans)
                 else:
-                    epub_src = os.path.join(manga.MANGA_PATH,manga_title,manga.VOLUMES_SUBPATH,title)
-                    epub_dest = os.path.join(manga.MANGA_PATH,manga_title,manga.EPUB_VOLUMES_SUBPATH)
+                    epub_src = os.path.join(manga.MANGA_PAGE_PATH,manga_title,manga.VOLUME_SUBPATH,title)
+                    epub_dest = os.path.join(epub.MANGA_EPUB_PATH,manga_title)
                     epub.generate_epub(epub_src, epub_dest, title, author, scans)
                 return redirect('/epub')
             elif(manga_format == "new_manga"):

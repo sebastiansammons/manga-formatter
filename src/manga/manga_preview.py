@@ -47,7 +47,7 @@ def auto_volume_preview(manga, last_chapter_of_new_volume, volume_title):
     new_volume_number, first_chapter_in_volume = msql.get_new_volume_number(manga)
     # Preview Rename
     chapter_count = int(last_chapter_of_new_volume) - first_chapter_in_volume + 1
-    released_chapters = Files(os.path.join(mc.MANGA_PATH,manga,mc.NEW_CHAPTERS_SUBPATH))
+    released_chapters = Files(os.path.join(mc.MANGA_PAGE_PATH,manga,mc.CHAPTER_SUBPATH))
     preview_changes = []
     for volume_chapter in range(0, chapter_count):
         if(volume_title == ""):
