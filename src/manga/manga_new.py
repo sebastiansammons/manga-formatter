@@ -11,9 +11,9 @@ from . import Files
 
 def add_new_manga(manga, writer, illustrator, completed):
     new_manga_sql_entry(manga, writer, illustrator, completed)
-    new_manga_directory = os.path.join(mc.MANGA_PATH,manga)
+    new_manga_directory = os.path.join(mc.MANGA_PAGE_PATH,manga)
     create_new_manga_directory(new_manga_directory)
-    new_manga_volume_directory = os.path.join(new_manga_directory,mc.VOLUMES_SUBPATH)
+    new_manga_volume_directory = os.path.join(new_manga_directory,mc.VOLUME_SUBPATH)
     manga_src = Files(mc.SOURCE_PATH)
     for volume in range(0, manga_src.count):
         volume_info = manga_src.filenames[volume].split(" - ")
@@ -27,7 +27,7 @@ def add_new_manga(manga, writer, illustrator, completed):
         move_temp_to_volume(mc.DESTINATION_PATH, new_manga_volume_directory)
         volume_src.rm_dir()
     if(completed == True):
-        manga_chapters_pages = Directory(os.path.join(new_manga_directory,mc.NEW_CHAPTERS_SUBPATH))
+        manga_chapters_pages = Directory(os.path.join(new_manga_directory,mc.CHAPTER_SUBPATH))
         manga_chapters_pages.rm_dir()
 
 def create_new_manga_directory(new_manga_directory):
@@ -35,13 +35,11 @@ def create_new_manga_directory(new_manga_directory):
     manga_directory.mk_dir()
     chapter_pages = Directory(os.path.join(new_manga_directory,"Chapter Pages"))
     chapter_pages.mk_dir()
-    new_chapters = Directory(os.path.join(new_manga_directory,mc.NEW_CHAPTERS_SUBPATH))
+    new_chapters = Directory(os.path.join(new_manga_directory,mc.CHAPTER_SUBPATH))
     new_chapters.mk_dir()
-    volume_pages_directory = Directory(os.path.join(new_manga_directory,mc.VOLUMES_SUBPATH))
+    volume_pages_directory = Directory(os.path.join(new_manga_directory,mc.VOLUME_SUBPATH))
     volume_pages_directory.mk_dir()
-    volume_directory = Directory(os.path.join(new_manga_directory,mc.EPUB_VOLUMES_SUBPATH))
-    volume_directory.mk_dir()
-    del manga_directory, chapter_pages, new_chapters, volume_pages_directory, volume_directory
+    del manga_directory, chapter_pages, new_chapters, volume_pages_directory
 
 def new_manga_check(manga, writer, illustrator):
     if(manga == "" or writer == "" or illustrator == ""):

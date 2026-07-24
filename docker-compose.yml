@@ -18,21 +18,21 @@ services:
       
       # DirectoryPaths
       # manga_config.py
-      - MANGA_PATH=<path to MANGA_PATH>
+      - MANGA_PAGE_PATH=<path to MANGA_PAGE_PATH>
       - SOURCE_PATH=<path to SOURCE_PATH>
       - DESTINATION_PATH=<path to DESTINATION_PATH>
       - ERROR_PATH=<path to ERROR_PATH>
       - DB_FILE_PATH=<path to DB_FILE_PATH>
       # epub_config.py
-      - EPUB_TEMPLATE_PATH=<path to EPUB_TEMPLATE_PATH> (look in tests/data/container/[epub_template])
+      - MANGA_EPUB_PATH=<path to MANGA_EPUB_PATH>
+      - EPUB_TEMPLATE_PATH=<path to EPUB_TEMPLATE_PATH>
       
       # SubDirectoryPaths
       # Note: These are the subdirectories for the title's directory. 
       #       I recommend using the default in _config.py
       # manga_config.py
-      - NEW_CHAPTERS_SUBPATH = <path to NEW_CHAPTERS_SUBPATH>
-      - VOLUMES_SUBPATH = <path to VOLUMES_SUBPATH>
-      - EPUB_VOLUMES_SUBPATH=<path to EPUB_VOLUMES_SUBPATH>
+      - CHAPTER_SUBPATH = <path to CHAPTER_SUBPATH>
+      - VOLUME_SUBPATH = <path to VOLUME_SUBPATH>
       - OP_COVER_SUBPATH = <path to OP_COVER_SUBPATH>
       # epub_config.py
       - TEMP_IMAGES_SUBPATH=<path to TEMP_IMAGES_SUBPATH>

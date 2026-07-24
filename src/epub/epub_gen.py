@@ -329,7 +329,7 @@ def build_epub(dest_path, title, temp_path):
     # zip images
     image_src = natsorted([f for f in os.listdir(os.path.join(temp_path,"OEBPS/images")) if not f.startswith('.')])
     for i in range(0,len(image_src)):
-        zip.write(os.path.join(temp_path,"OEBPS/images,",image_src[i]), f"OEBPS/images/{image_src[i]}")
+        zip.write(os.path.join(temp_path,"OEBPS/images",image_src[i]), f"OEBPS/images/{image_src[i]}")
     # zip xhtml
     xhtml_pages = natsorted([f for f in os.listdir(os.path.join(temp_path,"OEBPS/xhtml")) if not f.startswith('.')])
     for i in range(0,len(xhtml_pages)):
