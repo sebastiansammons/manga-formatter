@@ -1,4 +1,4 @@
-FROM python:3.9-slim-bookworm
+FROM python:3.11.15-slim-bookworm
 
 WORKDIR /manga-formatter
 COPY /src .
