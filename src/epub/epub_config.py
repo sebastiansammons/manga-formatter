@@ -6,4 +6,4 @@ import os
 EPUB_TEMPLATE_PATH = os.getenv("EPUB_TEMPLATE_PATH", "/manga/other/[epub_template]/")
 
 # Sub Directory Paths:
-TEMP_IMAGES_SUBPATH = os.getenv("TEMP_IMAGES_SUBPATH", "/OEBPS/temp_images/")
+TEMP_IMAGES_SUBPATH = os.getenv("TEMP_IMAGES_SUBPATH", "OEBPS/temp_images")
