@@ -160,6 +160,7 @@ def new_manga(manga, writer, illustrator, completed = False):
 def manga_to_table_name(manga):
     manga_table = manga.replace("-", "")
     manga_table = manga_table.replace("'", "")
+    manga_table = manga_table.replace("!", "")
     manga_table = manga_table.replace("[", "")
     manga_table = manga_table.replace("]", "")
     manga_table = manga_table.replace('"', "")
