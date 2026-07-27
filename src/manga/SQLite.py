@@ -7,7 +7,7 @@ from . import manga_error as me
 
 class SQLite:
     def __init__(self, path):
-        if(os.path.isfile(path) == False):
+        if os.path.isfile(path) == False:
             self.connection = None
             self.cursor = None
         else:
@@ -22,12 +22,14 @@ class SQLite:
             self.connection = None
             self.cursor = None
 
-    def execute(self, query, query_input = None):
-        if(self.connection is None or self.cursor is None):
+    def execute(self, query, query_input=None):
+        if self.connection is None or self.cursor is None:
             return False
-        if(query_input == None):
+        if query_input == None:
             try:
-                query_output = [query_data[0] for query_data in self.cursor.execute(query)]
+                query_output = [
+                    query_data[0] for query_data in self.cursor.execute(query)
+                ]
             except sqlite3.OperationalError:
                 me.error_write(f"[{query}] IS NOT A VALID OPERATION")
                 return False
@@ -36,9 +38,14 @@ class SQLite:
                 return False
         else:
             try:
-                query_output = [query_data[0] for query_data in self.cursor.execute(query, query_input)]
+                query_output = [
+                    query_data[0]
+                    for query_data in self.cursor.execute(query, query_input)
+                ]
             except sqlite3.OperationalError:
-                me.error_write(f"[{query} with data: {str(query_input)}] IS NOT A VALID OPERATION")
+                me.error_write(
+                    f"[{query} with data: {str(query_input)}] IS NOT A VALID OPERATION"
+                )
                 return False
             except sqlite3.IntegrityError:
                 me.error_write(f"[{query_input}] CANNOT BE USED TO INSERT/UPDATE")
@@ -49,7 +56,7 @@ class SQLite:
         return query_output
 
     def commit(self):
-        if(self.connection is None or self.cursor is None):
+        if self.connection is None or self.cursor is None:
             return False
         try:
             self.connection.commit()
@@ -58,7 +65,7 @@ class SQLite:
             return False
 
     def close(self):
-        if(self.connection is None or self.cursor is None):
+        if self.connection is None or self.cursor is None:
             return False
         try:
             self.connection.close()

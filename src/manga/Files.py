@@ -13,30 +13,32 @@ class Files(Directory):
         self.filenames = self.list_dir()
         self.count = self.num_files()
 
-    def isfile(self, file = 0):
-        return os.path.isfile(os.path.join(self.path,self.filenames[file]))
+    def isfile(self, file=0):
+        return os.path.isfile(os.path.join(self.path, self.filenames[file]))
 
-    def ext(self, file = 0):
-        if(self.filenames[file].rfind('.') != -1):
-            return self.filenames[file][self.filenames[file].rfind('.'):]
+    def ext(self, file=0):
+        if self.filenames[file].rfind(".") != -1:
+            return self.filenames[file][self.filenames[file].rfind(".") :]
         return -1
 
-    def rename(self, dest_path, dest_filename, file = 0):
-        if(self.num_files() == 0):
+    def rename(self, dest_path, dest_filename, file=0):
+        if self.num_files() == 0:
             return False
-        src = os.path.join(self.path,self.filenames[file])
-        dest = os.path.join(dest_path,dest_filename)
-        if(os.path.isfile(dest) == True):
+        src = os.path.join(self.path, self.filenames[file])
+        dest = os.path.join(dest_path, dest_filename)
+        if os.path.isfile(dest) == True:
             me.error_write(f"[{dest}] ALREADY EXISTS")
             return False
         try:
-            shutil.move(src,dest)
+            shutil.move(src, dest)
             try:
-                shutil.chown(dest, user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.chown(
+                    dest, user=int(os.getenv("PUID")), group=int(os.getenv("PGID"))
+                )
             except PermissionError:
                 pass
         except FileNotFoundError:
-            if(os.path.isfile(src) == False):
+            if os.path.isfile(src) == False:
                 me.error_write(f"[{src}] NOT FOUND")
                 return False
         except PermissionError:
@@ -44,32 +46,39 @@ class Files(Directory):
             return False
         return True
 
-    def copyfile(self, dest_path, dest_filename, file = 0):
+    def copyfile(self, dest_path, dest_filename, file=0):
         # Meant to only copy 1 file so the File object shouldn't have more than 1 file
-        if not(isinstance(dest_filename, str)):
+        if not (isinstance(dest_filename, str)):
             me.error_write("INVALID DEST FILENAME")
             return False
-        if not(os.path.isdir(dest_path)):
+        if not (os.path.isdir(dest_path)):
             me.error_write(f"[{dest_path}] NOT FOUND")
             return False
-        if(os.path.isfile(os.path.join(dest_path,dest_filename))):
+        if os.path.isfile(os.path.join(dest_path, dest_filename)):
             me.error_write(f"[{dest_path}/{str(self.filenames[file])}] ALREADY EXISTS")
             return False
         else:
-            shutil.copyfile(os.path.join(self.path,self.filenames[file]), os.path.join(dest_path,dest_filename))
+            shutil.copyfile(
+                os.path.join(self.path, self.filenames[file]),
+                os.path.join(dest_path, dest_filename),
+            )
             try:
-                shutil.chown(os.path.join(dest_path,dest_filename), user = int(os.getenv("PUID")), group = int(os.getenv("PGID")))
+                shutil.chown(
+                    os.path.join(dest_path, dest_filename),
+                    user=int(os.getenv("PUID")),
+                    group=int(os.getenv("PGID")),
+                )
             except PermissionError:
                 pass
             return True
 
-    def pad_zero(self, preview = None):
-        for file in range(0,self.num_files()):
+    def pad_zero(self, preview=None):
+        for file in range(0, self.num_files()):
             for char in range(0, len(self.filenames[file])):
-                if(self.filenames[file][char].isnumeric()):
-                    if(char == 0):
+                if self.filenames[file][char].isnumeric():
+                    if char == 0:
                         # First character
-                        if(self.filenames[file][char+1].isnumeric()):
+                        if self.filenames[file][char + 1].isnumeric():
                             continue
                         else:
                             # Single numeric character at the beginning, add leading zero
@@ -79,7 +88,7 @@ class Files(Directory):
                             else:
                                 self.rename(self.path, dest_filenames, file)
                             break
-                    elif(char + 1 >= len(self.filenames[file])):
+                    elif char + 1 >= len(self.filenames[file]):
                         # Last character
                         dest_filenames = f"{self.filenames[file][:char]}0{self.filenames[file][char:]}"
                         if preview == "Preview":
@@ -89,10 +98,10 @@ class Files(Directory):
                         break
                     else:
                         # Middle character
-                        if(self.filenames[file][char] != '0'):
-                            if(self.filenames[file][char + 1].isnumeric()):
+                        if self.filenames[file][char] != "0":
+                            if self.filenames[file][char + 1].isnumeric():
                                 continue
-                            elif(self.filenames[file][char - 1].isnumeric()):
+                            elif self.filenames[file][char - 1].isnumeric():
                                 continue
                             else:
                                 dest_filenames = f"{self.filenames[file][:char]}0{self.filenames[file][char:]}"
@@ -102,10 +111,13 @@ class Files(Directory):
                                     self.rename(self.path, dest_filenames, file)
                                 break
                         else:
-                            if(self.filenames[file][char + 1].isnumeric() and self.filenames[file][char +1] != '0'):
+                            if (
+                                self.filenames[file][char + 1].isnumeric()
+                                and self.filenames[file][char + 1] != "0"
+                            ):
                                 break
         # Update list
-        if(preview == "Preview"):
+        if preview == "Preview":
             self.filenames = natsorted(self.filenames)
         else:
             self.filenames = self.list_dir()
