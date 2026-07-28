@@ -30,7 +30,7 @@ def add_new_manga(manga, writer, illustrator, completed):
             mc.DESTINATION_PATH,
             manga,
             current_volume_number,
-            current_volume_title,
+            current_volume_title
         )
         move_temp_to_volume(mc.DESTINATION_PATH, new_manga_volume_directory)
         volume_src.rm_dir()

@@ -38,7 +38,7 @@ class Directory:
     def mk_dir(self):
         if not (self.isdir()):
             try:
-                os.mkdir(self.path)
+                os.makedirs(self.path)
                 try:
                     shutil.chown(
                         self.path,
